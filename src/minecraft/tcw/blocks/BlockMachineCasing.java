@@ -7,16 +7,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import tcw.TCWCreativeTab;
 
-public class BlockOreTCW extends Block {
+public class BlockMachineCasing extends Block {
 
     private final String textureKey;
 
-    public BlockOreTCW(int id, String name) {
-        super(id, Material.rock);
-        this.textureKey = name;
-        setUnlocalizedName(name);
-        setHardness(3.0F);
-        setResistance(5.0F);
+    public BlockMachineCasing(int id, String textureKey) {
+        super(id, Material.iron);
+        this.textureKey = textureKey;
+        setUnlocalizedName(textureKey);
+        setHardness(2.8F);
+        setResistance(7.0F);
         setCreativeTab(TCWCreativeTab.TAB_MACHINES);
     }
 

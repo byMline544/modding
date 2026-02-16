@@ -15,7 +15,7 @@ public class ItemBronzePickaxe extends ItemPickaxe {
         super(id, material);
         this.textureKey = textureKey;
         setUnlocalizedName(textureKey);
-        setCreativeTab(TCWCreativeTab.TAB);
+        setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
     }
 
     @Override

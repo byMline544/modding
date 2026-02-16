@@ -13,6 +13,7 @@ import tcw.blocks.BlockElectricFurnace;
 import tcw.blocks.BlockExtractor;
 import tcw.blocks.BlockGenerator;
 import tcw.blocks.BlockMacerator;
+import tcw.blocks.BlockMachineCasing;
 import tcw.blocks.BlockOreTCW;
 import tcw.blocks.BlockSolarPanel;
 import tcw.blocks.BlockWiremill;
@@ -28,6 +29,7 @@ public class BlockManager {
     public static Block oreNickel;
     public static Block oreSilver;
     public static Block oreUranium;
+    public static Block machineCasing;
 
     public static Block solarBasic;
     public static Block solarImproved;
@@ -51,6 +53,9 @@ public class BlockManager {
         MinecraftForge.setBlockHarvestLevel(oreNickel, "pickaxe", 2);
         MinecraftForge.setBlockHarvestLevel(oreSilver, "pickaxe", 2);
         MinecraftForge.setBlockHarvestLevel(oreUranium, "pickaxe", 3);
+
+        machineCasing = registerBlock(new BlockMachineCasing(3122, "machine_casing"), "machine_casing", "Корпус механизма");
+        MinecraftForge.setBlockHarvestLevel(machineCasing, "pickaxe", 1);
 
         solarBasic = registerBlock(new BlockSolarPanel(3103, "solar_basic", 120000, 8), "solar_basic", "Легкая солнечная панель");
         solarImproved = registerBlock(new BlockSolarPanel(3104, "solar_improved", 300000, 22), "solar_improved", "Улучшенная солнечная панель");

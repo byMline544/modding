@@ -15,7 +15,7 @@ public class ItemBronzeSword extends ItemSword {
         super(id, material);
         this.textureKey = textureKey;
         setUnlocalizedName(textureKey);
-        setCreativeTab(TCWCreativeTab.TAB);
+        setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
     }
 
     @Override

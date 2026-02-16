@@ -15,7 +15,7 @@ public class ItemBronzeShovel extends ItemSpade {
         super(id, material);
         this.textureKey = textureKey;
         setUnlocalizedName(textureKey);
-        setCreativeTab(TCWCreativeTab.TAB);
+        setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
     }
 
     @Override

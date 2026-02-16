@@ -73,7 +73,8 @@ public class EnergyNetHelper {
 
             int accepted = targetNode.receiveEnergy(canSend, false);
             if (accepted > 0) {
-                sourceNode.extractEnergy(accepted + Math.max(0, lossPerTransfer), false);
+                int transferLoss = (source instanceof TileEntityCable) ? 0 : Math.max(0, lossPerTransfer);
+                sourceNode.extractEnergy(accepted + transferLoss, false);
                 remainingBudget -= accepted;
             }
         }
@@ -95,13 +96,37 @@ public class EnergyNetHelper {
             return false;
         }
 
-        // чтобы убрать «высасывание в пустоту» на длинных линиях:
-        // кабель не отправляет в кабель с равной/большей энергией.
+        // Кабель — только транспорт: в cable->cable передаём только по явному градиенту
+        // и только если целевой кабель реально ведёт к потребителю энергии.
         if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
-            return sourceNode.getEnergyStored() > targetNode.getEnergyStored();
+            if (sourceNode.getEnergyStored() <= targetNode.getEnergyStored() + 4) {
+                return false;
+            }
+            return hasRealConsumerAround(target, source);
         }
 
         return true;
+    }
+
+    private static boolean hasRealConsumerAround(TileEntity cable, TileEntity ignore) {
+        if (cable == null || cable.worldObj == null) {
+            return false;
+        }
+        ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+        for (int i = 0; i < dirs.length; i++) {
+            ForgeDirection dir = dirs[i];
+            TileEntity t = cable.worldObj.getBlockTileEntity(cable.xCoord + dir.offsetX, cable.yCoord + dir.offsetY, cable.zCoord + dir.offsetZ);
+            if (t == null || t == ignore) {
+                continue;
+            }
+            if (t instanceof TileEntityMachine && !(t instanceof TileEntityGenerator) && !(t instanceof TileEntitySolarPanel)) {
+                IEnergyNode n = getNode(t);
+                if (n != null && n.getEnergyStored() < n.getMaxEnergyStored()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static IEnergyNode getNode(TileEntity tile) {

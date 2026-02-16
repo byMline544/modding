@@ -15,7 +15,7 @@ public class ItemBronzeArmor extends ItemArmor {
         super(id, material, renderIndex, armorType);
         this.textureKey = textureKey;
         setUnlocalizedName(textureKey);
-        setCreativeTab(TCWCreativeTab.TAB);
+        setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
     }
 
     @Override

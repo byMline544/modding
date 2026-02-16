@@ -14,7 +14,7 @@ public class TCWItem extends Item {
         super(id);
         this.textureKey = textureKey;
         setUnlocalizedName(textureKey);
-        setCreativeTab(TCWCreativeTab.TAB);
+        setCreativeTab(TCWCreativeTab.TAB_COMPONENTS);
     }
 
     @Override

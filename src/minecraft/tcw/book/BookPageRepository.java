@@ -79,6 +79,11 @@ public class BookPageRepository {
                                 new ItemStack(ItemManager.energyMatrix)},
                         new ItemStack(ItemManager.quantumCore)),
 
+                new Entry("Достижения", "Откройте книгу, чтобы начать ветку прогресса.
+Всего доступно 20 достижений: от бронзы до квантовых технологий.",
+                        new ItemStack[] {new ItemStack(ItemManager.techBook), new ItemStack(ItemManager.quantumCore)},
+                        new ItemStack(BlockManager.machineCasing)),
+
                 new Entry("Цель прогресса", "Постройте стабильную сеть: генерация -> хранение -> переработка -> автоматизация.\n\nПереходите к продвинутым панелям и полной автоматике.",
                         new ItemStack[] {new ItemStack(BlockManager.solarAdvanced), new ItemStack(ItemManager.batteryAdvanced),
                                 new ItemStack(BlockManager.machines[MachineTier.CHARGER.ordinal()])},

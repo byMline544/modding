@@ -21,47 +21,36 @@ public class ItemBlockMachineInfo extends ItemBlock {
             return;
         }
 
-        // Краткая тех.карта машины в подсказке предмета.
+        if (key.contains("machine_casing")) {
+            list.add("Базовый корпус для сборки машин");
+            return;
+        }
+
         if (key.contains("crusher") || key.contains("macerator")) {
-            list.add("Потребление: 20 EU/t");
-            list.add("Скорость: 120 тиков/операция");
-            list.add("Требует: подключение к энергосети");
+            list.add("20 EU/t • 120 тиков");
         } else if (key.contains("compressor")) {
-            list.add("Потребление: 28 EU/t");
-            list.add("Скорость: 160 тиков/операция");
-            list.add("Требует: подключение к энергосети");
+            list.add("28 EU/t • 160 тиков");
         } else if (key.contains("electric_furnace")) {
-            list.add("Потребление: 24 EU/t");
-            list.add("Скорость: 140 тиков/операция");
-            list.add("Требует: подключение к энергосети");
+            list.add("24 EU/t • 140 тиков");
         } else if (key.contains("alloy_smelter")) {
-            list.add("Потребление: 36 EU/t");
-            list.add("Скорость: 180 тиков/операция");
-            list.add("Требует: подключение к энергосети");
+            list.add("36 EU/t • 180 тиков");
         } else if (key.contains("wiremill")) {
-            list.add("Потребление: 16 EU/t");
-            list.add("Скорость: 100 тиков/операция");
-            list.add("Требует: подключение к энергосети");
+            list.add("16 EU/t • 100 тиков");
         } else if (key.contains("extractor")) {
-            list.add("Потребление: 26/40 EU/t");
-            list.add("Режимы: обычный / turbo");
-            list.add("Требует: подключение к энергосети");
+            list.add("26/40 EU/t • обычный/turbo");
         } else if (key.contains("assembler")) {
-            list.add("Потребление: 30/48 EU/t");
-            list.add("Режимы: обычный / precision");
-            list.add("Требует: подключение к энергосети");
+            list.add("30/48 EU/t • обычный/precision");
         } else if (key.contains("charger")) {
-            list.add("Потребление: 500/900 EU/t");
-            list.add("Режимы: normal / fast");
-            list.add("Заряжает электрические предметы");
+            list.add("500/900 EU/t • normal/fast");
         } else if (key.contains("generator")) {
-            list.add("Выработка: до 80 EU/t");
-            list.add("Топливо: уголь и совместимое");
-            list.add("Отдача: в соседние кабели/машины");
+            list.add("Генерация до 80 EU/t");
         } else if (key.contains("solar")) {
-            list.add("Работает: только днём");
-            list.add("Выход: зависит от уровня панели");
-            list.add("Отдача: в соседнюю энергосеть");
+            list.add("Генерация днём • зависит от уровня");
+        }
+
+        if (key.contains("crusher") || key.contains("compressor") || key.contains("electric_furnace") || key.contains("alloy_smelter")
+                || key.contains("wiremill") || key.contains("extractor") || key.contains("assembler") || key.contains("charger")) {
+            list.add("Работает только при подключении к сети");
         }
     }
 }

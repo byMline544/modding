@@ -23,7 +23,7 @@ public class BlockCable extends BlockContainer {
         setUnlocalizedName("energy_cable_" + tier.textureSuffix);
         setHardness(0.6F);
         setResistance(1.0F);
-        setCreativeTab(tcw.TCWCreativeTab.TAB);
+        setCreativeTab(tcw.TCWCreativeTab.TAB_MACHINES);
     }
 
     @Override

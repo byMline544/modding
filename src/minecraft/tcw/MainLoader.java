@@ -40,6 +40,12 @@ public class MainLoader {
     public void preInit(FMLPreInitializationEvent event) {
         LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud", "ru_RU", "TechnoCloud");
         LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud", "en_US", "TechnoCloud");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.machines", "ru_RU", "TC> Механизмы, блоки, руды");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.machines", "en_US", "TC> Machines, blocks, ores");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.equipment", "ru_RU", "TC> Оружие, инструменты, броня");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.equipment", "en_US", "TC> Weapons, tools, armor");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.components", "ru_RU", "TC> Компоненты и предметы");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.technocloud.components", "en_US", "TC> Components and items");
         ItemManager.initItems();
         BlockManager.initBlocks();
         WorldManager.registerWorldGen();
