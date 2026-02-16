@@ -23,6 +23,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         int cost = fastMode ? 900 : 500;
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canCharge() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;

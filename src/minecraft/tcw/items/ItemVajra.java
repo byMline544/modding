@@ -11,31 +11,28 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.world.World;
 import tcw.TCWCreativeTab;
 
-public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
+public class ItemVajra extends ItemPickaxe implements IElectricItemTCW {
 
-    private final String textureKey;
     private final int maxEnergy;
-    private final int damageVsEntity;
 
-    public ItemElectricSword(int id, EnumToolMaterial material, String textureKey) {
+    public ItemVajra(int id, EnumToolMaterial material, int maxEnergy) {
         super(id, material);
-        this.textureKey = textureKey;
-        this.maxEnergy = textureKey.contains("quantum") ? 1200000 : 400000;
-        this.damageVsEntity = textureKey.contains("quantum") ? 24 : 14;
-        setUnlocalizedName(textureKey);
+        this.maxEnergy = maxEnergy;
+        setUnlocalizedName("vajra");
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
         setMaxDamage(0);
+        setMaxStackSize(1);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister register) {
-        itemIcon = register.registerIcon("technocloud:" + textureKey);
+        itemIcon = register.registerIcon("technocloud:vajra");
     }
 
     @Override
@@ -53,44 +50,49 @@ public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
     }
 
     public double getDurabilityForDisplay(ItemStack stack) {
-        int max = getMaxEnergy(stack);
         int energy = ElectricItemHelper.getEnergy(stack);
-        if (max <= 0) {
-            return 1.0D;
+        return 1.0D - ((double) energy / (double) maxEnergy);
+    }
+
+    @Override
+    public float getStrVsBlock(ItemStack stack, Block block) {
+        if (ElectricItemHelper.getEnergy(stack) <= 0) {
+            return 1.0F;
         }
-        return 1.0D - ((double) energy / (double) max);
+        return 24.0F;
     }
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
         Block block = Block.blocksList[blockId];
-        if (block != null && block.getBlockHardness(world, x, y, z) > 0.0F) {
-            ElectricItemHelper.addEnergy(stack, -150);
+        if (block != null) {
+            float hardness = block.getBlockHardness(world, x, y, z);
+            if (hardness > 0.0F) {
+                int cost = Math.max(140, Math.round(220.0F + hardness * 230.0F));
+                ElectricItemHelper.addEnergy(stack, -cost);
+            }
         }
         return true;
     }
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLiving target, EntityLiving attacker) {
-        ElectricItemHelper.addEnergy(stack, -350);
+        ElectricItemHelper.addEnergy(stack, -420);
         return true;
     }
 
     @Override
     public int getDamageVsEntity(Entity entity) {
-        if (entity == null) {
-            return super.getDamageVsEntity(entity);
-        }
-        return damageVsEntity;
+        return 16;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         int energy = ElectricItemHelper.getEnergy(stack);
-        list.add("Электро-предмет");
-        list.add("Зарядка: в Заряднике");
-        list.add("Энергия: " + energy + " / " + getMaxEnergy(stack));
+        list.add("Разрушитель класса Ваджра");
+        list.add("Быстро копает и наносит высокий урон");
+        list.add("Энергия: " + energy + " / " + maxEnergy);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,7 +100,7 @@ public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
     @Override
     public void getSubItems(int id, CreativeTabs tab, List list) {
         ItemStack charged = new ItemStack(id, 1, 0);
-        ElectricItemHelper.setEnergy(charged, getMaxEnergy(charged));
+        ElectricItemHelper.setEnergy(charged, maxEnergy);
         list.add(charged);
 
         ItemStack empty = new ItemStack(id, 1, 0);

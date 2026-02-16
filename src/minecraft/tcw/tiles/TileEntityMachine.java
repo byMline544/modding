@@ -20,6 +20,28 @@ public class TileEntityMachine extends TileEntity {
         return storage;
     }
 
+
+    public static void resetNearbyMachineEnergy(net.minecraft.world.World world, int x, int y, int z, int radius) {
+        if (world == null || world.isRemote) {
+            return;
+        }
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    net.minecraft.tileentity.TileEntity te = world.getBlockTileEntity(x + dx, y + dy, z + dz);
+                    if (te instanceof TileEntityMachine) {
+                        TileEntityMachine machine = (TileEntityMachine) te;
+                        if (machine.storage.getEnergyStored() > 0) {
+                            machine.storage.setEnergy(0);
+                            world.markBlockForUpdate(x + dx, y + dy, z + dz);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void updateEntity() {
         // Базовые машины сами не раздают энергию, чтобы не возникал пинг-понг по сети.

@@ -21,6 +21,7 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
 
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 16;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(16, false);
             progress++;

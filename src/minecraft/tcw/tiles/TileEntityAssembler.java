@@ -51,6 +51,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         int cost = precisionMode ? 48 : 30;
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;

@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemPickaxe;
@@ -22,9 +23,10 @@ public class ItemElectricPickaxe extends ItemPickaxe implements IElectricItemTCW
     public ItemElectricPickaxe(int id, EnumToolMaterial material, String textureKey) {
         super(id, material);
         this.textureKey = textureKey;
-        this.maxEnergy = textureKey.contains("quantum") ? 3200000 : 1000000;
+        this.maxEnergy = textureKey.contains("quantum") ? 1600000 : 500000;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
+        setMaxDamage(0);
     }
 
     @Override
@@ -43,25 +45,35 @@ public class ItemElectricPickaxe extends ItemPickaxe implements IElectricItemTCW
         return false;
     }
 
-    @Override
     public boolean showDurabilityBar(ItemStack stack) {
         return true;
     }
 
-    @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         int max = getMaxEnergy(stack);
         int energy = ElectricItemHelper.getEnergy(stack);
-        if (max <= 0) return 1.0D;
+        if (max <= 0) {
+            return 1.0D;
+        }
         return 1.0D - ((double) energy / (double) max);
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, net.minecraft.entity.EntityLivingBase entity) {
-        Block b = Block.blocksList[blockId];
-        if (b != null && b.getBlockHardness(world, x, y, z) > 0.0F) {
-            ElectricItemHelper.addEnergy(stack, -250);
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
+        Block block = Block.blocksList[blockId];
+        if (block != null) {
+            float hardness = block.getBlockHardness(world, x, y, z);
+            if (hardness > 0.0F) {
+                int cost = Math.max(80, Math.round(120.0F + hardness * 180.0F));
+                ElectricItemHelper.addEnergy(stack, -cost);
+            }
         }
+        return true;
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLiving target, EntityLiving attacker) {
+        ElectricItemHelper.addEnergy(stack, -220);
         return true;
     }
 
