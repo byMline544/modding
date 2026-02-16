@@ -13,13 +13,14 @@ public class ItemWrench extends TCWItem {
     public ItemWrench(int id) {
         super(id, "wrench");
         setMaxStackSize(1);
+        setMaxDamage(120);
     }
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY,
             float hitZ) {
         if (world.isRemote) {
-            return true;
+            return false;
         }
 
         int id = world.getBlockId(x, y, z);
@@ -37,6 +38,8 @@ public class ItemWrench extends TCWItem {
             EntityItem entityItem = new EntityItem(world, x + 0.5D, y + 0.6D, z + 0.5D, drop);
             world.spawnEntityInWorld(entityItem);
         }
+
+        stack.damageItem(1, player);
         return true;
     }
 }

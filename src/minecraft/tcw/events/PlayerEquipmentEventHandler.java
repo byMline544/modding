@@ -68,12 +68,12 @@ public class PlayerEquipmentEventHandler {
         int sprintCost = 0;
         int jumpCost = 0;
         if (name.contains("quantum_leggings")) {
-            boost = 0.14F;
-            sprintCost = 7;
+            boost = 0.65F;
+            sprintCost = 10;
             jumpCost = 170;
         } else if (name.contains("nano_leggings")) {
-            boost = 0.08F;
-            sprintCost = 4;
+            boost = 0.35F;
+            sprintCost = 6;
             jumpCost = 110;
         }
 
@@ -82,7 +82,8 @@ public class PlayerEquipmentEventHandler {
         }
 
         if (player.onGround && player.isSprinting()) {
-            player.moveFlying(0.0F, 1.0F, boost);
+            player.motionX *= (1.0D + boost);
+            player.motionZ *= (1.0D + boost);
             ElectricItemHelper.addEnergy(legs, -sprintCost);
         }
 

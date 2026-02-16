@@ -9,7 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import tcw.items.ItemMachineModule;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -74,26 +73,8 @@ public class BlockBaseMachine extends BlockContainer {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity tile = world.getBlockTileEntity(x, y, z);
-            ItemStack held = player.getCurrentEquippedItem();
-            if (held != null && held.getItem() instanceof ItemMachineModule && tile instanceof tcw.tiles.TileEntityMachine
-                    && !(tile instanceof tcw.tiles.TileEntitySolarPanel)) {
-                ItemMachineModule module = (ItemMachineModule) held.getItem();
-                if (((tcw.tiles.TileEntityMachine) tile).installModule(module.getModuleType())) {
-                    if (!player.capabilities.isCreativeMode) {
-                        held.stackSize--;
-                        if (held.stackSize <= 0) {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                        }
-                    }
-                    world.markBlockForUpdate(x, y, z);
-                    return true;
-                }
-            }
-            if (guiId >= 0) {
-                player.openGui(tcw.MainLoader.instance, guiId, world, x, y, z);
-            }
+        if (!world.isRemote && guiId >= 0) {
+            player.openGui(tcw.MainLoader.instance, guiId, world, x, y, z);
         }
         return true;
     }

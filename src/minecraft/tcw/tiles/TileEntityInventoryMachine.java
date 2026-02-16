@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import tcw.items.ItemMachineModule;
 
 public abstract class TileEntityInventoryMachine extends TileEntityMachine implements IInventory {
 
@@ -12,7 +13,15 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
 
     protected TileEntityInventoryMachine(int capacity, int slots) {
         super(capacity);
-        this.inventory = new ItemStack[slots];
+        this.inventory = new ItemStack[slots + 8];
+    }
+
+    public int getModuleSlotStart() {
+        return inventory.length - 8;
+    }
+
+    public int getModuleSlotCount() {
+        return 8;
     }
 
     @Override
@@ -82,13 +91,23 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
     public void closeChest() {
     }
 
-
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        if (slot >= getModuleSlotStart()) {
+            return stack != null && stack.getItem() instanceof ItemMachineModule;
+        }
         return isStackValidForSlot(slot, stack);
     }
 
     public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        if (worldObj != null && worldObj.isRemote && storage.getEnergyStored() > 0 && worldObj.rand.nextInt(6) == 0) {
+            worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
+        }
     }
 
     protected boolean hasExternalPowerLink() {
@@ -107,29 +126,22 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
             if (tile instanceof TileEntityCable && ((TileEntityCable) tile).getStorage().getEnergyStored() > 0) {
                 return true;
             }
+            if (tile instanceof TileEntityEnergyBuffer && ((TileEntityEnergyBuffer) tile).getStorage().getEnergyStored() > 0) {
+                return true;
+            }
         }
         return false;
     }
-
-    /**
-     * Сбрасывает энергию машины при потере подключения к энергосети.
-     *
-     * @return true если связь с сетью есть, иначе false.
-     */
 
     protected void tickMachineEffects(boolean active) {
         if (!active || worldObj == null) {
             return;
         }
 
-        if (worldObj.rand.nextInt(6) == 0) {
-            worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
-        }
         if (!worldObj.isRemote && worldObj.getWorldTime() % 40 == 0) {
             worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "random.fizz", 0.2F, 1.8F);
         }
     }
-
 
     protected int getEnergyCostWithModules(int baseCost) {
         int over = getOverclockerModules();

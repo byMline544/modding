@@ -42,6 +42,10 @@ public class TileEntityMachine extends TileEntity {
         return 128 + transformerModules * 128;
     }
 
+    public int getDesiredReceivePerTick() {
+        return 32 + overclockerModules * 24;
+    }
+
     public boolean installModule(int moduleType) {
         if (moduleType == 0 && overclockerModules < 8) {
             overclockerModules++;
@@ -64,7 +68,7 @@ public class TileEntityMachine extends TileEntity {
             return;
         }
         worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-        worldObj.createExplosion(null, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, 2.4F + incoming / 350.0F, true);
+        worldObj.createExplosion(null, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, 1.0F, false);
     }
 
     protected void updateStorageCapacity() {
@@ -97,7 +101,7 @@ public class TileEntityMachine extends TileEntity {
 
     @Override
     public void updateEntity() {
-        // Базовые машины сами не раздают энергию, чтобы не возникал пинг-понг по сети.
+        // Базовые машины сами не раздают энергию.
     }
 
     @Override

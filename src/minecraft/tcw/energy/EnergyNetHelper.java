@@ -79,6 +79,7 @@ public class EnergyNetHelper {
                     machineTarget.onOvervoltage(canSend);
                     continue;
                 }
+                canSend = Math.min(canSend, machineTarget.getDesiredReceivePerTick());
             }
 
             int accepted = targetNode.receiveEnergy(canSend, false);

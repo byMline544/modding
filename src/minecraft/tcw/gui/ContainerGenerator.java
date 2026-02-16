@@ -19,6 +19,10 @@ public class ContainerGenerator extends Container {
         this.machine = machine;
         addSlotToContainer(new Slot(machine, 0, 80, 35));
 
+        for (int i = 0; i < machine.getModuleSlotCount(); i++) {
+            addSlotToContainer(new SlotMachineModule(machine, machine.getModuleSlotStart() + i, 152, 8 + i * 16));
+        }
+
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
@@ -77,7 +81,7 @@ public class ContainerGenerator extends Container {
             ItemStack inSlot = slot.getStack();
             itemstack = inSlot.copy();
 
-            if (index == 0) {
+            if (index < 1 + machine.getModuleSlotCount()) {
                 if (!this.mergeItemStack(inSlot, 1, this.inventorySlots.size(), true)) {
                     return null;
                 }

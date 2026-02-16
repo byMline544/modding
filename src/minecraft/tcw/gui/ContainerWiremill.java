@@ -19,6 +19,10 @@ public class ContainerWiremill extends Container {
         addSlotToContainer(new Slot(machine, 0, 56, 35));
         addSlotToContainer(new Slot(machine, 1, 116, 35));
 
+        for (int i = 0; i < machine.getModuleSlotCount(); i++) {
+            addSlotToContainer(new SlotMachineModule(machine, machine.getModuleSlotStart() + i, 152, 8 + i * 16));
+        }
+
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
@@ -68,7 +72,7 @@ public class ContainerWiremill extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack inSlot = slot.getStack();
             itemstack = inSlot.copy();
-            if (index < 2) {
+            if (index < 2 + machine.getModuleSlotCount()) {
                 if (!this.mergeItemStack(inSlot, 2, this.inventorySlots.size(), true)) {
                     return null;
                 }

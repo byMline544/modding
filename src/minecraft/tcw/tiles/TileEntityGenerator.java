@@ -10,23 +10,35 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
     public int burnTime;
     private int currentItemBurnTime;
     private boolean ecoMode;
+    private int burnTickAccumulator;
 
     public TileEntityGenerator() {
         super(160000, 1);
     }
 
     @Override
+    public int getDesiredReceivePerTick() {
+        return 0;
+    }
+
+    @Override
     public void updateEntity() {
+        super.updateEntity();
         if (worldObj.isRemote) {
             return;
         }
 
         int outputPerTick = ecoMode ? 2 : 3;
         boolean hadBurning = burnTime > 0;
+        int fuelSaveDivider = 1 + getOverclockerModules();
 
         if (burnTime > 0 && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
-            burnTime--;
-            storage.receiveEnergy(outputPerTick, false);
+            burnTickAccumulator++;
+            if (burnTickAccumulator >= fuelSaveDivider) {
+                burnTime--;
+                burnTickAccumulator = 0;
+            }
+            storage.receiveEnergy(outputPerTick + getOverclockerModules(), false);
         }
 
         if (burnTime <= 0 && inventory[0] != null && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
@@ -34,6 +46,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             if (itemBurn > 0) {
                 currentItemBurnTime = Math.max(12, itemBurn / 24);
                 burnTime = currentItemBurnTime;
+                burnTickAccumulator = 0;
                 inventory[0].stackSize--;
                 if (inventory[0].stackSize <= 0) {
                     inventory[0] = null;
@@ -44,6 +57,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
 
         int reserve = ecoMode ? 180 : 260;
         int sendPerTick = ecoMode ? 14 : 18;
+        sendPerTick += getTransformerModules() * 12;
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick);
         }
@@ -74,6 +88,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         burnTime = nbt.getInteger("BurnTime");
         currentItemBurnTime = nbt.getInteger("CurrentItemBurnTime");
         ecoMode = nbt.getBoolean("EcoMode");
+        burnTickAccumulator = nbt.getInteger("BurnAcc");
         if (currentItemBurnTime <= 0) {
             currentItemBurnTime = 200;
         }
@@ -85,6 +100,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         nbt.setInteger("BurnTime", burnTime);
         nbt.setInteger("CurrentItemBurnTime", currentItemBurnTime);
         nbt.setBoolean("EcoMode", ecoMode);
+        nbt.setInteger("BurnAcc", burnTickAccumulator);
     }
 
     public int getBurnTime() {
