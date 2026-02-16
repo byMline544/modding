@@ -19,7 +19,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         if (worldObj.isRemote) return;
 
         int cost = fastMode ? 900 : 500;
-        boolean canRun = canCharge() && storage.getEnergyStored() >= cost;
+        boolean canRun = canCharge() && hasExternalPowerLink() && storage.getEnergyStored() >= cost;
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;

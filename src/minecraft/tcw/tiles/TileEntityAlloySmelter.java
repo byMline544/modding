@@ -19,7 +19,7 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && storage.getEnergyStored() >= 36;
+        boolean canRun = canProcess() && hasExternalPowerLink() && storage.getEnergyStored() >= 36;
         if (canRun) {
             storage.extractEnergy(36, false);
             progress++;

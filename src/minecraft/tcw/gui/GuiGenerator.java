@@ -28,7 +28,7 @@ public class GuiGenerator extends GuiContainer {
         super.initGui();
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
-        modeButton = new GuiButton(0, x + 8, y + 58, 70, 20, getModeText());
+        modeButton = new GuiButton(0, x + 8, y + 56, 62, 16, getModeText());
         buttonList.add(modeButton);
     }
 

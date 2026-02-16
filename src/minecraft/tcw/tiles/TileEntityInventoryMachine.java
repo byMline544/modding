@@ -91,6 +91,20 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
         return false;
     }
 
+    protected boolean hasExternalPowerLink() {
+        if (worldObj == null) {
+            return false;
+        }
+        int[][] o = new int[][] { {1,0,0}, {-1,0,0}, {0,1,0}, {0,-1,0}, {0,0,1}, {0,0,-1} };
+        for (int i = 0; i < o.length; i++) {
+            net.minecraft.tileentity.TileEntity tile = worldObj.getBlockTileEntity(xCoord + o[i][0], yCoord + o[i][1], zCoord + o[i][2]);
+            if (tile instanceof TileEntityCable || tile instanceof TileEntityGenerator || tile instanceof TileEntitySolarPanel) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);

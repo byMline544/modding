@@ -49,7 +49,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         }
 
         int cost = precisionMode ? 48 : 30;
-        boolean canRun = canProcess() && storage.getEnergyStored() >= cost;
+        boolean canRun = canProcess() && hasExternalPowerLink() && storage.getEnergyStored() >= cost;
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;

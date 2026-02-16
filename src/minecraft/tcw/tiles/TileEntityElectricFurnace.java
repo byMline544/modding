@@ -19,7 +19,7 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canSmelt() && storage.getEnergyStored() >= 24;
+        boolean canRun = canSmelt() && hasExternalPowerLink() && storage.getEnergyStored() >= 24;
         if (canRun) {
             storage.extractEnergy(24, false);
             progress++;

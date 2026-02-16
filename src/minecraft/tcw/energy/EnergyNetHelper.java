@@ -90,6 +90,11 @@ public class EnergyNetHelper {
             return false;
         }
 
+        // панели и генераторы не принимают энергию от сети (только собственная генерация).
+        if (target instanceof TileEntitySolarPanel || target instanceof TileEntityGenerator) {
+            return false;
+        }
+
         // чтобы убрать «высасывание в пустоту» на длинных линиях:
         // кабель не отправляет в кабель с равной/большей энергией.
         if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
