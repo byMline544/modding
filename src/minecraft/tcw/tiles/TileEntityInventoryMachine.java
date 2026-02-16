@@ -13,15 +13,15 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
 
     protected TileEntityInventoryMachine(int capacity, int slots) {
         super(capacity);
-        this.inventory = new ItemStack[slots + 8];
+        this.inventory = new ItemStack[slots + 4];
     }
 
     public int getModuleSlotStart() {
-        return inventory.length - 8;
+        return inventory.length - 4;
     }
 
     public int getModuleSlotCount() {
-        return 8;
+        return 4;
     }
 
     @Override
@@ -105,8 +105,14 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (worldObj != null && worldObj.isRemote && storage.getEnergyStored() > 0 && worldObj.rand.nextInt(6) == 0) {
-            worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
+        int expectedCapacity = baseCapacity + getCapacityModules() * 50000;
+        if (storage.getMaxEnergyStored() != expectedCapacity) {
+            int energy = storage.getEnergyStored();
+            storage = new tcw.energy.EnergyStorageTCW(expectedCapacity);
+            storage.setEnergy(Math.min(energy, expectedCapacity));
+            if (worldObj != null && !worldObj.isRemote) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
         }
     }
 
@@ -138,7 +144,14 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
             return;
         }
 
-        if (!worldObj.isRemote && worldObj.getWorldTime() % 40 == 0) {
+        if (worldObj.isRemote) {
+            if (worldObj.rand.nextInt(4) == 0) {
+                worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
+            }
+            return;
+        }
+
+        if (worldObj.getWorldTime() % 40 == 0) {
             worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "random.fizz", 0.2F, 1.8F);
         }
     }
@@ -165,6 +178,35 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
             }
         }
         return linked;
+    }
+
+
+    @Override
+    public int getOverclockerModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_OVERCLOCKER);
+    }
+
+    @Override
+    public int getTransformerModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_TRANSFORMER);
+    }
+
+    @Override
+    public int getCapacityModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_CAPACITY);
+    }
+
+    private int getInstalledModuleCount(int moduleType) {
+        int count = 0;
+        for (int i = getModuleSlotStart(); i < inventory.length; i++) {
+            ItemStack stack = inventory[i];
+            if (stack != null && stack.getItem() instanceof ItemMachineModule) {
+                if (((ItemMachineModule) stack.getItem()).getModuleType() == moduleType) {
+                    count += stack.stackSize;
+                }
+            }
+        }
+        return Math.min(4, count);
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import tcw.items.ItemMachineModule;
+import tcw.tiles.TileEntityInventoryMachine;
 
 public class SlotMachineModule extends Slot {
 
@@ -13,11 +14,33 @@ public class SlotMachineModule extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack != null && stack.getItem() instanceof ItemMachineModule;
+        if (stack == null || !(stack.getItem() instanceof ItemMachineModule)) {
+            return false;
+        }
+
+        if (!(inventory instanceof TileEntityInventoryMachine)) {
+            return true;
+        }
+
+        TileEntityInventoryMachine machine = (TileEntityInventoryMachine) inventory;
+        int type = ((ItemMachineModule) stack.getItem()).getModuleType();
+        for (int i = machine.getModuleSlotStart(); i < machine.getModuleSlotStart() + machine.getModuleSlotCount(); i++) {
+            if (i == getSlotIndex()) {
+                continue;
+            }
+            ItemStack inSlot = machine.getStackInSlot(i);
+            if (inSlot != null && inSlot.getItem() instanceof ItemMachineModule) {
+                if (((ItemMachineModule) inSlot.getItem()).getModuleType() == type) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
     public int getSlotStackLimit() {
-        return 8;
+        return 1;
     }
 }

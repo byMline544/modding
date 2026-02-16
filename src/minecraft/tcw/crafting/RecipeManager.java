@@ -137,6 +137,10 @@ public class RecipeManager {
         GameRegistry.addRecipe(new ItemStack(ItemManager.moduleOverclocker), "RCR", "CMC", "RCR", 'R', Item.redstone, 'C', ItemManager.advancedCircuit, 'M', ItemManager.reinforcedPlate);
         GameRegistry.addRecipe(new ItemStack(ItemManager.moduleTransformer), "ICI", "CMC", "ICI", 'I', Item.ingotIron, 'C', ItemManager.advancedCircuit, 'M', ItemManager.energyMatrix);
         GameRegistry.addRecipe(new ItemStack(ItemManager.moduleCapacity), "BTB", "CMC", "BTB", 'B', ItemManager.batteryAdvanced, 'T', ItemManager.tinIngot, 'C', ItemManager.reinforcedPlate, 'M', ItemManager.coolingCell);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.armorModuleNightVision), "GLG", "CEC", "GRG", 'G', Block.glass, 'L', ItemManager.lens, 'C', ItemManager.advancedCircuit, 'E', Item.eyeOfEnder, 'R', Item.redstone);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.armorModuleFastRun), "SRS", "CEC", "SRS", 'S', Item.silk, 'R', Item.redstone, 'C', ItemManager.nanoFiber, 'E', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(BlockManager.modificationTable), "ICI", "CMC", "IRI", 'I', Item.ingotIron, 'C', ItemManager.advancedCircuit, 'M', BlockManager.machineCasing, 'R', Item.redstone);
     }
 
     private static void registerElectricEquipment() {

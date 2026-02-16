@@ -17,6 +17,7 @@ import tcw.items.ItemElectricSword;
 import tcw.items.ItemTechBook;
 import tcw.items.ItemJetpack;
 import tcw.items.ItemMachineModule;
+import tcw.items.ItemArmorModule;
 import tcw.items.ItemVajra;
 import tcw.items.ItemWrench;
 import tcw.items.TCWItem;
@@ -68,6 +69,8 @@ public class ItemManager {
     public static Item moduleOverclocker;
     public static Item moduleTransformer;
     public static Item moduleCapacity;
+    public static Item armorModuleNightVision;
+    public static Item armorModuleFastRun;
 
     public static Item batteryBasic;
     public static Item batteryAdvanced;
@@ -140,9 +143,11 @@ public class ItemManager {
         moduleOverclocker = registerTool(new ItemMachineModule(28057, "module_overclocker", ItemMachineModule.TYPE_OVERCLOCKER), "module_overclocker", "Модуль-ускоритель");
         moduleTransformer = registerTool(new ItemMachineModule(28058, "module_transformer", ItemMachineModule.TYPE_TRANSFORMER), "module_transformer", "Модуль-трансформатор");
         moduleCapacity = registerTool(new ItemMachineModule(28059, "module_capacity", ItemMachineModule.TYPE_CAPACITY), "module_capacity", "Модуль-ёмкость");
+        armorModuleNightVision = registerTool(new ItemArmorModule(28060, "armor_module_nightvision", ItemArmorModule.TYPE_NIGHT_VISION), "armor_module_nightvision", "Модуль ночного зрения");
+        armorModuleFastRun = registerTool(new ItemArmorModule(28061, "armor_module_fastrun", ItemArmorModule.TYPE_FAST_RUN), "armor_module_fastrun", "Модуль быстрого бега");
 
-        batteryBasic = registerTool(new ItemBattery(28024, "battery_basic", 50000), "battery_basic", "Базовая батарея");
-        batteryAdvanced = registerTool(new ItemBattery(28025, "battery_advanced", 250000), "battery_advanced", "Улучшенная батарея");
+        batteryBasic = registerTool(new ItemBattery(28024, "battery_basic", 16000), "battery_basic", "Базовая батарея");
+        batteryAdvanced = registerTool(new ItemBattery(28025, "battery_advanced", 70000), "battery_advanced", "Улучшенная батарея");
 
         techBook = registerTool(new ItemTechBook(28026), "tech_book", "Справочник TechnoCloud");
         wrench = registerTool(new ItemWrench(28027), "wrench", "Гаечный ключ");
@@ -162,7 +167,7 @@ public class ItemManager {
         nanoPickaxe = registerTool(new ItemElectricPickaxe(28038, ELECTRO_TOOL, "nano_pickaxe"), "nano_pickaxe", "Нано-кирка");
         quantumSword = registerTool(new ItemElectricSword(28039, QUANTUM_TOOL, "quantum_sword"), "quantum_sword", "Квантовый меч");
         quantumPickaxe = registerTool(new ItemElectricPickaxe(28040, QUANTUM_TOOL, "quantum_pickaxe"), "quantum_pickaxe", "Квантовая кирка");
-        vajra = registerTool(new ItemVajra(28053, VAJRA_TOOL, 2200000), "vajra", "Ваджра-разрушитель");
+        vajra = registerTool(new ItemVajra(28053, VAJRA_TOOL, 700000), "vajra", "Ваджра-разрушитель");
 
         nanoHelmet = registerTool(new ItemElectricArmor(28041, NANO_ARMOR, 0, 0, "nano_helmet", "nano"), "nano_helmet", "Нано-шлем");
         nanoChestplate = registerTool(new ItemElectricArmor(28042, NANO_ARMOR, 0, 1, "nano_chestplate", "nano"), "nano_chestplate", "Нано-нагрудник");
@@ -174,9 +179,9 @@ public class ItemManager {
         quantumLeggings = registerTool(new ItemElectricArmor(28047, QUANTUM_ARMOR, 0, 2, "quantum_leggings", "quantum"), "quantum_leggings", "Квантовые поножи");
         quantumBoots = registerTool(new ItemElectricArmor(28048, QUANTUM_ARMOR, 0, 3, "quantum_boots", "quantum"), "quantum_boots", "Квантовые ботинки");
 
-        jetpackBasic = registerTool(new ItemJetpack(28054, "jetpack_basic", 400000, 0.09D, 18), "jetpack_basic", "Базовый джетпак");
-        jetpackAdvanced = registerTool(new ItemJetpack(28055, "jetpack_advanced", 900000, 0.12D, 28), "jetpack_advanced", "Продвинутый джетпак");
-        jetpackQuantum = registerTool(new ItemJetpack(28056, "jetpack_quantum", 1800000, 0.15D, 42), "jetpack_quantum", "Квантовый джетпак");
+        jetpackBasic = registerTool(new ItemJetpack(28054, "jetpack_basic", 120000, 0.09D, 18), "jetpack_basic", "Базовый джетпак");
+        jetpackAdvanced = registerTool(new ItemJetpack(28055, "jetpack_advanced", 260000, 0.12D, 28), "jetpack_advanced", "Продвинутый джетпак");
+        jetpackQuantum = registerTool(new ItemJetpack(28056, "jetpack_quantum", 500000, 0.15D, 42), "jetpack_quantum", "Квантовый джетпак");
     }
 
     private static Item registerSimple(int id, String key, String ruName) {

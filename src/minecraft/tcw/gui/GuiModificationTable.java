@@ -4,25 +4,24 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import tcw.tiles.TileEntityCharger;
+import tcw.tiles.TileEntityModificationTable;
 
-public class GuiCharger extends GuiContainer {
+public class GuiModificationTable extends GuiContainer {
 
-    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/charger.png";
-    private final TileEntityCharger machine;
+    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/modification_table.png";
+    private final TileEntityModificationTable table;
 
-    public GuiCharger(InventoryPlayer playerInventory, TileEntityCharger machine) {
-        super(new ContainerCharger(playerInventory, machine));
-        this.machine = machine;
+    public GuiModificationTable(InventoryPlayer playerInventory, TileEntityModificationTable table) {
+        super(new ContainerModificationTable(playerInventory, table));
+        this.table = table;
         this.xSize = 176;
         this.ySize = 166;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        fontRenderer.drawString("Зарядник", 8, 6, 4210752);
-        fontRenderer.drawString("Режим: БЫСТРЫЙ", 8, 26, 0x2f6f2f);
-        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored(), 8, 16, 0x2f6f2f);
+        fontRenderer.drawString("Стол модификации", 8, 6, 4210752);
+        fontRenderer.drawString("Прогресс", 74, 22, 0x2f6f2f);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 
@@ -34,7 +33,7 @@ public class GuiCharger extends GuiContainer {
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-        int progress = machine.getScaledProgress(24);
-        drawTexturedModalRect(x + 79, y + 34, 176, 0, progress + 1, 16);
+        int progress = table.getScaledProgress(24);
+        drawTexturedModalRect(x + 76, y + 34, 176, 0, progress + 1, 16);
     }
 }

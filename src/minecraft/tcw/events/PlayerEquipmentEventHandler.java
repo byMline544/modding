@@ -46,7 +46,7 @@ public class PlayerEquipmentEventHandler {
             return;
         }
 
-        int cost = Math.max(90, (int) (event.distance * 80.0F));
+        int cost = Math.max(80, (int) (event.distance * 70.0F));
         int spend = Math.min(cost, energy);
         ElectricItemHelper.addEnergy(boots, -spend);
         if (spend >= cost) {
@@ -55,7 +55,7 @@ public class PlayerEquipmentEventHandler {
     }
 
     private void applyLeggingsSprintBoost(EntityPlayer player, ItemStack legs) {
-        if (legs == null || legs.getItem() == null) {
+        if (legs == null || legs.getItem() == null || !hasFastRunModule(legs)) {
             return;
         }
 
@@ -68,13 +68,13 @@ public class PlayerEquipmentEventHandler {
         int sprintCost = 0;
         int jumpCost = 0;
         if (name.contains("quantum_leggings")) {
-            boost = 0.65F;
-            sprintCost = 10;
-            jumpCost = 170;
+            boost = 3.0F;
+            sprintCost = 26;
+            jumpCost = 200;
         } else if (name.contains("nano_leggings")) {
-            boost = 0.35F;
-            sprintCost = 6;
-            jumpCost = 110;
+            boost = 1.8F;
+            sprintCost = 16;
+            jumpCost = 140;
         }
 
         if (boost <= 0.0F || ElectricItemHelper.getEnergy(legs) <= 0) {
@@ -90,5 +90,9 @@ public class PlayerEquipmentEventHandler {
         if (!player.onGround && player.motionY > 0.15D) {
             ElectricItemHelper.addEnergy(legs, -jumpCost);
         }
+    }
+
+    private boolean hasFastRunModule(ItemStack stack) {
+        return stack != null && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_FastRunModule");
     }
 }

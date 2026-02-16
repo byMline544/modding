@@ -12,9 +12,7 @@ import tcw.items.IElectricItemTCW;
 
 public class PlayerCombatEventHandler {
 
-    private static final float NANO_ABSORB = 0.10F;
-    private static final float QUANTUM_ABSORB = 0.16F;
-    private static final int ENERGY_PER_DAMAGE = 2200;
+    private static final int ENERGY_PER_DAMAGE = 2800;
 
     @ForgeSubscribe
     public void onLivingHurt(LivingHurtEvent event) {
@@ -27,8 +25,8 @@ public class PlayerCombatEventHandler {
             return;
         }
 
-        float absorbFactor = 0.0F;
         List<ItemStack> electricArmor = new ArrayList<ItemStack>();
+        int totalEnergy = 0;
         for (int i = 0; i < player.inventory.armorInventory.length; i++) {
             ItemStack armor = player.inventory.armorInventory[i];
             if (armor == null || !(armor.getItem() instanceof IElectricItemTCW)) {
@@ -39,36 +37,21 @@ public class PlayerCombatEventHandler {
             if (energy <= 0) {
                 continue;
             }
+
             electricArmor.add(armor);
-
-            String name = armor.getItem().getUnlocalizedName();
-            absorbFactor += (name != null && name.contains("quantum")) ? QUANTUM_ABSORB : NANO_ABSORB;
+            totalEnergy += energy;
         }
 
-        if (absorbFactor <= 0.0F || electricArmor.isEmpty()) {
+        if (electricArmor.isEmpty() || totalEnergy <= 0) {
             return;
         }
 
-        absorbFactor = Math.min(absorbFactor, 0.75F);
-        float blockedDamage = event.ammount * absorbFactor;
-        int requiredEnergy = Math.max(1, Math.round(blockedDamage * ENERGY_PER_DAMAGE));
-
-        int totalEnergy = 0;
-        for (ItemStack armor : electricArmor) {
-            totalEnergy += ElectricItemHelper.getEnergy(armor);
-        }
-        if (totalEnergy <= 0) {
-            return;
-        }
-
-        if (requiredEnergy > totalEnergy) {
-            blockedDamage = blockedDamage * ((float) totalEnergy / (float) requiredEnergy);
-            requiredEnergy = totalEnergy;
-        }
+        int requiredEnergy = Math.max(1, Math.round(event.ammount * ENERGY_PER_DAMAGE));
+        int spent = Math.min(requiredEnergy, totalEnergy);
 
         int pieces = electricArmor.size();
-        int baseDrain = requiredEnergy / pieces;
-        int remainder = requiredEnergy % pieces;
+        int baseDrain = spent / pieces;
+        int remainder = spent % pieces;
         for (int i = 0; i < pieces; i++) {
             ItemStack armor = electricArmor.get(i);
             int targetDrain = baseDrain + (i < remainder ? 1 : 0);
@@ -76,6 +59,12 @@ public class PlayerCombatEventHandler {
             ElectricItemHelper.addEnergy(armor, -Math.min(energy, targetDrain));
         }
 
-        event.ammount = Math.max(0, (int) (event.ammount - blockedDamage));
+        if (spent >= requiredEnergy) {
+            event.ammount = 0.0F;
+            return;
+        }
+
+        float blockedPart = (float) spent / (float) requiredEnergy;
+        event.ammount = Math.max(0.0F, event.ammount * (1.0F - blockedPart));
     }
 }

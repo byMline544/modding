@@ -9,7 +9,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
 
     public int burnTime;
     private int currentItemBurnTime;
-    private boolean ecoMode;
     private int burnTickAccumulator;
 
     public TileEntityGenerator() {
@@ -28,7 +27,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             return;
         }
 
-        int outputPerTick = ecoMode ? 2 : 3;
+        int outputPerTick = 4;
         boolean hadBurning = burnTime > 0;
         int fuelSaveDivider = 1 + getOverclockerModules();
 
@@ -55,8 +54,8 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             }
         }
 
-        int reserve = ecoMode ? 180 : 260;
-        int sendPerTick = ecoMode ? 14 : 18;
+        int reserve = 120;
+        int sendPerTick = 22;
         sendPerTick += getTransformerModules() * 12;
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick);
@@ -87,7 +86,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         super.readFromNBT(nbt);
         burnTime = nbt.getInteger("BurnTime");
         currentItemBurnTime = nbt.getInteger("CurrentItemBurnTime");
-        ecoMode = nbt.getBoolean("EcoMode");
         burnTickAccumulator = nbt.getInteger("BurnAcc");
         if (currentItemBurnTime <= 0) {
             currentItemBurnTime = 200;
@@ -99,7 +97,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         super.writeToNBT(nbt);
         nbt.setInteger("BurnTime", burnTime);
         nbt.setInteger("CurrentItemBurnTime", currentItemBurnTime);
-        nbt.setBoolean("EcoMode", ecoMode);
         nbt.setInteger("BurnAcc", burnTickAccumulator);
     }
 
@@ -115,22 +112,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         int energy = this.storage.getMaxEnergyStored() * scaled / 10000;
         this.storage.setEnergy(energy);
     }
-
-    public boolean isEcoMode() {
-        return ecoMode;
-    }
-
-    public void toggleEcoMode() {
-        ecoMode = !ecoMode;
-        if (worldObj != null) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-    }
-
-    public void setClientEcoMode(int mode) {
-        ecoMode = mode == 1;
-    }
-
     public int getScaledBurnTime(int scale) {
         int max = currentItemBurnTime <= 0 ? 200 : currentItemBurnTime;
         return burnTime * scale / max;

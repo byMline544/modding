@@ -9,7 +9,7 @@ import tcw.items.IElectricItemTCW;
 public class TileEntityCharger extends TileEntityInventoryMachine {
 
     private int progress;
-    private boolean fastMode;
+    private boolean fastMode = true;
 
     public TileEntityCharger() {
         super(180000, 2);
@@ -20,14 +20,14 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         super.updateEntity();
         if (worldObj.isRemote) return;
 
-        int cost = getEnergyCostWithModules(fastMode ? 900 : 500);
+        int cost = getEnergyCostWithModules(900);
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canCharge() && storage.getEnergyStored() >= cost;
         tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress += getProgressStepWithModules();
-            int workTime = isElectricRepairMode() ? 4 : (fastMode ? 60 : 100);
+            int workTime = isElectricRepairMode() ? 4 : 60;
             if (progress >= workTime) {
                 progress = 0;
                 charge();
@@ -66,7 +66,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
 
         if (isElectricRepairMode()) {
             // Заряд электро-предметов по NBT-энергии.
-            ElectricItemHelper.addEnergy(inventory[0], fastMode ? 6000 : 3000);
+            ElectricItemHelper.addEnergy(inventory[0], 6000);
             onInventoryChanged();
             return;
         }
@@ -93,14 +93,14 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) { super.readFromNBT(nbt); progress = nbt.getInteger("Progress"); fastMode = nbt.getBoolean("FastMode"); }
+    public void readFromNBT(NBTTagCompound nbt) { super.readFromNBT(nbt); progress = nbt.getInteger("Progress"); fastMode = true; }
     @Override
     public void writeToNBT(NBTTagCompound nbt) { super.writeToNBT(nbt); nbt.setInteger("Progress", progress); nbt.setBoolean("FastMode", fastMode); }
 
 
     public boolean isFastMode() { return fastMode; }
-    public void toggleFastMode() { fastMode = !fastMode; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
-    public void setClientFastMode(int mode) { fastMode = mode == 1; }
+    public void toggleFastMode() { fastMode = true; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void setClientFastMode(int mode) { fastMode = true; }
 
     public int getProgress() { return progress; }
     public void setClientProgress(int value) { this.progress = value; }

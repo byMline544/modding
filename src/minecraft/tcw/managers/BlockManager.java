@@ -14,6 +14,7 @@ import tcw.blocks.BlockExtractor;
 import tcw.blocks.BlockEnergyBuffer;
 import tcw.blocks.BlockGenerator;
 import tcw.blocks.BlockMacerator;
+import tcw.blocks.BlockModificationTable;
 import tcw.blocks.BlockMachineCasing;
 import tcw.blocks.BlockOreTCW;
 import tcw.blocks.BlockSolarPanel;
@@ -45,6 +46,7 @@ public class BlockManager {
     public static Block batBox;
     public static Block mfe;
     public static Block mfsu;
+    public static Block modificationTable;
 
     public static Block[] machines;
 
@@ -75,6 +77,7 @@ public class BlockManager {
         batBox = registerBlock(new BlockEnergyBuffer(3123, "batbox", TileEntityEnergyBuffer.BufferTier.BATBOX), "batbox", "БАТБОКС");
         mfe = registerBlock(new BlockEnergyBuffer(3124, "mfe", TileEntityEnergyBuffer.BufferTier.MFE), "mfe", "МФЭ");
         mfsu = registerBlock(new BlockEnergyBuffer(3125, "mfsu", TileEntityEnergyBuffer.BufferTier.MFSU), "mfsu", "МФСУ");
+        modificationTable = registerBlock(new BlockModificationTable(3126), "modification_table", "Стол модификации");
 
         machines = new Block[MachineTier.values().length];
         for (int i = 0; i < MachineTier.values().length; i++) {

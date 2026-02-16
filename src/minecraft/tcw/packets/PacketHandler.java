@@ -28,9 +28,6 @@ public class PacketHandler implements IPacketHandler {
             EntityPlayer entityPlayer = (EntityPlayer) player;
             TileEntity tile = entityPlayer.worldObj.getBlockTileEntity(x, y, z);
 
-            if (discriminator == PacketIds.TOGGLE_GENERATOR_MODE && tile instanceof TileEntityGenerator) {
-                ((TileEntityGenerator) tile).toggleEcoMode();
-            }
             if (discriminator == PacketIds.TOGGLE_CHARGER_MODE && tile instanceof TileEntityCharger) {
                 ((TileEntityCharger) tile).toggleFastMode();
             }

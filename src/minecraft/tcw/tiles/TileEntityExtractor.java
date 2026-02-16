@@ -21,7 +21,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
     private static final int FILTER_BLACKLIST = 2;
 
     private int progress;
-    private boolean overclockMode;
+    private boolean overclockMode = true;
     private boolean autoInput;
     private boolean autoOutput;
     private int inputSide;
@@ -259,7 +259,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         progress = nbt.getInteger("Progress");
-        overclockMode = nbt.getBoolean("OverclockMode");
+        overclockMode = true;
         autoInput = nbt.getBoolean("AutoInput");
         autoOutput = nbt.getBoolean("AutoOutput");
         inputSide = normalizeSide(nbt.getInteger("InputSide"), SIDE_WEST);
@@ -326,8 +326,8 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
     public void setClientProgress(int value) { this.progress = value; }
     public void setClientEnergyScaled(int scaled) { this.storage.setEnergy(this.storage.getMaxEnergyStored() * scaled / 10000); }
     public boolean isOverclockMode() { return overclockMode; }
-    public void toggleOverclockMode() { overclockMode = !overclockMode; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
-    public void setClientOverclockMode(int mode) { overclockMode = mode == 1; }
+    public void toggleOverclockMode() { overclockMode = true; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void setClientOverclockMode(int mode) { overclockMode = true; }
     public int getScaledProgress(int scale) { return progress * scale / (overclockMode ? 70 : 120); }
     public boolean isAutoInput() { return autoInput; }
     public boolean isAutoOutput() { return autoOutput; }

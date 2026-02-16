@@ -42,7 +42,8 @@ public class ClientEquipmentEventHandler {
         nPressedLastTick = nPressed;
 
         if (helmet == null || helmet.getItem() == null || helmet.getItem().getUnlocalizedName() == null
-                || !helmet.getItem().getUnlocalizedName().contains("quantum_helmet")) {
+                || !helmet.getItem().getUnlocalizedName().contains("quantum_helmet")
+                || !hasNightVisionModule(helmet)) {
             helmetVisionEnabled = false;
             if (mc.gameSettings.gammaSetting > 1.01F) {
                 mc.gameSettings.gammaSetting = 1.0F;
@@ -59,6 +60,11 @@ public class ClientEquipmentEventHandler {
 
         ElectricItemHelper.addEnergy(helmet, -4);
         mc.gameSettings.gammaSetting = 8.0F;
+    }
+
+
+    private boolean hasNightVisionModule(ItemStack helmet) {
+        return helmet != null && helmet.hasTagCompound() && helmet.getTagCompound().getBoolean("TCW_NightVisionModule");
     }
 
     private void handleJetpack(EntityPlayer player, ItemStack chest) {
