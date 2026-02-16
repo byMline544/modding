@@ -29,7 +29,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
     private int filterMode;
 
     public TileEntityExtractor() {
-        super(220000, 2);
+        super(160000, 2);
         inputSide = SIDE_WEST;
         outputSide = SIDE_EAST;
         filterMode = FILTER_OFF;

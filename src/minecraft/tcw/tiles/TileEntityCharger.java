@@ -10,7 +10,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     private boolean fastMode;
 
     public TileEntityCharger() {
-        super(300000, 2);
+        super(180000, 2);
     }
 
     @Override

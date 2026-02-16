@@ -9,7 +9,7 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityCompressor() {
-        super(200000, 2);
+        super(140000, 2);
     }
 
     @Override

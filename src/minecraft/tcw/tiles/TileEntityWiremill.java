@@ -9,7 +9,7 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
     private int progress;
 
     public TileEntityWiremill() {
-        super(180000, 2);
+        super(120000, 2);
     }
 
     @Override

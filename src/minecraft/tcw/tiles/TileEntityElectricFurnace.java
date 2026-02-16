@@ -9,7 +9,7 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityElectricFurnace() {
-        super(180000, 2);
+        super(140000, 2);
     }
 
     @Override

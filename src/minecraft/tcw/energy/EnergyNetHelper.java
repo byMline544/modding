@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import tcw.tiles.TileEntityCable;
 import tcw.tiles.TileEntityMachine;
+import tcw.tiles.TileEntitySolarPanel;
 
 public class EnergyNetHelper {
 
@@ -15,16 +16,20 @@ public class EnergyNetHelper {
     }
 
     public static void pushToNeighbors(TileEntity source, int maxPerSide) {
-        pushToNeighbors(source, maxPerSide, 0);
+        pushToNeighbors(source, maxPerSide, 0, 0, Integer.MAX_VALUE);
     }
 
     public static void pushToNeighbors(TileEntity source, int maxPerSide, int lossPerTransfer) {
+        pushToNeighbors(source, maxPerSide, lossPerTransfer, 0, Integer.MAX_VALUE);
+    }
+
+    public static void pushToNeighbors(TileEntity source, int maxPerSide, int lossPerTransfer, int keepReserve, int maxTotalPerTick) {
         if (source.worldObj == null || source.worldObj.isRemote) {
             return;
         }
 
         IEnergyNode sourceNode = getNode(source);
-        if (sourceNode == null || sourceNode.getEnergyStored() <= 0) {
+        if (sourceNode == null || sourceNode.getEnergyStored() <= keepReserve) {
             return;
         }
 
@@ -35,7 +40,13 @@ public class EnergyNetHelper {
             start = idx.intValue() % dirs.length;
         }
 
+        int remainingBudget = Math.max(0, maxTotalPerTick);
+
         for (int step = 0; step < dirs.length; step++) {
+            if (remainingBudget <= 0) {
+                break;
+            }
+
             ForgeDirection dir = dirs[(start + step) % dirs.length];
             TileEntity target = source.worldObj.getBlockTileEntity(source.xCoord + dir.offsetX, source.yCoord + dir.offsetY,
                     source.zCoord + dir.offsetZ);
@@ -44,12 +55,18 @@ public class EnergyNetHelper {
                 continue;
             }
 
-            int available = sourceNode.getEnergyStored() - Math.max(0, lossPerTransfer);
+            // Панели не должны заряжать другие панели напрямую.
+            if (source instanceof TileEntitySolarPanel && target instanceof TileEntitySolarPanel) {
+                continue;
+            }
+
+            int available = sourceNode.getEnergyStored() - keepReserve - Math.max(0, lossPerTransfer);
             if (available <= 0) {
                 break;
             }
 
             int canSend = Math.min(maxPerSide, available);
+            canSend = Math.min(canSend, remainingBudget);
             if (canSend <= 0) {
                 continue;
             }
@@ -57,6 +74,7 @@ public class EnergyNetHelper {
             int accepted = targetNode.receiveEnergy(canSend, false);
             if (accepted > 0) {
                 sourceNode.extractEnergy(accepted + Math.max(0, lossPerTransfer), false);
+                remainingBudget -= accepted;
             }
         }
 

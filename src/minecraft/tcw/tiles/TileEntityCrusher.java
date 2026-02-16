@@ -9,7 +9,7 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityCrusher() {
-        super(150000, 2);
+        super(120000, 2);
     }
 
     @Override

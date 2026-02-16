@@ -42,8 +42,10 @@ public class TileEntitySolarPanel extends TileEntityMachine {
             storage.receiveEnergy(generation, false);
         }
 
-        if (storage.getEnergyStored() > 0) {
-            EnergyNetHelper.pushToNeighbors(this, Math.max(32, generation * 4));
+        int reserve = Math.max(generation * 40, storage.getMaxEnergyStored() / 10);
+        int sendPerTick = Math.max(16, generation * 2);
+        if (storage.getEnergyStored() > reserve) {
+            EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick * 2);
         }
 
         if (worldObj.getWorldTime() % 20 == 0) {

@@ -30,7 +30,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     private boolean preferSecondInput;
 
     public TileEntityAssembler() {
-        super(260000, 3);
+        super(180000, 3);
         inputSide = SIDE_WEST;
         outputSide = SIDE_EAST;
         filterMode = FILTER_OFF;

@@ -31,7 +31,7 @@ public class TileEntityCable extends TileEntity {
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote) {
-            EnergyNetHelper.pushToNeighbors(this, tier.transferRate, tier.lossPerTransfer);
+            EnergyNetHelper.pushToNeighbors(this, tier.transferRate, tier.lossPerTransfer, 0, tier.transferRate);
         }
     }
 

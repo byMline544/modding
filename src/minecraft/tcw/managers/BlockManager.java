@@ -46,10 +46,10 @@ public class BlockManager {
         MinecraftForge.setBlockHarvestLevel(oreTin, "pickaxe", 2);
         MinecraftForge.setBlockHarvestLevel(oreNickel, "pickaxe", 2);
 
-        solarBasic = registerBlock(new BlockSolarPanel(3103, "solar_basic", 150000, 8), "solar_basic", "Легкая солнечная панель");
-        solarImproved = registerBlock(new BlockSolarPanel(3104, "solar_improved", 500000, 22), "solar_improved", "Улучшенная солнечная панель");
-        solarAdvanced = registerBlock(new BlockSolarPanel(3105, "solar_advanced", 1000000, 45), "solar_advanced", "Продвинутая солнечная панель");
-        solarUltimate = registerBlock(new BlockSolarPanel(3106, "solar_ultimate", 4000000, 110), "solar_ultimate", "Усовершенствованная солнечная панель");
+        solarBasic = registerBlock(new BlockSolarPanel(3103, "solar_basic", 120000, 8), "solar_basic", "Легкая солнечная панель");
+        solarImproved = registerBlock(new BlockSolarPanel(3104, "solar_improved", 300000, 22), "solar_improved", "Улучшенная солнечная панель");
+        solarAdvanced = registerBlock(new BlockSolarPanel(3105, "solar_advanced", 700000, 45), "solar_advanced", "Продвинутая солнечная панель");
+        solarUltimate = registerBlock(new BlockSolarPanel(3106, "solar_ultimate", 1500000, 110), "solar_ultimate", "Усовершенствованная солнечная панель");
 
         energyCable = registerBlock(new BlockCable(3107, CableTier.BASIC), "energy_cable", "Энергетический кабель (базовый)");
         energyCableReinforced = registerBlock(new BlockCable(3108, CableTier.REINFORCED), "energy_cable_reinforced", "Энергетический кабель (усиленный)");

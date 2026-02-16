@@ -9,7 +9,7 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
     private int progress;
 
     public TileEntityAlloySmelter() {
-        super(240000, 3);
+        super(180000, 3);
     }
 
     @Override
