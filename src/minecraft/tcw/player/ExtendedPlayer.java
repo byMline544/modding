@@ -1,7 +1,8 @@
 package tcw.player;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class ExtendedPlayer implements IExtendedEntityProperties {
@@ -21,7 +22,7 @@ public class ExtendedPlayer implements IExtendedEntityProperties {
     }
 
     @Override
-    public void init(EntityPlayer player, net.minecraft.world.World world) {
+    public void init(Entity entity, World world) {
         discoveredMachines = 0;
     }
 }

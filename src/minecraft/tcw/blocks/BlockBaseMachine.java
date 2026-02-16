@@ -28,7 +28,7 @@ public class BlockBaseMachine extends BlockContainer {
         super(id, Material.iron);
         this.textureKey = textureKey;
         this.guiId = guiId;
-        setBlockName(textureKey);
+        setUnlocalizedName(textureKey);
         setHardness(3.5F);
         setResistance(8.0F);
         setCreativeTab(tcw.TCWCreativeTab.TAB);

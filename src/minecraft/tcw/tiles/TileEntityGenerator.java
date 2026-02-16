@@ -53,7 +53,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && TileEntityFurnace.getItemBurnTime(stack) > 0;
     }
 

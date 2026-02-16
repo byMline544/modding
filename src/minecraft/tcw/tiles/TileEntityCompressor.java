@@ -78,7 +78,7 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && CompressorRecipes.instance().getResult(stack) != null;
     }
 

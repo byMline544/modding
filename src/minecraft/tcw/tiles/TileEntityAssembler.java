@@ -122,7 +122,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     private boolean pullIntoSlot(IInventory source, int targetSlot) {
         for (int i = 0; i < source.getSizeInventory(); i++) {
             ItemStack candidate = source.getStackInSlot(i);
-            if (candidate == null || !isItemValidForSlot(targetSlot, candidate) || !isAllowedByFilter(candidate)) {
+            if (candidate == null || !isStackValidForSlot(targetSlot, candidate) || !isAllowedByFilter(candidate)) {
                 continue;
             }
             if (inventory[targetSlot] != null
@@ -159,7 +159,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         ItemStack one = inventory[2].copy();
         one.stackSize = 1;
         for (int i = 0; i < target.getSizeInventory(); i++) {
-            if (!target.isItemValidForSlot(i, one)) {
+            if (!isTargetSlotValid(target, i, one)) {
                 continue;
             }
             ItemStack slot = target.getStackInSlot(i);
@@ -184,6 +184,25 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
             target.onInventoryChanged();
             onInventoryChanged();
             break;
+        }
+    }
+
+    private boolean isTargetSlotValid(IInventory target, int slot, ItemStack stack) {
+        if (target instanceof TileEntityInventoryMachine) {
+            return ((TileEntityInventoryMachine) target).isStackValidForSlot(slot, stack);
+        }
+        try {
+            java.lang.reflect.Method method = target.getClass().getMethod("isStackValidForSlot", Integer.TYPE, ItemStack.class);
+            Object result = method.invoke(target, Integer.valueOf(slot), stack);
+            return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+        } catch (Exception ignored) {
+            try {
+                java.lang.reflect.Method method = target.getClass().getMethod("isItemValidForSlot", Integer.TYPE, ItemStack.class);
+                Object result = method.invoke(target, Integer.valueOf(slot), stack);
+                return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+            } catch (Exception ignoredToo) {
+                return true;
+            }
         }
     }
 
@@ -231,7 +250,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     public boolean isInvNameLocalized() { return false; }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) return false;
         if (slot == 0) return inventory[1] == null || AssemblerRecipes.instance().getResult(stack, inventory[1]) != null;
         return inventory[0] == null || AssemblerRecipes.instance().getResult(inventory[0], stack) != null;

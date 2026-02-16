@@ -14,7 +14,7 @@ public class BlockOreTCW extends Block {
     public BlockOreTCW(int id, String name) {
         super(id, Material.rock);
         this.textureKey = name;
-        setBlockName(name);
+        setUnlocalizedName(name);
         setHardness(3.0F);
         setResistance(5.0F);
         setCreativeTab(TCWCreativeTab.TAB);

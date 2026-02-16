@@ -82,6 +82,15 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
     public void closeChest() {
     }
 
+
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return isStackValidForSlot(slot, stack);
+    }
+
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
+        return false;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);

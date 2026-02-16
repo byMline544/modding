@@ -119,7 +119,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
         }
         for (int i = 0; i < source.getSizeInventory(); i++) {
             ItemStack candidate = source.getStackInSlot(i);
-            if (candidate == null || !isItemValidForSlot(0, candidate) || !isAllowedByFilter(candidate)) {
+            if (candidate == null || !isStackValidForSlot(0, candidate) || !isAllowedByFilter(candidate)) {
                 continue;
             }
             if (inventory[0] != null && (!inventory[0].isItemEqual(candidate) || inventory[0].stackSize >= inventory[0].getMaxStackSize())) {
@@ -153,7 +153,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
         ItemStack one = inventory[1].copy();
         one.stackSize = 1;
         for (int i = 0; i < target.getSizeInventory(); i++) {
-            if (!target.isItemValidForSlot(i, one)) {
+            if (!isTargetSlotValid(target, i, one)) {
                 continue;
             }
             ItemStack slot = target.getStackInSlot(i);
@@ -178,6 +178,25 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
             target.onInventoryChanged();
             onInventoryChanged();
             break;
+        }
+    }
+
+    private boolean isTargetSlotValid(IInventory target, int slot, ItemStack stack) {
+        if (target instanceof TileEntityInventoryMachine) {
+            return ((TileEntityInventoryMachine) target).isStackValidForSlot(slot, stack);
+        }
+        try {
+            java.lang.reflect.Method method = target.getClass().getMethod("isStackValidForSlot", Integer.TYPE, ItemStack.class);
+            Object result = method.invoke(target, Integer.valueOf(slot), stack);
+            return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+        } catch (Exception ignored) {
+            try {
+                java.lang.reflect.Method method = target.getClass().getMethod("isItemValidForSlot", Integer.TYPE, ItemStack.class);
+                Object result = method.invoke(target, Integer.valueOf(slot), stack);
+                return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+            } catch (Exception ignoredToo) {
+                return true;
+            }
         }
     }
 
@@ -230,7 +249,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && ExtractorRecipes.instance().getResult(stack) != null;
     }
 

@@ -84,7 +84,7 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
             return false;
         }

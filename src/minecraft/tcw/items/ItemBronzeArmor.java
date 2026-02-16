@@ -24,8 +24,7 @@ public class ItemBronzeArmor extends ItemArmor {
         itemIcon = register.registerIcon("technocloud:" + textureKey);
     }
 
-    @Override
-    public String getArmorTextureFile(net.minecraft.item.ItemStack stack) {
+    public String getArmorTexture(net.minecraft.item.ItemStack stack, net.minecraft.entity.Entity entity, int slot, int layer) {
         if (armorType == 2) {
             return "/mods/technocloud/textures/armor/bronze_layer_2.png";
         }

@@ -18,7 +18,7 @@ public class BlockCable extends BlockContainer {
     public BlockCable(int id, CableTier tier) {
         super(id, Material.circuits);
         this.tier = tier;
-        setBlockName("energy_cable_" + tier.textureSuffix);
+        setUnlocalizedName("energy_cable_" + tier.textureSuffix);
         setHardness(0.6F);
         setResistance(1.0F);
         setCreativeTab(tcw.TCWCreativeTab.TAB);

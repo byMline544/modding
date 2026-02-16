@@ -57,7 +57,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     public boolean isInvNameLocalized() { return false; }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && stack.itemID == ItemManager.batteryBasic.itemID;
     }
 

@@ -35,8 +35,8 @@ public class WorldGenOres implements IWorldGenerator {
     }
 
     private void addOreSpawn(int blockId, World world, Random random, int blockXPos, int blockZPos, int maxX,
-            int maxZ, int maxVeinSize, int chancesToSpawn, int minY, int maxY) {
-        int diff = maxY - minY;
+            int maxZ, int maxVeinSize, int chancesToSpawn, int minY) {
+        int diff = maxX - minY;
         for (int i = 0; i < chancesToSpawn; i++) {
             int posX = blockXPos + random.nextInt(maxX);
             int posY = minY + random.nextInt(diff);
