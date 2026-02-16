@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
@@ -62,7 +62,7 @@ public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLivingBase entity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
         Block block = Block.blocksList[blockId];
         if (block != null && block.getBlockHardness(world, x, y, z) > 0.0F) {
             ElectricItemHelper.addEnergy(stack, -150);
@@ -71,7 +71,7 @@ public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(ItemStack stack, EntityLiving target, EntityLiving attacker) {
         ElectricItemHelper.addEnergy(stack, -350);
         return true;
     }

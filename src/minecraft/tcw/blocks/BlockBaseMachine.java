@@ -82,6 +82,7 @@ public class BlockBaseMachine extends BlockContainer {
     @Override
     public void breakBlock(World world, int x, int y, int z, int blockId, int meta) {
         dropInventory(world, x, y, z);
+        tcw.tiles.TileEntityMachine.resetNearbyMachineEnergy(world, x, y, z, 6);
         super.breakBlock(world, x, y, z, blockId, meta);
     }
 

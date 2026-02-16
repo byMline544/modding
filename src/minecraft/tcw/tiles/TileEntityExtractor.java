@@ -49,6 +49,7 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
         int cost = overclockMode ? 44 : 26;
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;

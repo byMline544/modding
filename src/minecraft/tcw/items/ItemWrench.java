@@ -1,6 +1,7 @@
 package tcw.items;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -18,7 +19,7 @@ public class ItemWrench extends TCWItem {
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY,
             float hitZ) {
         if (world.isRemote) {
-            return false;
+            return true;
         }
 
         int id = world.getBlockId(x, y, z);
@@ -27,13 +28,14 @@ public class ItemWrench extends TCWItem {
             return false;
         }
 
-        // На ПКМ снимаем блок без порчи и с гарантированным дропом самого механизма.
+        int meta = world.getBlockMetadata(x, y, z);
         BlockBaseMachine.dropInventory(world, x, y, z);
         world.setBlockToAir(x, y, z);
 
-        ItemStack drop = new ItemStack(id, 1, 0);
+        ItemStack drop = new ItemStack(block, 1, meta);
         if (!player.inventory.addItemStackToInventory(drop)) {
-            player.dropPlayerItemWithRandomChoice(drop, false);
+            EntityItem entityItem = new EntityItem(world, x + 0.5D, y + 0.6D, z + 0.5D, drop);
+            world.spawnEntityInWorld(entityItem);
         }
         return true;
     }

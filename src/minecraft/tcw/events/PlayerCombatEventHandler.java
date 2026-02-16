@@ -11,7 +11,7 @@ public class PlayerCombatEventHandler {
 
     private static final float NANO_ABSORB = 0.15F;
     private static final float QUANTUM_ABSORB = 0.24F;
-    private static final int ENERGY_PER_DAMAGE = 1200;
+    private static final int ENERGY_PER_DAMAGE = 1800;
 
     @ForgeSubscribe
     public void onLivingHurt(LivingHurtEvent event) {
@@ -86,6 +86,6 @@ public class PlayerCombatEventHandler {
             toDrain -= drain;
         }
 
-        event.ammount = Math.max(0.0F, event.ammount - realBlock);
+        event.ammount = Math.max(0, (int) (event.ammount - realBlock));
     }
 }

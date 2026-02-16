@@ -102,6 +102,12 @@ public class BlockCable extends BlockContainer {
     }
 
     @Override
+    public void breakBlock(World world, int x, int y, int z, int blockId, int meta) {
+        tcw.tiles.TileEntityMachine.resetNearbyMachineEnergy(world, x, y, z, 6);
+        super.breakBlock(world, x, y, z, blockId, meta);
+    }
+
+    @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
         float[] b = getBounds(world, x, y, z);
         setBlockBounds(b[0], b[1], b[2], b[3], b[4], b[5]);

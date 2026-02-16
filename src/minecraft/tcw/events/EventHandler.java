@@ -3,6 +3,7 @@ package tcw.events;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -29,17 +30,18 @@ public class EventHandler {
         int x = sr.getScaledWidth() - 72;
         int y = sr.getScaledHeight() - 74;
         FontRenderer fr = mc.fontRenderer;
+        RenderItem itemRenderer = new RenderItem();
 
+        int[] order = new int[] { 3, 2, 1, 0 }; // helmet, chest, legs, boots
         for (int i = 0; i < 4; i++) {
-            ItemStack armor = player.inventory.armorInventory[i];
+            ItemStack armor = player.inventory.armorInventory[order[i]];
             if (armor == null || !(armor.getItem() instanceof IElectricItemTCW)) {
                 continue;
             }
 
             int energy = ElectricItemHelper.getEnergy(armor);
-            mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/items.png"));
-            fr.drawStringWithShadow("Заряд: " + energy, x - 52, y + 4 + i * 16, 0xFFE44D);
-            mc.ingameGUI.drawTexturedModalRect(x + 14, y + i * 16, 0, 0, 16, 16);
+            fr.drawStringWithShadow(String.valueOf(energy), x - 22, y + 4 + i * 16, 0xFFE44D);
+            itemRenderer.renderItemIntoGUI(fr, mc.renderEngine, armor, x + 14, y + i * 16);
         }
     }
 }

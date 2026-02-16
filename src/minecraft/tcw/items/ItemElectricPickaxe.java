@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemPickaxe;
@@ -59,7 +59,7 @@ public class ItemElectricPickaxe extends ItemPickaxe implements IElectricItemTCW
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLivingBase entity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
         Block block = Block.blocksList[blockId];
         if (block != null) {
             float hardness = block.getBlockHardness(world, x, y, z);
@@ -72,7 +72,7 @@ public class ItemElectricPickaxe extends ItemPickaxe implements IElectricItemTCW
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(ItemStack stack, EntityLiving target, EntityLiving attacker) {
         ElectricItemHelper.addEnergy(stack, -220);
         return true;
     }
