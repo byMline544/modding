@@ -12,6 +12,7 @@ import tcw.blocks.BlockCrusher;
 import tcw.blocks.BlockElectricFurnace;
 import tcw.blocks.BlockExtractor;
 import tcw.blocks.BlockGenerator;
+import tcw.blocks.BlockMacerator;
 import tcw.blocks.BlockOreTCW;
 import tcw.blocks.BlockSolarPanel;
 import tcw.blocks.BlockWiremill;
@@ -67,6 +68,8 @@ public class BlockManager {
                 machines[i] = registerBlock(new BlockElectricFurnace(3110 + i), tier.key, tier.ruName);
             } else if (tier == MachineTier.ALLOY_SMELTER) {
                 machines[i] = registerBlock(new BlockAlloySmelter(3110 + i), tier.key, tier.ruName);
+            } else if (tier == MachineTier.MACERATOR) {
+                machines[i] = registerBlock(new BlockMacerator(3110 + i), tier.key, tier.ruName);
             } else if (tier == MachineTier.WIREMILL) {
                 machines[i] = registerBlock(new BlockWiremill(3110 + i), tier.key, tier.ruName);
             } else if (tier == MachineTier.EXTRACTOR) {

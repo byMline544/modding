@@ -8,7 +8,7 @@ public class BlockSolarPanel extends BlockBaseMachine {
     private final int generation;
 
     public BlockSolarPanel(int id, String name, int storage, int generation) {
-        super(id, name);
+        super(id, name, 10);
         this.storage = storage;
         this.generation = generation;
         setStepSound(soundGlassFootstep);

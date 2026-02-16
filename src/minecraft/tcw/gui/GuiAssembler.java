@@ -34,13 +34,13 @@ public class GuiAssembler extends GuiContainer {
         super.initGui();
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
-        modeButton = new GuiButton(0, x + 8, y + 6, 84, 20, getModeText());
-        autoInputButton = new GuiButton(1, x + 94, y + 6, 36, 20, getAutoInputText());
-        autoOutputButton = new GuiButton(2, x + 132, y + 6, 36, 20, getAutoOutputText());
-        inputSideButton = new GuiButton(3, x + 8, y + 28, 80, 20, getInputSideText());
-        outputSideButton = new GuiButton(4, x + 88, y + 28, 80, 20, getOutputSideText());
-        filterButton = new GuiButton(5, x + 8, y + 50, 80, 20, getFilterText());
-        priorityButton = new GuiButton(6, x + 88, y + 50, 80, 20, getPriorityText());
+        modeButton = new GuiButton(0, x + 8, y + 18, 58, 16, getModeText());
+        autoInputButton = new GuiButton(1, x + 68, y + 18, 50, 16, getAutoInputText());
+        autoOutputButton = new GuiButton(2, x + 120, y + 18, 48, 16, getAutoOutputText());
+        inputSideButton = new GuiButton(3, x + 8, y + 36, 80, 16, getInputSideText());
+        outputSideButton = new GuiButton(4, x + 88, y + 36, 80, 16, getOutputSideText());
+        filterButton = new GuiButton(5, x + 8, y + 54, 80, 16, getFilterText());
+        priorityButton = new GuiButton(6, x + 88, y + 54, 80, 16, getPriorityText());
         buttonList.add(modeButton);
         buttonList.add(autoInputButton);
         buttonList.add(autoOutputButton);
@@ -121,7 +121,7 @@ public class GuiAssembler extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        fontRenderer.drawString("Сборщик", 8, 30, 4210752);
+        fontRenderer.drawString("Сборщик", 8, 6, 4210752);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

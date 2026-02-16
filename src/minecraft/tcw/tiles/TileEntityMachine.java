@@ -7,7 +7,7 @@ import tcw.energy.EnergyStorageTCW;
 
 public class TileEntityMachine extends TileEntity {
 
-    protected final EnergyStorageTCW storage;
+    protected EnergyStorageTCW storage;
 
     public TileEntityMachine() {
         this(32000);
