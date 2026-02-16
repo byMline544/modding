@@ -11,6 +11,9 @@ import tcw.items.ItemBronzeHoe;
 import tcw.items.ItemBronzePickaxe;
 import tcw.items.ItemBronzeShovel;
 import tcw.items.ItemBronzeSword;
+import tcw.items.ItemElectricArmor;
+import tcw.items.ItemElectricPickaxe;
+import tcw.items.ItemElectricSword;
 import tcw.items.ItemTechBook;
 import tcw.items.TCWItem;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -20,16 +23,26 @@ public class ItemManager {
 
     public static final EnumToolMaterial BRONZE_TOOL = EnumHelper.addToolMaterial("TCW_BRONZE", 2, 350, 6.5F, 2, 12);
     public static final EnumArmorMaterial BRONZE_ARMOR = EnumHelper.addArmorMaterial("TCW_BRONZE", 18, new int[] { 2, 6, 5, 2 }, 12);
+    public static final EnumToolMaterial ELECTRO_TOOL = EnumHelper.addToolMaterial("TCW_ELECTRO", 3, 2200, 10.0F, 4, 18);
+    public static final EnumToolMaterial QUANTUM_TOOL = EnumHelper.addToolMaterial("TCW_QUANTUM", 4, 3800, 13.0F, 6, 24);
+    public static final EnumArmorMaterial NANO_ARMOR = EnumHelper.addArmorMaterial("TCW_NANO", 33, new int[] { 3, 8, 6, 3 }, 18);
+    public static final EnumArmorMaterial QUANTUM_ARMOR = EnumHelper.addArmorMaterial("TCW_QUANTUM", 44, new int[] { 4, 9, 7, 4 }, 22);
 
     public static Item copperIngot;
     public static Item tinIngot;
     public static Item nickelIngot;
     public static Item bronzeIngot;
+    public static Item silverIngot;
+    public static Item uraniumIngot;
+    public static Item steelIngot;
 
     public static Item copperDust;
     public static Item tinDust;
     public static Item nickelDust;
     public static Item bronzeDust;
+    public static Item silverDust;
+    public static Item uraniumDust;
+    public static Item steelDust;
 
     public static Item mixedDust;
     public static Item carbonPlate;
@@ -37,6 +50,10 @@ public class ItemManager {
     public static Item lens;
     public static Item coil;
     public static Item cable;
+    public static Item nanoFiber;
+    public static Item quantumCore;
+    public static Item energyMatrix;
+    public static Item coolingCell;
 
     public static Item batteryBasic;
     public static Item batteryAdvanced;
@@ -53,39 +70,79 @@ public class ItemManager {
     public static Item bronzeLeggings;
     public static Item bronzeBoots;
 
+    public static Item nanoSword;
+    public static Item nanoPickaxe;
+    public static Item quantumSword;
+    public static Item quantumPickaxe;
+
+    public static Item nanoHelmet;
+    public static Item nanoChestplate;
+    public static Item nanoLeggings;
+    public static Item nanoBoots;
+
+    public static Item quantumHelmet;
+    public static Item quantumChestplate;
+    public static Item quantumLeggings;
+    public static Item quantumBoots;
+
     public static void initItems() {
         copperIngot = registerSimple(28000, "copper_ingot", "Медный слиток");
         tinIngot = registerSimple(28001, "tin_ingot", "Оловянный слиток");
         nickelIngot = registerSimple(28002, "nickel_ingot", "Никелевый слиток");
         bronzeIngot = registerSimple(28003, "bronze_ingot", "Бронзовый слиток");
+        silverIngot = registerSimple(28004, "silver_ingot", "Серебряный слиток");
+        uraniumIngot = registerSimple(28005, "uranium_ingot", "Урановый слиток");
+        steelIngot = registerSimple(28006, "steel_ingot", "Стальной слиток");
 
-        copperDust = registerSimple(28004, "copper_dust", "Медная пыль");
-        tinDust = registerSimple(28005, "tin_dust", "Оловянная пыль");
-        nickelDust = registerSimple(28006, "nickel_dust", "Никелевая пыль");
-        bronzeDust = registerSimple(28007, "bronze_dust", "Бронзовая пыль");
+        copperDust = registerSimple(28007, "copper_dust", "Медная пыль");
+        tinDust = registerSimple(28008, "tin_dust", "Оловянная пыль");
+        nickelDust = registerSimple(28009, "nickel_dust", "Никелевая пыль");
+        bronzeDust = registerSimple(28010, "bronze_dust", "Бронзовая пыль");
+        silverDust = registerSimple(28011, "silver_dust", "Серебряная пыль");
+        uraniumDust = registerSimple(28012, "uranium_dust", "Урановая пыль");
+        steelDust = registerSimple(28013, "steel_dust", "Стальная пыль");
 
-        mixedDust = registerSimple(28008, "mixed_dust", "Смешанная пыль");
-        carbonPlate = registerSimple(28009, "carbon_plate", "Карбоновая пластина");
-        advancedCircuit = registerSimple(28010, "advanced_circuit", "Продвинутая схема");
-        lens = registerSimple(28011, "lens", "Энергетическая линза");
-        coil = registerSimple(28012, "coil", "Медная катушка");
-        cable = registerSimple(28013, "cable", "Изолированный кабель");
+        mixedDust = registerSimple(28014, "mixed_dust", "Смешанная пыль");
+        carbonPlate = registerSimple(28015, "carbon_plate", "Карбоновая пластина");
+        advancedCircuit = registerSimple(28016, "advanced_circuit", "Продвинутая схема");
+        lens = registerSimple(28017, "lens", "Энергетическая линза");
+        coil = registerSimple(28018, "coil", "Медная катушка");
+        cable = registerSimple(28019, "cable", "Изолированный кабель");
+        nanoFiber = registerSimple(28020, "nano_fiber", "Нано-волокно");
+        quantumCore = registerSimple(28021, "quantum_core", "Квантовое ядро");
+        energyMatrix = registerSimple(28022, "energy_matrix", "Энергоматрица");
+        coolingCell = registerSimple(28023, "cooling_cell", "Охлаждающая ячейка");
 
-        batteryBasic = registerTool(new ItemBattery(28014, "battery_basic", 50000), "battery_basic", "Базовая батарея");
-        batteryAdvanced = registerTool(new ItemBattery(28015, "battery_advanced", 250000), "battery_advanced", "Улучшенная батарея");
+        batteryBasic = registerTool(new ItemBattery(28024, "battery_basic", 50000), "battery_basic", "Базовая батарея");
+        batteryAdvanced = registerTool(new ItemBattery(28025, "battery_advanced", 250000), "battery_advanced", "Улучшенная батарея");
 
-        techBook = registerTool(new ItemTechBook(28016), "tech_book", "Справочник TechnoCloud");
+        techBook = registerTool(new ItemTechBook(28026), "tech_book", "Справочник TechnoCloud");
 
-        bronzeSword = registerTool(new ItemBronzeSword(28017, BRONZE_TOOL, "bronze_sword"), "bronze_sword", "Бронзовый меч");
-        bronzePickaxe = registerTool(new ItemBronzePickaxe(28018, BRONZE_TOOL, "bronze_pickaxe"), "bronze_pickaxe", "Бронзовая кирка");
-        bronzeAxe = registerTool(new ItemBronzeAxe(28019, BRONZE_TOOL, "bronze_axe"), "bronze_axe", "Бронзовый топор");
-        bronzeShovel = registerTool(new ItemBronzeShovel(28020, BRONZE_TOOL, "bronze_shovel"), "bronze_shovel", "Бронзовая лопата");
-        bronzeHoe = registerTool(new ItemBronzeHoe(28021, BRONZE_TOOL, "bronze_hoe"), "bronze_hoe", "Бронзовая мотыга");
+        bronzeSword = registerTool(new ItemBronzeSword(28027, BRONZE_TOOL, "bronze_sword"), "bronze_sword", "Бронзовый меч");
+        bronzePickaxe = registerTool(new ItemBronzePickaxe(28028, BRONZE_TOOL, "bronze_pickaxe"), "bronze_pickaxe", "Бронзовая кирка");
+        bronzeAxe = registerTool(new ItemBronzeAxe(28029, BRONZE_TOOL, "bronze_axe"), "bronze_axe", "Бронзовый топор");
+        bronzeShovel = registerTool(new ItemBronzeShovel(28030, BRONZE_TOOL, "bronze_shovel"), "bronze_shovel", "Бронзовая лопата");
+        bronzeHoe = registerTool(new ItemBronzeHoe(28031, BRONZE_TOOL, "bronze_hoe"), "bronze_hoe", "Бронзовая мотыга");
 
-        bronzeHelmet = registerTool(new ItemBronzeArmor(28022, BRONZE_ARMOR, 0, 0, "bronze_helmet"), "bronze_helmet", "Бронзовый шлем");
-        bronzeChestplate = registerTool(new ItemBronzeArmor(28023, BRONZE_ARMOR, 0, 1, "bronze_chestplate"), "bronze_chestplate", "Бронзовый нагрудник");
-        bronzeLeggings = registerTool(new ItemBronzeArmor(28024, BRONZE_ARMOR, 0, 2, "bronze_leggings"), "bronze_leggings", "Бронзовые поножи");
-        bronzeBoots = registerTool(new ItemBronzeArmor(28025, BRONZE_ARMOR, 0, 3, "bronze_boots"), "bronze_boots", "Бронзовые ботинки");
+        bronzeHelmet = registerTool(new ItemBronzeArmor(28032, BRONZE_ARMOR, 0, 0, "bronze_helmet"), "bronze_helmet", "Бронзовый шлем");
+        bronzeChestplate = registerTool(new ItemBronzeArmor(28033, BRONZE_ARMOR, 0, 1, "bronze_chestplate"), "bronze_chestplate", "Бронзовый нагрудник");
+        bronzeLeggings = registerTool(new ItemBronzeArmor(28034, BRONZE_ARMOR, 0, 2, "bronze_leggings"), "bronze_leggings", "Бронзовые поножи");
+        bronzeBoots = registerTool(new ItemBronzeArmor(28035, BRONZE_ARMOR, 0, 3, "bronze_boots"), "bronze_boots", "Бронзовые ботинки");
+
+        nanoSword = registerTool(new ItemElectricSword(28036, ELECTRO_TOOL, "nano_sword"), "nano_sword", "Нано-меч");
+        nanoPickaxe = registerTool(new ItemElectricPickaxe(28037, ELECTRO_TOOL, "nano_pickaxe"), "nano_pickaxe", "Нано-кирка");
+        quantumSword = registerTool(new ItemElectricSword(28038, QUANTUM_TOOL, "quantum_sword"), "quantum_sword", "Квантовый меч");
+        quantumPickaxe = registerTool(new ItemElectricPickaxe(28039, QUANTUM_TOOL, "quantum_pickaxe"), "quantum_pickaxe", "Квантовая кирка");
+
+        nanoHelmet = registerTool(new ItemElectricArmor(28040, NANO_ARMOR, 0, 0, "nano_helmet", "nano"), "nano_helmet", "Нано-шлем");
+        nanoChestplate = registerTool(new ItemElectricArmor(28041, NANO_ARMOR, 0, 1, "nano_chestplate", "nano"), "nano_chestplate", "Нано-нагрудник");
+        nanoLeggings = registerTool(new ItemElectricArmor(28042, NANO_ARMOR, 0, 2, "nano_leggings", "nano"), "nano_leggings", "Нано-поножи");
+        nanoBoots = registerTool(new ItemElectricArmor(28043, NANO_ARMOR, 0, 3, "nano_boots", "nano"), "nano_boots", "Нано-ботинки");
+
+        quantumHelmet = registerTool(new ItemElectricArmor(28044, QUANTUM_ARMOR, 0, 0, "quantum_helmet", "quantum"), "quantum_helmet", "Квантовый шлем");
+        quantumChestplate = registerTool(new ItemElectricArmor(28045, QUANTUM_ARMOR, 0, 1, "quantum_chestplate", "quantum"), "quantum_chestplate", "Квантовый нагрудник");
+        quantumLeggings = registerTool(new ItemElectricArmor(28046, QUANTUM_ARMOR, 0, 2, "quantum_leggings", "quantum"), "quantum_leggings", "Квантовые поножи");
+        quantumBoots = registerTool(new ItemElectricArmor(28047, QUANTUM_ARMOR, 0, 3, "quantum_boots", "quantum"), "quantum_boots", "Квантовые ботинки");
     }
 
     private static Item registerSimple(int id, String key, String ruName) {

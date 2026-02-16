@@ -26,6 +26,8 @@ public class BlockManager {
     public static Block oreCopper;
     public static Block oreTin;
     public static Block oreNickel;
+    public static Block oreSilver;
+    public static Block oreUranium;
 
     public static Block solarBasic;
     public static Block solarImproved;
@@ -42,9 +44,13 @@ public class BlockManager {
         oreCopper = registerBlock(new BlockOreTCW(3100, "ore_copper"), "ore_copper", "Медная руда");
         oreTin = registerBlock(new BlockOreTCW(3101, "ore_tin"), "ore_tin", "Оловянная руда");
         oreNickel = registerBlock(new BlockOreTCW(3102, "ore_nickel"), "ore_nickel", "Никелевая руда");
+        oreSilver = registerBlock(new BlockOreTCW(3120, "ore_silver"), "ore_silver", "Серебряная руда");
+        oreUranium = registerBlock(new BlockOreTCW(3121, "ore_uranium"), "ore_uranium", "Урановая руда");
         MinecraftForge.setBlockHarvestLevel(oreCopper, "pickaxe", 2);
         MinecraftForge.setBlockHarvestLevel(oreTin, "pickaxe", 2);
         MinecraftForge.setBlockHarvestLevel(oreNickel, "pickaxe", 2);
+        MinecraftForge.setBlockHarvestLevel(oreSilver, "pickaxe", 2);
+        MinecraftForge.setBlockHarvestLevel(oreUranium, "pickaxe", 3);
 
         solarBasic = registerBlock(new BlockSolarPanel(3103, "solar_basic", 120000, 8), "solar_basic", "Легкая солнечная панель");
         solarImproved = registerBlock(new BlockSolarPanel(3104, "solar_improved", 300000, 22), "solar_improved", "Улучшенная солнечная панель");
@@ -85,7 +91,7 @@ public class BlockManager {
     }
 
     private static Block registerBlock(Block block, String key, String ruName) {
-        GameRegistry.registerBlock(block, key);
+        GameRegistry.registerBlock(block, tcw.items.ItemBlockMachineInfo.class, key);
         LanguageRegistry.addName(block, ruName);
         return block;
     }

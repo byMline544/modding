@@ -61,6 +61,24 @@ public class BookPageRepository {
                         new ItemStack[] {new ItemStack(BlockManager.machines[MachineTier.ALLOY_SMELTER.ordinal()]), new ItemStack(ItemManager.mixedDust)},
                         new ItemStack(ItemManager.bronzeIngot)),
 
+                new Entry("Новые руды 0.2.2", "Теперь доступны серебро и уран.\nСеребро - для электроцепей, уран - для квантовых компонентов.",
+                        new ItemStack[] {new ItemStack(BlockManager.oreSilver), new ItemStack(BlockManager.oreUranium)},
+                        new ItemStack(ItemManager.uraniumIngot)),
+
+                new Entry("Электро-броня", "Нано и Квантовый комплекты требуют заряд.\nИспользуйте Зарядник: он восстанавливает ресурс электро-предметов.",
+                        new ItemStack[] {new ItemStack(ItemManager.nanoChestplate), new ItemStack(ItemManager.quantumChestplate),
+                                new ItemStack(BlockManager.machines[MachineTier.CHARGER.ordinal()])},
+                        new ItemStack(ItemManager.quantumCore)),
+
+                new Entry("Электро-инструменты", "Нано/Квантовый меч и кирка - повышенная эффективность.\nРесурс инструмента = внутренний заряд, пополняется в Заряднике.",
+                        new ItemStack[] {new ItemStack(ItemManager.nanoPickaxe), new ItemStack(ItemManager.quantumPickaxe)},
+                        new ItemStack(ItemManager.energyMatrix)),
+
+                new Entry("Компоненты 2.0", "Цепочка крафта: стальная пыль -> сталь -> нано-волокно -> энергоматрица -> квантовое ядро.",
+                        new ItemStack[] {new ItemStack(ItemManager.steelDust), new ItemStack(ItemManager.nanoFiber),
+                                new ItemStack(ItemManager.energyMatrix)},
+                        new ItemStack(ItemManager.quantumCore)),
+
                 new Entry("Цель прогресса", "Постройте стабильную сеть: генерация -> хранение -> переработка -> автоматизация.\n\nПереходите к продвинутым панелям и полной автоматике.",
                         new ItemStack[] {new ItemStack(BlockManager.solarAdvanced), new ItemStack(ItemManager.batteryAdvanced),
                                 new ItemStack(BlockManager.machines[MachineTier.CHARGER.ordinal()])},

@@ -19,7 +19,7 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && hasExternalPowerLink() && storage.getEnergyStored() >= 28;
+        boolean canRun = canProcess() && ensurePowerLinkOrDropEnergy() && storage.getEnergyStored() >= 28;
         if (canRun) {
             storage.extractEnergy(28, false);
             progress++;

@@ -19,7 +19,7 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && hasExternalPowerLink() && storage.getEnergyStored() >= 16;
+        boolean canRun = canProcess() && ensurePowerLinkOrDropEnergy() && storage.getEnergyStored() >= 16;
         if (canRun) {
             storage.extractEnergy(16, false);
             progress++;

@@ -19,7 +19,7 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && hasExternalPowerLink() && storage.getEnergyStored() >= 20;
+        boolean canRun = canProcess() && ensurePowerLinkOrDropEnergy() && storage.getEnergyStored() >= 20;
         if (canRun) {
             storage.extractEnergy(20, false);
             progress++;

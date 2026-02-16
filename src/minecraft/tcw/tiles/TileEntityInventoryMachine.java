@@ -105,6 +105,22 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
         return false;
     }
 
+    /**
+     * Сбрасывает энергию машины при потере подключения к энергосети.
+     *
+     * @return true если связь с сетью есть, иначе false.
+     */
+    protected boolean ensurePowerLinkOrDropEnergy() {
+        boolean linked = hasExternalPowerLink();
+        if (!linked && storage.getEnergyStored() > 0) {
+            storage.setEnergy(0);
+            if (worldObj != null && !worldObj.isRemote) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+        return linked;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);

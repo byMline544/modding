@@ -15,12 +15,16 @@ public class RecipeManager {
         registerBronzeEquipment();
         registerMachines();
         registerSolarPanels();
+        registerAdvancedComponents();
+        registerElectricEquipment();
     }
 
     private static void registerMaterialChain() {
         GameRegistry.addSmelting(BlockManager.oreCopper.blockID, new ItemStack(ItemManager.copperIngot), 0.8F);
         GameRegistry.addSmelting(BlockManager.oreTin.blockID, new ItemStack(ItemManager.tinIngot), 0.8F);
         GameRegistry.addSmelting(BlockManager.oreNickel.blockID, new ItemStack(ItemManager.nickelIngot), 1.0F);
+        GameRegistry.addSmelting(BlockManager.oreSilver.blockID, new ItemStack(ItemManager.silverIngot), 0.9F);
+        GameRegistry.addSmelting(BlockManager.oreUranium.blockID, new ItemStack(ItemManager.uraniumIngot), 1.2F);
 
         GameRegistry.addRecipe(new ItemStack(ItemManager.mixedDust, 2), "CTC", "TNT", "CTC", 'C', ItemManager.copperDust, 'T',
                 ItemManager.tinDust, 'N', ItemManager.nickelDust);
@@ -111,4 +115,32 @@ public class RecipeManager {
         GameRegistry.addRecipe(new ItemStack(BlockManager.solarUltimate), "PLP", "NBN", "ACA", 'P', BlockManager.solarAdvanced, 'L',
                 ItemManager.lens, 'N', Item.netherStar, 'B', ItemManager.batteryAdvanced, 'A', ItemManager.advancedCircuit, 'C', Block.blockDiamond);
     }
+    private static void registerAdvancedComponents() {
+        GameRegistry.addRecipe(new ItemStack(ItemManager.steelDust, 2), "ICI", "CCC", "ICI", 'I', Item.ingotIron, 'C', Item.coal);
+        GameRegistry.addSmelting(ItemManager.steelDust.itemID, new ItemStack(ItemManager.steelIngot), 0.8F);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoFiber, 2), "CSC", "SAS", "CSC", 'C', ItemManager.carbonPlate, 'S', Item.silk, 'A', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.energyMatrix), "ACA", "CBC", "ACA", 'A', ItemManager.advancedCircuit, 'C', ItemManager.coil, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.coolingCell), "STS", "WAW", "STS", 'S', ItemManager.steelIngot, 'T', ItemManager.tinIngot, 'W', Item.bucketWater, 'A', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumCore), "ENE", "CMC", "ENE", 'E', Item.eyeOfEnder, 'N', Item.netherStar, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+    }
+
+    private static void registerElectricEquipment() {
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoSword), " N ", "NCN", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoPickaxe), "NNN", " C ", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumSword), " Q ", "QCQ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumPickaxe), "QQQ", " C ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoHelmet), "NNN", "NCN", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoChestplate), "N N", "NCN", "NNN", 'N', ItemManager.nanoFiber, 'C', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoLeggings), "NNN", "N N", "N N", 'N', ItemManager.nanoFiber);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoBoots), "N N", "N N", 'N', ItemManager.nanoFiber);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumHelmet), "QQQ", "QCQ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumChestplate), "Q Q", "QMQ", "QQQ", 'Q', ItemManager.quantumCore, 'M', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumLeggings), "QQQ", "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumBoots), "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
+    }
+
 }
