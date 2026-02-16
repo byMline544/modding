@@ -1,5 +1,7 @@
 package tcw.energy;
 
+import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.WeakHashMap;
 
 import net.minecraft.tileentity.TileEntity;
@@ -96,36 +98,65 @@ public class EnergyNetHelper {
             return false;
         }
 
-        // Кабель — только транспорт: в cable->cable передаём только по явному градиенту
-        // и только если целевой кабель реально ведёт к потребителю энергии.
-        if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
-            if (sourceNode.getEnergyStored() <= targetNode.getEnergyStored() + 4) {
+        // Кабель — только транспорт. Передача в кабель разрешается только если в его сети
+        // реально есть потребитель (машина с недостающей энергией).
+        if (target instanceof TileEntityCable) {
+            if (!hasConsumerInCableNetwork((TileEntityCable) target, source, 32)) {
                 return false;
             }
-            return hasRealConsumerAround(target, source);
+        }
+
+        // Для cable->cable дополнительно держим градиент, чтобы убрать пинг-понг.
+        if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
+            return sourceNode.getEnergyStored() > targetNode.getEnergyStored() + 2;
         }
 
         return true;
     }
 
-    private static boolean hasRealConsumerAround(TileEntity cable, TileEntity ignore) {
-        if (cable == null || cable.worldObj == null) {
+    private static boolean hasConsumerInCableNetwork(TileEntityCable start, TileEntity ignore, int maxDepth) {
+        if (start == null || start.worldObj == null) {
             return false;
         }
-        ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
-        for (int i = 0; i < dirs.length; i++) {
-            ForgeDirection dir = dirs[i];
-            TileEntity t = cable.worldObj.getBlockTileEntity(cable.xCoord + dir.offsetX, cable.yCoord + dir.offsetY, cable.zCoord + dir.offsetZ);
-            if (t == null || t == ignore) {
+
+        ArrayDeque<TileEntity> queue = new ArrayDeque<TileEntity>();
+        ArrayDeque<Integer> depth = new ArrayDeque<Integer>();
+        HashSet<String> seen = new HashSet<String>();
+
+        queue.add(start);
+        depth.add(Integer.valueOf(0));
+
+        while (!queue.isEmpty()) {
+            TileEntity tile = queue.poll();
+            int d = depth.poll().intValue();
+            String key = tile.xCoord + ":" + tile.yCoord + ":" + tile.zCoord;
+            if (!seen.add(key)) {
                 continue;
             }
-            if (t instanceof TileEntityMachine && !(t instanceof TileEntityGenerator) && !(t instanceof TileEntitySolarPanel)) {
-                IEnergyNode n = getNode(t);
-                if (n != null && n.getEnergyStored() < n.getMaxEnergyStored()) {
-                    return true;
+
+            ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+            for (int i = 0; i < dirs.length; i++) {
+                ForgeDirection dir = dirs[i];
+                TileEntity t = tile.worldObj.getBlockTileEntity(tile.xCoord + dir.offsetX, tile.yCoord + dir.offsetY, tile.zCoord + dir.offsetZ);
+                if (t == null || t == ignore) {
+                    continue;
+                }
+
+                if (t instanceof TileEntityMachine && !(t instanceof TileEntityCable)
+                        && !(t instanceof TileEntityGenerator) && !(t instanceof TileEntitySolarPanel)) {
+                    IEnergyNode n = getNode(t);
+                    if (n != null && n.getEnergyStored() < n.getMaxEnergyStored()) {
+                        return true;
+                    }
+                }
+
+                if (t instanceof TileEntityCable && d < maxDepth) {
+                    queue.add(t);
+                    depth.add(Integer.valueOf(d + 1));
                 }
             }
         }
+
         return false;
     }
 

@@ -79,8 +79,7 @@ public class BookPageRepository {
                                 new ItemStack(ItemManager.energyMatrix)},
                         new ItemStack(ItemManager.quantumCore)),
 
-                new Entry("Достижения", "Откройте книгу, чтобы начать ветку прогресса.
-Всего доступно 20 достижений: от бронзы до квантовых технологий.",
+                new Entry("Достижения", "Откройте книгу, чтобы начать ветку прогресса.\nВсего доступно 20 достижений: от бронзы до квантовых технологий.",
                         new ItemStack[] {new ItemStack(ItemManager.techBook), new ItemStack(ItemManager.quantumCore)},
                         new ItemStack(BlockManager.machineCasing)),
 
