@@ -46,12 +46,13 @@ public class TileEntityExtractor extends TileEntityInventoryMachine {
             tryAutoInput();
         }
 
-        int cost = overclockMode ? 44 : 26;
+        int cost = getEnergyCostWithModules(overclockMode ? 44 : 26);
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
-            progress++;
+            progress += getProgressStepWithModules();
             if (progress >= (overclockMode ? 70 : 120)) {
                 progress = 0;
                 process();

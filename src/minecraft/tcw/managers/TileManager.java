@@ -7,6 +7,7 @@ import tcw.tiles.TileEntityCharger;
 import tcw.tiles.TileEntityCompressor;
 import tcw.tiles.TileEntityCrusher;
 import tcw.tiles.TileEntityElectricFurnace;
+import tcw.tiles.TileEntityEnergyBuffer;
 import tcw.tiles.TileEntityExtractor;
 import tcw.tiles.TileEntityGenerator;
 import tcw.tiles.TileEntityMachine;
@@ -31,5 +32,6 @@ public class TileManager {
         GameRegistry.registerTileEntity(TileEntityAssembler.class, "tcw.assembler");
         GameRegistry.registerTileEntity(TileEntityCharger.class, "tcw.charger");
         GameRegistry.registerTileEntity(TileEntityCable.class, "tcw.cable");
+        GameRegistry.registerTileEntity(TileEntityEnergyBuffer.class, "tcw.energyBuffer");
     }
 }

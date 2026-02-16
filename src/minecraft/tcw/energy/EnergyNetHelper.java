@@ -73,6 +73,14 @@ public class EnergyNetHelper {
                 continue;
             }
 
+            if (target instanceof TileEntityMachine) {
+                TileEntityMachine machineTarget = (TileEntityMachine) target;
+                if (canSend > machineTarget.getSafeInputPerTick()) {
+                    machineTarget.onOvervoltage(canSend);
+                    continue;
+                }
+            }
+
             int accepted = targetNode.receiveEnergy(canSend, false);
             if (accepted > 0) {
                 int transferLoss = (source instanceof TileEntityCable) ? 0 : Math.max(0, lossPerTransfer);

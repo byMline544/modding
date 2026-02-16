@@ -8,7 +8,7 @@ import tcw.tiles.TileEntityMacerator;
 
 public class GuiMacerator extends GuiContainer {
 
-    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/crusher.png";
+    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/macerator.png";
     private final TileEntityMacerator machine;
 
     public GuiMacerator(InventoryPlayer playerInventory, TileEntityMacerator machine) {

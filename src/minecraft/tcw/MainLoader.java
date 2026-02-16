@@ -9,6 +9,8 @@ import tcw.managers.TileManager;
 import tcw.managers.WorldManager;
 import tcw.packets.PacketHandler;
 import tcw.proxy.CommonProxy;
+import tcw.events.PlayerCombatEventHandler;
+import tcw.events.PlayerEquipmentEventHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -20,6 +22,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = "technocloud", name = "TechnoCloud", version = "0.2.1")
@@ -58,6 +61,8 @@ public class MainLoader {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         RecipeManager.registerRecipes();
         AchievementManager.registerAchievements();
+        MinecraftForge.EVENT_BUS.register(new PlayerCombatEventHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerEquipmentEventHandler());
     }
 
     @PostInit

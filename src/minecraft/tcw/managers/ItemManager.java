@@ -15,6 +15,9 @@ import tcw.items.ItemElectricArmor;
 import tcw.items.ItemElectricPickaxe;
 import tcw.items.ItemElectricSword;
 import tcw.items.ItemTechBook;
+import tcw.items.ItemJetpack;
+import tcw.items.ItemMachineModule;
+import tcw.items.ItemVajra;
 import tcw.items.ItemWrench;
 import tcw.items.TCWItem;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -26,6 +29,7 @@ public class ItemManager {
     public static final EnumArmorMaterial BRONZE_ARMOR = EnumHelper.addArmorMaterial("TCW_BRONZE", 18, new int[] { 2, 6, 5, 2 }, 12);
     public static final EnumToolMaterial ELECTRO_TOOL = EnumHelper.addToolMaterial("TCW_ELECTRO", 3, 2200, 10.0F, 4, 18);
     public static final EnumToolMaterial QUANTUM_TOOL = EnumHelper.addToolMaterial("TCW_QUANTUM", 4, 3800, 13.0F, 6, 24);
+    public static final EnumToolMaterial VAJRA_TOOL = EnumHelper.addToolMaterial("TCW_VAJRA", 5, 1, 20.0F, 10, 28);
     public static final EnumArmorMaterial NANO_ARMOR = EnumHelper.addArmorMaterial("TCW_NANO", 33, new int[] { 3, 8, 6, 3 }, 18);
     public static final EnumArmorMaterial QUANTUM_ARMOR = EnumHelper.addArmorMaterial("TCW_QUANTUM", 44, new int[] { 4, 9, 7, 4 }, 22);
 
@@ -56,6 +60,15 @@ public class ItemManager {
     public static Item energyMatrix;
     public static Item coolingCell;
 
+    public static Item crystalRuby;
+    public static Item crystalSapphire;
+    public static Item reinforcedPlate;
+    public static Item superconductiveCore;
+
+    public static Item moduleOverclocker;
+    public static Item moduleTransformer;
+    public static Item moduleCapacity;
+
     public static Item batteryBasic;
     public static Item batteryAdvanced;
     public static Item techBook;
@@ -76,6 +89,11 @@ public class ItemManager {
     public static Item nanoPickaxe;
     public static Item quantumSword;
     public static Item quantumPickaxe;
+    public static Item vajra;
+
+    public static Item jetpackBasic;
+    public static Item jetpackAdvanced;
+    public static Item jetpackQuantum;
 
     public static Item nanoHelmet;
     public static Item nanoChestplate;
@@ -114,6 +132,14 @@ public class ItemManager {
         quantumCore = registerSimple(28021, "quantum_core", "Квантовое ядро");
         energyMatrix = registerSimple(28022, "energy_matrix", "Энергоматрица");
         coolingCell = registerSimple(28023, "cooling_cell", "Охлаждающая ячейка");
+        crystalRuby = registerSimple(28049, "crystal_ruby", "Рубиновый кристалл");
+        crystalSapphire = registerSimple(28050, "crystal_sapphire", "Сапфировый кристалл");
+        reinforcedPlate = registerSimple(28051, "reinforced_plate", "Усиленная пластина");
+        superconductiveCore = registerSimple(28052, "superconductive_core", "Сверхпроводящее ядро");
+
+        moduleOverclocker = registerTool(new ItemMachineModule(28057, "module_overclocker", ItemMachineModule.TYPE_OVERCLOCKER), "module_overclocker", "Модуль-ускоритель");
+        moduleTransformer = registerTool(new ItemMachineModule(28058, "module_transformer", ItemMachineModule.TYPE_TRANSFORMER), "module_transformer", "Модуль-трансформатор");
+        moduleCapacity = registerTool(new ItemMachineModule(28059, "module_capacity", ItemMachineModule.TYPE_CAPACITY), "module_capacity", "Модуль-ёмкость");
 
         batteryBasic = registerTool(new ItemBattery(28024, "battery_basic", 50000), "battery_basic", "Базовая батарея");
         batteryAdvanced = registerTool(new ItemBattery(28025, "battery_advanced", 250000), "battery_advanced", "Улучшенная батарея");
@@ -136,6 +162,7 @@ public class ItemManager {
         nanoPickaxe = registerTool(new ItemElectricPickaxe(28038, ELECTRO_TOOL, "nano_pickaxe"), "nano_pickaxe", "Нано-кирка");
         quantumSword = registerTool(new ItemElectricSword(28039, QUANTUM_TOOL, "quantum_sword"), "quantum_sword", "Квантовый меч");
         quantumPickaxe = registerTool(new ItemElectricPickaxe(28040, QUANTUM_TOOL, "quantum_pickaxe"), "quantum_pickaxe", "Квантовая кирка");
+        vajra = registerTool(new ItemVajra(28053, VAJRA_TOOL, 2200000), "vajra", "Ваджра-разрушитель");
 
         nanoHelmet = registerTool(new ItemElectricArmor(28041, NANO_ARMOR, 0, 0, "nano_helmet", "nano"), "nano_helmet", "Нано-шлем");
         nanoChestplate = registerTool(new ItemElectricArmor(28042, NANO_ARMOR, 0, 1, "nano_chestplate", "nano"), "nano_chestplate", "Нано-нагрудник");
@@ -146,6 +173,10 @@ public class ItemManager {
         quantumChestplate = registerTool(new ItemElectricArmor(28046, QUANTUM_ARMOR, 0, 1, "quantum_chestplate", "quantum"), "quantum_chestplate", "Квантовый нагрудник");
         quantumLeggings = registerTool(new ItemElectricArmor(28047, QUANTUM_ARMOR, 0, 2, "quantum_leggings", "quantum"), "quantum_leggings", "Квантовые поножи");
         quantumBoots = registerTool(new ItemElectricArmor(28048, QUANTUM_ARMOR, 0, 3, "quantum_boots", "quantum"), "quantum_boots", "Квантовые ботинки");
+
+        jetpackBasic = registerTool(new ItemJetpack(28054, "jetpack_basic", 400000, 0.09D, 18), "jetpack_basic", "Базовый джетпак");
+        jetpackAdvanced = registerTool(new ItemJetpack(28055, "jetpack_advanced", 900000, 0.12D, 28), "jetpack_advanced", "Продвинутый джетпак");
+        jetpackQuantum = registerTool(new ItemJetpack(28056, "jetpack_quantum", 1800000, 0.15D, 42), "jetpack_quantum", "Квантовый джетпак");
     }
 
     private static Item registerSimple(int id, String key, String ruName) {

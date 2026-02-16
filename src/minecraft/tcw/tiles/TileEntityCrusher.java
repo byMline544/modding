@@ -20,10 +20,12 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
         }
 
         boolean linked = ensurePowerLinkOrDropEnergy();
-        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 20;
+        int cost = getEnergyCostWithModules(20);
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
-            storage.extractEnergy(20, false);
-            progress++;
+            storage.extractEnergy(cost, false);
+            progress += getProgressStepWithModules();
             if (progress >= 120) {
                 progress = 0;
                 processItem();
