@@ -1,6 +1,5 @@
 package tcw.blocks;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 
 public class BlockSolarPanel extends BlockBaseMachine {
@@ -26,7 +25,7 @@ public class BlockSolarPanel extends BlockBaseMachine {
     }
 
     @Override
-    public net.minecraft.tileentity.TileEntity createTileEntity(World world, int metadata) {
+    public net.minecraft.tileentity.TileEntity createNewTileEntity(World world) {
         return new tcw.tiles.TileEntitySolarPanel(storage, generation);
     }
 

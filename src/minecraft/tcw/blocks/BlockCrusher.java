@@ -9,7 +9,7 @@ public class BlockCrusher extends BlockBaseMachine {
     }
 
     @Override
-    public net.minecraft.tileentity.TileEntity createTileEntity(World world, int metadata) {
+    public net.minecraft.tileentity.TileEntity createNewTileEntity(World world) {
         return new tcw.tiles.TileEntityCrusher();
     }
 }

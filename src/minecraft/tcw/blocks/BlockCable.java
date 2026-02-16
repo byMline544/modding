@@ -1,8 +1,9 @@
 package tcw.blocks;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -10,7 +11,7 @@ import tcw.energy.CableTier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCable extends Block {
+public class BlockCable extends BlockContainer {
 
     private final CableTier tier;
 
@@ -30,12 +31,7 @@ public class BlockCable extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(int metadata) {
-        return true;
-    }
-
-    @Override
-    public net.minecraft.tileentity.TileEntity createTileEntity(World world, int metadata) {
+    public TileEntity createNewTileEntity(World world) {
         return new tcw.tiles.TileEntityCable(tier);
     }
 

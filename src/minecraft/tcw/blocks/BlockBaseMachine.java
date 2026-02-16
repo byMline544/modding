@@ -2,17 +2,18 @@ package tcw.blocks;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockBaseMachine extends Block {
+public class BlockBaseMachine extends BlockContainer {
 
     protected Icon frontIcon;
     protected Icon sideIcon;
@@ -58,12 +59,7 @@ public class BlockBaseMachine extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(int metadata) {
-        return true;
-    }
-
-    @Override
-    public net.minecraft.tileentity.TileEntity createTileEntity(World world, int metadata) {
+    public TileEntity createNewTileEntity(World world) {
         return new tcw.tiles.TileEntityMachine();
     }
 
