@@ -9,7 +9,7 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityElectricFurnace() {
-        super(180000, 2);
+        super(140000, 2);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canSmelt() && storage.getEnergyStored() >= 24;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canSmelt() && storage.getEnergyStored() >= 24;
         if (canRun) {
             storage.extractEnergy(24, false);
             progress++;
@@ -82,7 +83,7 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && FurnaceRecipes.smelting().getSmeltingResult(stack) != null;
     }
 

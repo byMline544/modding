@@ -1,18 +1,12 @@
 package tcw.items;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-
-public class ItemBattery extends Item {
+public class ItemBattery extends TCWItem {
 
     private final int maxEnergy;
 
     public ItemBattery(int id, String name, int maxEnergy) {
-        super(id);
+        super(id, name);
         this.maxEnergy = maxEnergy;
-        setUnlocalizedName(name);
-        setTextureName("technocloud:" + name);
-        setCreativeTab(CreativeTabs.tabMaterials);
         setMaxStackSize(1);
     }
 

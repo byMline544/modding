@@ -9,7 +9,7 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
     private int progress;
 
     public TileEntityAlloySmelter() {
-        super(240000, 3);
+        super(180000, 3);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && storage.getEnergyStored() >= 36;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 36;
         if (canRun) {
             storage.extractEnergy(36, false);
             progress++;
@@ -84,7 +85,7 @@ public class TileEntityAlloySmelter extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) {
             return false;
         }

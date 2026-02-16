@@ -9,7 +9,7 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityCrusher() {
-        super(150000, 2);
+        super(120000, 2);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && storage.getEnergyStored() >= 20;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 20;
         if (canRun) {
             storage.extractEnergy(20, false);
             progress++;
@@ -79,7 +80,7 @@ public class TileEntityCrusher extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && CrusherRecipes.instance().getResult(stack) != null;
     }
 

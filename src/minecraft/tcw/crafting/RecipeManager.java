@@ -15,12 +15,16 @@ public class RecipeManager {
         registerBronzeEquipment();
         registerMachines();
         registerSolarPanels();
+        registerAdvancedComponents();
+        registerElectricEquipment();
     }
 
     private static void registerMaterialChain() {
         GameRegistry.addSmelting(BlockManager.oreCopper.blockID, new ItemStack(ItemManager.copperIngot), 0.8F);
         GameRegistry.addSmelting(BlockManager.oreTin.blockID, new ItemStack(ItemManager.tinIngot), 0.8F);
         GameRegistry.addSmelting(BlockManager.oreNickel.blockID, new ItemStack(ItemManager.nickelIngot), 1.0F);
+        GameRegistry.addSmelting(BlockManager.oreSilver.blockID, new ItemStack(ItemManager.silverIngot), 0.9F);
+        GameRegistry.addSmelting(BlockManager.oreUranium.blockID, new ItemStack(ItemManager.uraniumIngot), 1.2F);
 
         GameRegistry.addRecipe(new ItemStack(ItemManager.mixedDust, 2), "CTC", "TNT", "CTC", 'C', ItemManager.copperDust, 'T',
                 ItemManager.tinDust, 'N', ItemManager.nickelDust);
@@ -42,6 +46,8 @@ public class RecipeManager {
                 ItemManager.coil, 'B', ItemManager.batteryBasic, 'E', Item.enderPearl);
 
         GameRegistry.addRecipe(new ItemStack(ItemManager.techBook), "PPP", "PBP", "PPP", 'P', Item.paper, 'B', Item.book);
+        GameRegistry.addRecipe(new ItemStack(BlockManager.machineCasing), "III", "I I", "III", 'I', Item.ingotIron);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.wrench), " I ", " SI", "S  ", 'I', Item.ingotIron, 'S', Item.stick);
     }
 
     private static void registerBronzeEquipment() {
@@ -59,31 +65,31 @@ public class RecipeManager {
 
     private static void registerMachines() {
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.CRUSHER.ordinal()]), "CFC", "PMP", "CBC", 'C',
-                ItemManager.cable, 'F', Item.flint, 'P', Block.pistonBase, 'M', Block.blockIron, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'F', Item.flint, 'P', Block.pistonBase, 'M', BlockManager.machineCasing, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.GENERATOR.ordinal()]), "CCC", "FMB", "CCC", 'C',
-                ItemManager.cable, 'F', Block.furnaceIdle, 'M', Block.blockIron, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'F', Block.furnaceIdle, 'M', BlockManager.machineCasing, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.COMPRESSOR.ordinal()]), "CCC", "PMP", "ABA", 'C',
-                ItemManager.cable, 'P', Block.pistonBase, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'P', Block.pistonBase, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.FURNACE_ELECTRIC.ordinal()]), "CCC", "FMF", "ABA", 'C',
-                ItemManager.cable, 'F', Block.furnaceIdle, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'F', Block.furnaceIdle, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.ALLOY_SMELTER.ordinal()]), "CBC", "AMA", "BFB", 'C',
-                ItemManager.cable, 'A', ItemManager.advancedCircuit, 'M', Block.blockIron, 'B', ItemManager.batteryBasic, 'F', Block.furnaceIdle);
+                ItemManager.cable, 'A', ItemManager.advancedCircuit, 'M', BlockManager.machineCasing, 'B', ItemManager.batteryBasic, 'F', Block.furnaceIdle);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.WIREMILL.ordinal()]), "CBC", "RMR", "ABA", 'C',
-                ItemManager.cable, 'R', Item.redstone, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'R', Item.redstone, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.EXTRACTOR.ordinal()]), "CBC", "DMD", "ABA", 'C',
-                ItemManager.cable, 'D', Item.diamond, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
+                ItemManager.cable, 'D', Item.diamond, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryBasic);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.ASSEMBLER.ordinal()]), "CBC", "RMR", "ABA", 'C',
-                ItemManager.cable, 'R', Item.redstone, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+                ItemManager.cable, 'R', Item.redstone, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.machines[MachineTier.CHARGER.ordinal()]), "CBC", "BMB", "ACA", 'C',
-                ItemManager.cable, 'B', ItemManager.batteryBasic, 'M', Block.blockIron, 'A', ItemManager.advancedCircuit);
+                ItemManager.cable, 'B', ItemManager.batteryBasic, 'M', BlockManager.machineCasing, 'A', ItemManager.advancedCircuit);
 
         for (int i = 0; i < MachineTier.values().length; i++) {
             if (i == MachineTier.CRUSHER.ordinal() || i == MachineTier.GENERATOR.ordinal() || i == MachineTier.COMPRESSOR.ordinal()
@@ -94,13 +100,13 @@ public class RecipeManager {
             }
             Block machine = BlockManager.machines[i];
             GameRegistry.addRecipe(new ItemStack(machine), "CBC", "AMA", "CIC", 'C', ItemManager.cable, 'B', ItemManager.batteryBasic,
-                    'A', ItemManager.advancedCircuit, 'M', Block.blockIron, 'I', Item.ingotIron);
+                    'A', ItemManager.advancedCircuit, 'M', BlockManager.machineCasing, 'I', Item.ingotIron);
         }
     }
 
     private static void registerSolarPanels() {
         GameRegistry.addRecipe(new ItemStack(BlockManager.solarBasic), "GLG", "CBC", "AIA", 'G', Block.glass, 'L', ItemManager.lens, 'C',
-                ItemManager.cable, 'B', ItemManager.batteryBasic, 'A', ItemManager.advancedCircuit, 'I', Block.blockIron);
+                ItemManager.cable, 'B', ItemManager.batteryBasic, 'A', ItemManager.advancedCircuit, 'I', BlockManager.machineCasing);
 
         GameRegistry.addRecipe(new ItemStack(BlockManager.solarImproved), "PLP", "SBS", "ACA", 'P', BlockManager.solarBasic, 'L',
                 ItemManager.lens, 'S', Item.netherStar, 'B', ItemManager.batteryAdvanced, 'A', ItemManager.advancedCircuit, 'C', ItemManager.coil);
@@ -111,4 +117,32 @@ public class RecipeManager {
         GameRegistry.addRecipe(new ItemStack(BlockManager.solarUltimate), "PLP", "NBN", "ACA", 'P', BlockManager.solarAdvanced, 'L',
                 ItemManager.lens, 'N', Item.netherStar, 'B', ItemManager.batteryAdvanced, 'A', ItemManager.advancedCircuit, 'C', Block.blockDiamond);
     }
+    private static void registerAdvancedComponents() {
+        GameRegistry.addRecipe(new ItemStack(ItemManager.steelDust, 2), "ICI", "CCC", "ICI", 'I', Item.ingotIron, 'C', Item.coal);
+        GameRegistry.addSmelting(ItemManager.steelDust.itemID, new ItemStack(ItemManager.steelIngot), 0.8F);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoFiber, 2), "CSC", "SAS", "CSC", 'C', ItemManager.carbonPlate, 'S', Item.silk, 'A', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.energyMatrix), "ACA", "CBC", "ACA", 'A', ItemManager.advancedCircuit, 'C', ItemManager.coil, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.coolingCell), "STS", "WAW", "STS", 'S', ItemManager.steelIngot, 'T', ItemManager.tinIngot, 'W', Item.bucketWater, 'A', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumCore), "ENE", "CMC", "ENE", 'E', Item.eyeOfEnder, 'N', Item.netherStar, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+    }
+
+    private static void registerElectricEquipment() {
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoSword), " N ", "NCN", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoPickaxe), "NNN", " C ", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumSword), " Q ", "QCQ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumPickaxe), "QQQ", " C ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoHelmet), "NNN", "NCN", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoChestplate), "N N", "NCN", "NNN", 'N', ItemManager.nanoFiber, 'C', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoLeggings), "NNN", "N N", "N N", 'N', ItemManager.nanoFiber);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoBoots), "N N", "N N", 'N', ItemManager.nanoFiber);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumHelmet), "QQQ", "QCQ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumChestplate), "Q Q", "QMQ", "QQQ", 'Q', ItemManager.quantumCore, 'M', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumLeggings), "QQQ", "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumBoots), "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
+    }
+
 }

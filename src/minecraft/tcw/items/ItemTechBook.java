@@ -1,18 +1,13 @@
 package tcw.items;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemTechBook extends Item {
+public class ItemTechBook extends TCWItem {
 
     public ItemTechBook(int id) {
-        super(id);
-        setUnlocalizedName("tech_book");
-        setTextureName("technocloud:tech_book");
-        setCreativeTab(CreativeTabs.tabMisc);
+        super(id, "tech_book");
         setMaxStackSize(1);
     }
 

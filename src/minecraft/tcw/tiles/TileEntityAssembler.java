@@ -8,13 +8,33 @@ import tcw.crafting.AssemblerRecipes;
 
 public class TileEntityAssembler extends TileEntityInventoryMachine {
 
+    private static final int SIDE_DISABLED = -1;
+    private static final int SIDE_DOWN = 0;
+    private static final int SIDE_UP = 1;
+    private static final int SIDE_NORTH = 2;
+    private static final int SIDE_SOUTH = 3;
+    private static final int SIDE_WEST = 4;
+    private static final int SIDE_EAST = 5;
+
+    private static final int FILTER_OFF = 0;
+    private static final int FILTER_WHITELIST = 1;
+    private static final int FILTER_BLACKLIST = 2;
+
     private int progress;
     private boolean precisionMode;
     private boolean autoInput;
     private boolean autoOutput;
+    private int inputSide;
+    private int outputSide;
+    private int filterMode;
+    private boolean preferSecondInput;
 
     public TileEntityAssembler() {
-        super(260000, 3);
+        super(180000, 3);
+        inputSide = SIDE_WEST;
+        outputSide = SIDE_EAST;
+        filterMode = FILTER_OFF;
+        preferSecondInput = false;
     }
 
     @Override
@@ -29,7 +49,8 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         }
 
         int cost = precisionMode ? 48 : 30;
-        boolean canRun = canProcess() && storage.getEnergyStored() >= cost;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;
@@ -70,21 +91,39 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         onInventoryChanged();
     }
 
+    private boolean isAllowedByFilter(ItemStack candidate) {
+        if (filterMode == FILTER_OFF) {
+            return true;
+        }
+        boolean slot0 = inventory[0] != null && inventory[0].isItemEqual(candidate);
+        boolean slot1 = inventory[1] != null && inventory[1].isItemEqual(candidate);
+        boolean hasPattern = inventory[0] != null || inventory[1] != null;
+        if (!hasPattern) {
+            return filterMode != FILTER_WHITELIST;
+        }
+        if (filterMode == FILTER_WHITELIST) {
+            return slot0 || slot1;
+        }
+        return !slot0 && !slot1;
+    }
+
     private void tryAutoInput() {
-        IInventory source = getAdjacentInventory(xCoord - 1, yCoord, zCoord);
+        IInventory source = getSideInventory(inputSide);
         if (source == null) {
             return;
         }
-        if (pullIntoSlot(source, 0)) {
+        int first = preferSecondInput ? 1 : 0;
+        int second = preferSecondInput ? 0 : 1;
+        if (pullIntoSlot(source, first)) {
             return;
         }
-        pullIntoSlot(source, 1);
+        pullIntoSlot(source, second);
     }
 
     private boolean pullIntoSlot(IInventory source, int targetSlot) {
         for (int i = 0; i < source.getSizeInventory(); i++) {
             ItemStack candidate = source.getStackInSlot(i);
-            if (candidate == null || !isItemValidForSlot(targetSlot, candidate)) {
+            if (candidate == null || !isStackValidForSlot(targetSlot, candidate) || !isAllowedByFilter(candidate)) {
                 continue;
             }
             if (inventory[targetSlot] != null
@@ -113,7 +152,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         if (inventory[2] == null) {
             return;
         }
-        IInventory target = getAdjacentInventory(xCoord + 1, yCoord, zCoord);
+        IInventory target = getSideInventory(outputSide);
         if (target == null) {
             return;
         }
@@ -121,7 +160,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         ItemStack one = inventory[2].copy();
         one.stackSize = 1;
         for (int i = 0; i < target.getSizeInventory(); i++) {
-            if (!target.isItemValidForSlot(i, one)) {
+            if (!isTargetSlotValid(target, i, one)) {
                 continue;
             }
             ItemStack slot = target.getStackInSlot(i);
@@ -149,6 +188,55 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         }
     }
 
+    private boolean isTargetSlotValid(IInventory target, int slot, ItemStack stack) {
+        if (target instanceof TileEntityInventoryMachine) {
+            return ((TileEntityInventoryMachine) target).isStackValidForSlot(slot, stack);
+        }
+        try {
+            java.lang.reflect.Method method = target.getClass().getMethod("isStackValidForSlot", Integer.TYPE, ItemStack.class);
+            Object result = method.invoke(target, Integer.valueOf(slot), stack);
+            return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+        } catch (Exception ignored) {
+            try {
+                java.lang.reflect.Method method = target.getClass().getMethod("isItemValidForSlot", Integer.TYPE, ItemStack.class);
+                Object result = method.invoke(target, Integer.valueOf(slot), stack);
+                return result instanceof Boolean ? ((Boolean) result).booleanValue() : false;
+            } catch (Exception ignoredToo) {
+                return true;
+            }
+        }
+    }
+
+    private IInventory getSideInventory(int side) {
+        if (side == SIDE_DISABLED) {
+            return null;
+        }
+        int[] offsets = getSideOffsets(side);
+        return getAdjacentInventory(xCoord + offsets[0], yCoord + offsets[1], zCoord + offsets[2]);
+    }
+
+    private int[] getSideOffsets(int side) {
+        if (side == SIDE_DOWN) {
+            return new int[] {0, -1, 0};
+        }
+        if (side == SIDE_UP) {
+            return new int[] {0, 1, 0};
+        }
+        if (side == SIDE_NORTH) {
+            return new int[] {0, 0, -1};
+        }
+        if (side == SIDE_SOUTH) {
+            return new int[] {0, 0, 1};
+        }
+        if (side == SIDE_WEST) {
+            return new int[] {-1, 0, 0};
+        }
+        if (side == SIDE_EAST) {
+            return new int[] {1, 0, 0};
+        }
+        return new int[] {0, 0, 0};
+    }
+
     private IInventory getAdjacentInventory(int x, int y, int z) {
         TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
         if (tile instanceof IInventory) {
@@ -163,7 +251,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     public boolean isInvNameLocalized() { return false; }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 2) return false;
         if (slot == 0) return inventory[1] == null || AssemblerRecipes.instance().getResult(stack, inventory[1]) != null;
         return inventory[0] == null || AssemblerRecipes.instance().getResult(inventory[0], stack) != null;
@@ -176,6 +264,10 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         precisionMode = nbt.getBoolean("PrecisionMode");
         autoInput = nbt.getBoolean("AutoInput");
         autoOutput = nbt.getBoolean("AutoOutput");
+        inputSide = normalizeSide(nbt.getInteger("InputSide"), SIDE_WEST);
+        outputSide = normalizeSide(nbt.getInteger("OutputSide"), SIDE_EAST);
+        filterMode = normalizeFilterMode(nbt.getInteger("FilterMode"));
+        preferSecondInput = nbt.getBoolean("PreferSecondInput");
     }
 
     @Override
@@ -185,6 +277,56 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
         nbt.setBoolean("PrecisionMode", precisionMode);
         nbt.setBoolean("AutoInput", autoInput);
         nbt.setBoolean("AutoOutput", autoOutput);
+        nbt.setInteger("InputSide", inputSide);
+        nbt.setInteger("OutputSide", outputSide);
+        nbt.setInteger("FilterMode", filterMode);
+        nbt.setBoolean("PreferSecondInput", preferSecondInput);
+    }
+
+    private int normalizeSide(int value, int fallback) {
+        if (value < SIDE_DISABLED || value > SIDE_EAST) {
+            return fallback;
+        }
+        return value;
+    }
+
+    private int normalizeFilterMode(int value) {
+        if (value < FILTER_OFF || value > FILTER_BLACKLIST) {
+            return FILTER_OFF;
+        }
+        return value;
+    }
+
+    private int cycleSide(int current) {
+        if (current >= SIDE_EAST) {
+            return SIDE_DISABLED;
+        }
+        return current + 1;
+    }
+
+    public String getInputSideLabel() { return getSideLabel(inputSide); }
+    public String getOutputSideLabel() { return getSideLabel(outputSide); }
+    public String getFilterModeLabel() {
+        if (filterMode == FILTER_WHITELIST) {
+            return "БЕЛ";
+        }
+        if (filterMode == FILTER_BLACKLIST) {
+            return "ЧЕР";
+        }
+        return "ВЫКЛ";
+    }
+    public String getPriorityLabel() {
+        return preferSecondInput ? "СЛОТ2" : "СЛОТ1";
+    }
+
+    private String getSideLabel(int side) {
+        if (side == SIDE_DISABLED) return "ВЫКЛ";
+        if (side == SIDE_DOWN) return "НИЗ";
+        if (side == SIDE_UP) return "ВЕРХ";
+        if (side == SIDE_NORTH) return "СЕВ";
+        if (side == SIDE_SOUTH) return "ЮГ";
+        if (side == SIDE_WEST) return "ЗАП";
+        return "ВОСТ";
     }
 
     public int getProgress() { return progress; }
@@ -200,4 +342,29 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     public void toggleAutoOutput() { autoOutput = !autoOutput; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
     public void setClientAutoInput(int mode) { autoInput = mode == 1; }
     public void setClientAutoOutput(int mode) { autoOutput = mode == 1; }
+    public void cycleInputSide() { inputSide = cycleSide(inputSide); if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void cycleOutputSide() { outputSide = cycleSide(outputSide); if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void setClientInputSide(int side) { inputSide = normalizeSide(side, SIDE_WEST); }
+    public void setClientOutputSide(int side) { outputSide = normalizeSide(side, SIDE_EAST); }
+    public int getInputSide() { return inputSide; }
+    public int getOutputSide() { return outputSide; }
+    public int getFilterMode() { return filterMode; }
+    public void cycleFilterMode() {
+        filterMode++;
+        if (filterMode > FILTER_BLACKLIST) {
+            filterMode = FILTER_OFF;
+        }
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+    public void setClientFilterMode(int mode) { filterMode = normalizeFilterMode(mode); }
+    public boolean isPreferSecondInput() { return preferSecondInput; }
+    public void toggleInputPriority() {
+        preferSecondInput = !preferSecondInput;
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+    public void setClientPreferSecondInput(int mode) { preferSecondInput = mode == 1; }
 }

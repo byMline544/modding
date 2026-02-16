@@ -9,7 +9,7 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
     public int progress;
 
     public TileEntityCompressor() {
-        super(200000, 2);
+        super(140000, 2);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && storage.getEnergyStored() >= 28;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 28;
         if (canRun) {
             storage.extractEnergy(28, false);
             progress++;
@@ -78,7 +79,7 @@ public class TileEntityCompressor extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && CompressorRecipes.instance().getResult(stack) != null;
     }
 

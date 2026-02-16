@@ -3,6 +3,8 @@ package tcw.tiles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import tcw.managers.ItemManager;
+import tcw.items.ElectricItemHelper;
+import tcw.items.IElectricItemTCW;
 
 public class TileEntityCharger extends TileEntityInventoryMachine {
 
@@ -10,7 +12,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     private boolean fastMode;
 
     public TileEntityCharger() {
-        super(300000, 2);
+        super(180000, 2);
     }
 
     @Override
@@ -19,11 +21,13 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         if (worldObj.isRemote) return;
 
         int cost = fastMode ? 900 : 500;
-        boolean canRun = canCharge() && storage.getEnergyStored() >= cost;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canCharge() && storage.getEnergyStored() >= cost;
         if (canRun) {
             storage.extractEnergy(cost, false);
             progress++;
-            if (progress >= (fastMode ? 60 : 100)) {
+            int workTime = isElectricRepairMode() ? 4 : (fastMode ? 60 : 100);
+            if (progress >= workTime) {
                 progress = 0;
                 charge();
             }
@@ -34,15 +38,38 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         }
     }
 
+    /**
+     * Проверка доступного режима зарядки:
+     * 1) Конверсия батареи basic -> advanced.
+     * 2) Подзарядка электро-предмета через уменьшение его износа.
+     */
     private boolean canCharge() {
-        if (inventory[0] == null || inventory[0].itemID != ItemManager.batteryBasic.itemID) return false;
-        if (inventory[1] == null) return true;
-        if (inventory[1].itemID != ItemManager.batteryAdvanced.itemID) return false;
-        return inventory[1].stackSize < inventory[1].getMaxStackSize();
+        if (inventory[0] == null) return false;
+
+        if (inventory[0].itemID == ItemManager.batteryBasic.itemID) {
+            if (inventory[1] == null) return true;
+            if (inventory[1].itemID != ItemManager.batteryAdvanced.itemID) return false;
+            return inventory[1].stackSize < inventory[1].getMaxStackSize();
+        }
+
+        return inventory[0].getItem() instanceof IElectricItemTCW
+                && ElectricItemHelper.getEnergy(inventory[0]) < ElectricItemHelper.getMaxEnergy(inventory[0]);
+    }
+
+    private boolean isElectricRepairMode() {
+        return inventory[0] != null && inventory[0].getItem() instanceof IElectricItemTCW;
     }
 
     private void charge() {
         if (!canCharge()) return;
+
+        if (isElectricRepairMode()) {
+            // Заряд электро-предметов по NBT-энергии.
+            ElectricItemHelper.addEnergy(inventory[0], fastMode ? 6000 : 3000);
+            onInventoryChanged();
+            return;
+        }
+
         if (inventory[1] == null) inventory[1] = new ItemStack(ItemManager.batteryAdvanced, 1);
         else inventory[1].stackSize++;
 
@@ -57,8 +84,11 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     public boolean isInvNameLocalized() { return false; }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return slot == 0 && stack.itemID == ItemManager.batteryBasic.itemID;
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
+        if (slot != 0 || stack == null) {
+            return false;
+        }
+        return stack.itemID == ItemManager.batteryBasic.itemID || stack.getItem() instanceof IElectricItemTCW;
     }
 
     @Override

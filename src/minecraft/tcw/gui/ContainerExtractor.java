@@ -16,6 +16,9 @@ public class ContainerExtractor extends Container {
     private int lastMode;
     private int lastAutoInput;
     private int lastAutoOutput;
+    private int lastInputSide;
+    private int lastOutputSide;
+    private int lastFilterMode;
 
     public ContainerExtractor(InventoryPlayer playerInventory, TileEntityExtractor machine) {
         this.machine = machine;
@@ -38,6 +41,9 @@ public class ContainerExtractor extends Container {
         int mode = machine.isOverclockMode() ? 1 : 0;
         int autoInput = machine.isAutoInput() ? 1 : 0;
         int autoOutput = machine.isAutoOutput() ? 1 : 0;
+        int inputSide = machine.getInputSide();
+        int outputSide = machine.getOutputSide();
+        int filterMode = machine.getFilterMode();
         for (int i = 0; i < this.crafters.size(); ++i) {
             ICrafting c = (ICrafting) this.crafters.get(i);
             if (lastProgress != machine.getProgress()) c.sendProgressBarUpdate(this, 0, machine.getProgress());
@@ -45,12 +51,18 @@ public class ContainerExtractor extends Container {
             if (lastMode != mode) c.sendProgressBarUpdate(this, 2, mode);
             if (lastAutoInput != autoInput) c.sendProgressBarUpdate(this, 3, autoInput);
             if (lastAutoOutput != autoOutput) c.sendProgressBarUpdate(this, 4, autoOutput);
+            if (lastInputSide != inputSide) c.sendProgressBarUpdate(this, 5, inputSide);
+            if (lastOutputSide != outputSide) c.sendProgressBarUpdate(this, 6, outputSide);
+            if (lastFilterMode != filterMode) c.sendProgressBarUpdate(this, 7, filterMode);
         }
         lastProgress = machine.getProgress();
         lastEnergy = energyScaled;
         lastMode = mode;
         lastAutoInput = autoInput;
         lastAutoOutput = autoOutput;
+        lastInputSide = inputSide;
+        lastOutputSide = outputSide;
+        lastFilterMode = filterMode;
     }
 
     @Override
@@ -60,6 +72,9 @@ public class ContainerExtractor extends Container {
         else if (id == 2) machine.setClientOverclockMode(value);
         else if (id == 3) machine.setClientAutoInput(value);
         else if (id == 4) machine.setClientAutoOutput(value);
+        else if (id == 5) machine.setClientInputSide(value);
+        else if (id == 6) machine.setClientOutputSide(value);
+        else if (id == 7) machine.setClientFilterMode(value);
     }
 
     @Override

@@ -17,6 +17,10 @@ public class GuiAssembler extends GuiContainer {
     private GuiButton modeButton;
     private GuiButton autoInputButton;
     private GuiButton autoOutputButton;
+    private GuiButton inputSideButton;
+    private GuiButton outputSideButton;
+    private GuiButton filterButton;
+    private GuiButton priorityButton;
 
     public GuiAssembler(InventoryPlayer playerInventory, TileEntityAssembler machine) {
         super(new ContainerAssembler(playerInventory, machine));
@@ -30,12 +34,20 @@ public class GuiAssembler extends GuiContainer {
         super.initGui();
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
-        modeButton = new GuiButton(0, x + 8, y + 6, 84, 20, getModeText());
-        autoInputButton = new GuiButton(1, x + 94, y + 6, 36, 20, getAutoInputText());
-        autoOutputButton = new GuiButton(2, x + 132, y + 6, 36, 20, getAutoOutputText());
+        modeButton = new GuiButton(0, x + 8, y + 18, 58, 16, getModeText());
+        autoInputButton = new GuiButton(1, x + 68, y + 18, 50, 16, getAutoInputText());
+        autoOutputButton = new GuiButton(2, x + 120, y + 18, 48, 16, getAutoOutputText());
+        inputSideButton = new GuiButton(3, x + 8, y + 36, 80, 16, getInputSideText());
+        outputSideButton = new GuiButton(4, x + 88, y + 36, 80, 16, getOutputSideText());
+        filterButton = new GuiButton(5, x + 8, y + 54, 80, 16, getFilterText());
+        priorityButton = new GuiButton(6, x + 88, y + 54, 80, 16, getPriorityText());
         buttonList.add(modeButton);
         buttonList.add(autoInputButton);
         buttonList.add(autoOutputButton);
+        buttonList.add(inputSideButton);
+        buttonList.add(outputSideButton);
+        buttonList.add(filterButton);
+        buttonList.add(priorityButton);
     }
 
     @Override
@@ -47,6 +59,14 @@ public class GuiAssembler extends GuiContainer {
             discriminator = PacketIds.TOGGLE_ASSEMBLER_AUTO_INPUT;
         } else if (button.id == 2) {
             discriminator = PacketIds.TOGGLE_ASSEMBLER_AUTO_OUTPUT;
+        } else if (button.id == 3) {
+            discriminator = PacketIds.CYCLE_ASSEMBLER_INPUT_SIDE;
+        } else if (button.id == 4) {
+            discriminator = PacketIds.CYCLE_ASSEMBLER_OUTPUT_SIDE;
+        } else if (button.id == 5) {
+            discriminator = PacketIds.CYCLE_ASSEMBLER_FILTER_MODE;
+        } else if (button.id == 6) {
+            discriminator = PacketIds.TOGGLE_ASSEMBLER_INPUT_PRIORITY;
         }
         if (discriminator != -1) {
             net.minecraft.network.packet.Packet250CustomPayload packet = PacketDispatcherTCW.makeTogglePacket(discriminator,
@@ -58,15 +78,31 @@ public class GuiAssembler extends GuiContainer {
     }
 
     private String getModeText() {
-        return machine.isPrecisionMode() ? "Режим: PRECISE" : "Режим: NORMAL";
+        return machine.isPrecisionMode() ? "Режим: ТОЧН" : "Режим: ОБЫЧ";
     }
 
     private String getAutoInputText() {
-        return machine.isAutoInput() ? "IN:A" : "IN:-";
+        return machine.isAutoInput() ? "ВХ:АВТ" : "ВХ:ВЫКЛ";
     }
 
     private String getAutoOutputText() {
-        return machine.isAutoOutput() ? "OUT:A" : "OUT:-";
+        return machine.isAutoOutput() ? "ВЫХ:АВТ" : "ВЫХ:ВЫКЛ";
+    }
+
+    private String getInputSideText() {
+        return "ВХ< " + machine.getInputSideLabel();
+    }
+
+    private String getOutputSideText() {
+        return "ВЫХ> " + machine.getOutputSideLabel();
+    }
+
+    private String getFilterText() {
+        return "Фильтр: " + machine.getFilterModeLabel();
+    }
+
+    private String getPriorityText() {
+        return "Приоритет: " + machine.getPriorityLabel();
     }
 
     @Override
@@ -76,12 +112,16 @@ public class GuiAssembler extends GuiContainer {
             modeButton.displayString = getModeText();
             autoInputButton.displayString = getAutoInputText();
             autoOutputButton.displayString = getAutoOutputText();
+            inputSideButton.displayString = getInputSideText();
+            outputSideButton.displayString = getOutputSideText();
+            filterButton.displayString = getFilterText();
+            priorityButton.displayString = getPriorityText();
         }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        fontRenderer.drawString("Сборщик", 8, 30, 4210752);
+        fontRenderer.drawString("Сборщик", 8, 6, 4210752);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

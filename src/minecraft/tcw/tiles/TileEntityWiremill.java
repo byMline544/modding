@@ -9,7 +9,7 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
     private int progress;
 
     public TileEntityWiremill() {
-        super(180000, 2);
+        super(120000, 2);
     }
 
     @Override
@@ -19,7 +19,8 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
             return;
         }
 
-        boolean canRun = canProcess() && storage.getEnergyStored() >= 16;
+        boolean linked = ensurePowerLinkOrDropEnergy();
+        boolean canRun = linked && canProcess() && storage.getEnergyStored() >= 16;
         if (canRun) {
             storage.extractEnergy(16, false);
             progress++;
@@ -78,7 +79,7 @@ public class TileEntityWiremill extends TileEntityInventoryMachine {
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return slot == 0 && WiremillRecipes.instance().getResult(stack) != null;
     }
 
