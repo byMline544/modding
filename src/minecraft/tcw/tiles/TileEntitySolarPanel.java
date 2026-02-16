@@ -1,6 +1,7 @@
 package tcw.tiles;
 
 import net.minecraft.nbt.NBTTagCompound;
+import tcw.energy.EnergyNetHelper;
 import tcw.energy.EnergyStorageTCW;
 
 public class TileEntitySolarPanel extends TileEntityMachine {
@@ -33,24 +34,47 @@ public class TileEntitySolarPanel extends TileEntityMachine {
 
     @Override
     public void updateEntity() {
-        super.updateEntity();
-        if (!worldObj.isRemote && worldObj.isDaytime() && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
+        if (worldObj.isRemote) {
+            return;
+        }
+
+        if (worldObj.isDaytime() && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
             storage.receiveEnergy(generation, false);
+        }
+
+        if (storage.getEnergyStored() > 0) {
+            EnergyNetHelper.pushToNeighbors(this, Math.max(32, generation * 4));
+        }
+
+        if (worldObj.getWorldTime() % 20 == 0) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        capacity = nbt.getInteger("Capacity");
-        generation = nbt.getInteger("Generation");
-        if (capacity <= 0) {
-            capacity = 150000;
-        }
-        if (generation <= 0) {
-            generation = 8;
-        }
-        storage = new EnergyStorageTCW(capacity);
         super.readFromNBT(nbt);
+
+        int loadedCapacity = nbt.getInteger("Capacity");
+        int loadedGeneration = nbt.getInteger("Generation");
+        if (loadedCapacity > 0 && loadedGeneration > 0 && loadedCapacity != storage.getMaxEnergyStored()) {
+            int savedEnergy = storage.getEnergyStored();
+            capacity = loadedCapacity;
+            generation = loadedGeneration;
+            storage = new EnergyStorageTCW(capacity);
+            storage.setEnergy(savedEnergy);
+        } else {
+            if (loadedCapacity > 0) {
+                capacity = loadedCapacity;
+            } else if (capacity <= 0) {
+                capacity = storage.getMaxEnergyStored();
+            }
+            if (loadedGeneration > 0) {
+                generation = loadedGeneration;
+            } else if (generation <= 0) {
+                generation = 8;
+            }
+        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package tcw.tiles;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import tcw.energy.EnergyNetHelper;
 import tcw.energy.EnergyStorageTCW;
 
 public class TileEntityMachine extends TileEntity {
@@ -23,9 +22,7 @@ public class TileEntityMachine extends TileEntity {
 
     @Override
     public void updateEntity() {
-        if (!worldObj.isRemote) {
-            EnergyNetHelper.pushToNeighbors(this, 128);
-        }
+        // Базовые машины сами не раздают энергию, чтобы не возникал пинг-понг по сети.
     }
 
     @Override

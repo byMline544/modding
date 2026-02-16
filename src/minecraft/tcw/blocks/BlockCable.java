@@ -60,12 +60,12 @@ public class BlockCable extends BlockContainer {
         boolean west = canConnectTo(world, x - 1, y, z);
         boolean east = canConnectTo(world, x + 1, y, z);
 
-        float minX = west ? 0.0F : 0.3125F;
-        float minY = down ? 0.0F : 0.3125F;
-        float minZ = north ? 0.0F : 0.3125F;
-        float maxX = east ? 1.0F : 0.6875F;
-        float maxY = up ? 1.0F : 0.6875F;
-        float maxZ = south ? 1.0F : 0.6875F;
+        float minX = west ? 0.1875F : 0.3125F;
+        float minY = down ? 0.1875F : 0.3125F;
+        float minZ = north ? 0.1875F : 0.3125F;
+        float maxX = east ? 0.8125F : 0.6875F;
+        float maxY = up ? 0.8125F : 0.6875F;
+        float maxZ = south ? 0.8125F : 0.6875F;
         return new float[] {minX, minY, minZ, maxX, maxY, maxZ};
     }
 

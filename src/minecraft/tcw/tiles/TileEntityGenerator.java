@@ -3,10 +3,12 @@ package tcw.tiles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
+import tcw.energy.EnergyNetHelper;
 
 public class TileEntityGenerator extends TileEntityInventoryMachine {
 
     public int burnTime;
+    private int currentItemBurnTime;
     private boolean ecoMode;
 
     public TileEntityGenerator() {
@@ -15,20 +17,23 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
 
     @Override
     public void updateEntity() {
-        super.updateEntity();
         if (worldObj.isRemote) {
             return;
         }
 
-        if (burnTime > 0) {
+        int outputPerTick = ecoMode ? 4 : 8;
+        boolean hadBurning = burnTime > 0;
+
+        if (burnTime > 0 && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
             burnTime--;
-            storage.receiveEnergy(ecoMode ? 20 : 32, false);
+            storage.receiveEnergy(outputPerTick, false);
         }
 
-        if (burnTime <= 0 && inventory[0] != null) {
+        if (burnTime <= 0 && inventory[0] != null && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
             int itemBurn = TileEntityFurnace.getItemBurnTime(inventory[0]);
             if (itemBurn > 0) {
-                burnTime = itemBurn;
+                currentItemBurnTime = Math.max(40, itemBurn / 8);
+                burnTime = currentItemBurnTime;
                 inventory[0].stackSize--;
                 if (inventory[0].stackSize <= 0) {
                     inventory[0] = null;
@@ -37,7 +42,11 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             }
         }
 
-        if (worldObj.getWorldTime() % 20 == 0) {
+        if (storage.getEnergyStored() > 0) {
+            EnergyNetHelper.pushToNeighbors(this, ecoMode ? 24 : 48);
+        }
+
+        if (worldObj.getWorldTime() % 10 == 0 || hadBurning != (burnTime > 0)) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
@@ -61,13 +70,18 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         burnTime = nbt.getInteger("BurnTime");
+        currentItemBurnTime = nbt.getInteger("CurrentItemBurnTime");
         ecoMode = nbt.getBoolean("EcoMode");
+        if (currentItemBurnTime <= 0) {
+            currentItemBurnTime = 200;
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("BurnTime", burnTime);
+        nbt.setInteger("CurrentItemBurnTime", currentItemBurnTime);
         nbt.setBoolean("EcoMode", ecoMode);
     }
 
@@ -83,7 +97,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         int energy = this.storage.getMaxEnergyStored() * scaled / 10000;
         this.storage.setEnergy(energy);
     }
-
 
     public boolean isEcoMode() {
         return ecoMode;
@@ -101,7 +114,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
     }
 
     public int getScaledBurnTime(int scale) {
-        int max = 1600;
+        int max = currentItemBurnTime <= 0 ? 200 : currentItemBurnTime;
         return burnTime * scale / max;
     }
 }
