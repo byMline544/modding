@@ -37,11 +37,9 @@ public class EventHandler {
             }
 
             int energy = ElectricItemHelper.getEnergy(armor);
-            int max = ElectricItemHelper.getMaxEnergy(armor);
-
             mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/items.png"));
-            mc.ingameGUI.drawTexturedModalRect(x - 18, y + i * 16, 0, 0, 16, 16);
-            fr.drawStringWithShadow(energy + "/" + max, x, y + 4 + i * 16, 0xFFE44D);
+            fr.drawStringWithShadow("Заряд: " + energy, x - 52, y + 4 + i * 16, 0xFFE44D);
+            mc.ingameGUI.drawTexturedModalRect(x + 14, y + i * 16, 0, 0, 16, 16);
         }
     }
 }

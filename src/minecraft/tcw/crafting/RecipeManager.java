@@ -125,24 +125,50 @@ public class RecipeManager {
         GameRegistry.addRecipe(new ItemStack(ItemManager.energyMatrix), "ACA", "CBC", "ACA", 'A', ItemManager.advancedCircuit, 'C', ItemManager.coil, 'B', ItemManager.batteryAdvanced);
         GameRegistry.addRecipe(new ItemStack(ItemManager.coolingCell), "STS", "WAW", "STS", 'S', ItemManager.steelIngot, 'T', ItemManager.tinIngot, 'W', Item.bucketWater, 'A', ItemManager.advancedCircuit);
         GameRegistry.addRecipe(new ItemStack(ItemManager.quantumCore), "ENE", "CMC", "ENE", 'E', Item.eyeOfEnder, 'N', Item.netherStar, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.crystalRuby), " R ", "RDR", " R ", 'R', Item.redstone, 'D', Item.diamond);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.crystalSapphire), " L ", "LDL", " L ", 'L', new ItemStack(Item.dyePowder, 1, 4), 'D', Item.diamond);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.reinforcedPlate), "SCS", "CDC", "SCS", 'S', ItemManager.steelIngot, 'C', ItemManager.carbonPlate, 'D', Item.diamond);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.superconductiveCore), "CRC", "SMS", "CRC", 'C', ItemManager.coil, 'R', ItemManager.crystalRuby, 'S', ItemManager.crystalSapphire, 'M', ItemManager.energyMatrix);
     }
 
     private static void registerElectricEquipment() {
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoSword), " N ", "NCN", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoPickaxe), "NNN", " C ", " B ", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoSword), " ND", "NCN", "ABA", 'N', ItemManager.nanoFiber, 'D', Item.diamond, 'C',
+                ItemManager.advancedCircuit, 'A', ItemManager.carbonPlate, 'B', ItemManager.batteryAdvanced);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoPickaxe), "NDN", "ACA", " B ", 'N', ItemManager.nanoFiber, 'D', Item.diamond, 'A',
+                ItemManager.carbonPlate, 'C', ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced);
 
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumSword), " Q ", "QCQ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumPickaxe), "QQQ", " C ", " M ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumSword), " QD", "QCQ", "AMA", 'Q', ItemManager.quantumCore, 'D', Item.diamond,
+                'C', ItemManager.energyMatrix, 'A', ItemManager.advancedCircuit, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumPickaxe), "QDQ", "ACA", " M ", 'Q', ItemManager.quantumCore, 'D', Item.diamond,
+                'A', ItemManager.energyMatrix, 'C', ItemManager.advancedCircuit, 'M', ItemManager.coolingCell);
 
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoHelmet), "NNN", "NCN", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoChestplate), "N N", "NCN", "NNN", 'N', ItemManager.nanoFiber, 'C', ItemManager.energyMatrix);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoLeggings), "NNN", "N N", "N N", 'N', ItemManager.nanoFiber);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoBoots), "N N", "N N", 'N', ItemManager.nanoFiber);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoHelmet), "NNN", "CDC", " A ", 'N', ItemManager.nanoFiber, 'C',
+                ItemManager.advancedCircuit, 'D', Item.diamond, 'A', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoChestplate), "N N", "NEN", "CDC", 'N', ItemManager.nanoFiber, 'C',
+                ItemManager.advancedCircuit, 'E', ItemManager.energyMatrix, 'D', Item.diamond);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoLeggings), "NEN", "N N", "CDC", 'N', ItemManager.nanoFiber, 'C',
+                ItemManager.advancedCircuit, 'D', Item.diamond, 'E', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.nanoBoots), "N N", "CDC", 'N', ItemManager.nanoFiber, 'C', ItemManager.advancedCircuit,
+                'D', Item.diamond);
 
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumHelmet), "QQQ", "QCQ", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumChestplate), "Q Q", "QMQ", "QQQ", 'Q', ItemManager.quantumCore, 'M', ItemManager.energyMatrix);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumLeggings), "QQQ", "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
-        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumBoots), "Q Q", "Q Q", 'Q', ItemManager.quantumCore);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumHelmet), "QQQ", "CEC", " D ", 'Q', ItemManager.quantumCore, 'C',
+                ItemManager.energyMatrix, 'E', Item.eyeOfEnder, 'D', Item.diamond);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumChestplate), "Q Q", "QEQ", "CMC", 'Q', ItemManager.quantumCore, 'E',
+                Item.eyeOfEnder, 'C', ItemManager.energyMatrix, 'M', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumLeggings), "QEQ", "Q Q", "CMC", 'Q', ItemManager.quantumCore, 'C',
+                ItemManager.energyMatrix, 'M', ItemManager.coolingCell, 'E', Item.eyeOfEnder);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.quantumBoots), "Q Q", "CMC", 'Q', ItemManager.quantumCore, 'C', ItemManager.energyMatrix,
+                'M', ItemManager.coolingCell);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.jetpackBasic), "PCP", "BEB", "P P", 'P', ItemManager.reinforcedPlate, 'C',
+                ItemManager.advancedCircuit, 'B', ItemManager.batteryAdvanced, 'E', ItemManager.energyMatrix);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.jetpackAdvanced), "PSP", "JQJ", "PCP", 'P', ItemManager.reinforcedPlate, 'S',
+                ItemManager.superconductiveCore, 'J', ItemManager.jetpackBasic, 'Q', ItemManager.quantumCore, 'C', ItemManager.coolingCell);
+        GameRegistry.addRecipe(new ItemStack(ItemManager.jetpackQuantum), "QMQ", "JSJ", "QCQ", 'Q', ItemManager.quantumCore, 'M',
+                ItemManager.energyMatrix, 'J', ItemManager.jetpackAdvanced, 'S', Item.netherStar, 'C', ItemManager.superconductiveCore);
+
+        GameRegistry.addRecipe(new ItemStack(ItemManager.vajra), "QSQ", "RPR", " B ", 'Q', ItemManager.quantumCore, 'S',
+                ItemManager.superconductiveCore, 'R', ItemManager.crystalRuby, 'P', ItemManager.reinforcedPlate, 'B', ItemManager.batteryAdvanced);
     }
 
 }

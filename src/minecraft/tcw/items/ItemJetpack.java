@@ -13,20 +13,31 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import tcw.TCWCreativeTab;
 
-public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
+public class ItemJetpack extends ItemArmor implements IElectricItemTCW {
 
     private final String textureKey;
-    private final String setName;
     private final int maxEnergy;
+    private final double thrust;
+    private final int energyPerTick;
 
-    public ItemElectricArmor(int id, EnumArmorMaterial material, int renderIndex, int armorType, String textureKey, String setName) {
-        super(id, material, renderIndex, armorType);
+    public ItemJetpack(int id, String textureKey, int maxEnergy, double thrust, int energyPerTick) {
+        super(id, EnumArmorMaterial.IRON, 0, 1);
         this.textureKey = textureKey;
-        this.setName = setName;
-        this.maxEnergy = "quantum".equals(setName) ? 5000000 : 750000;
+        this.maxEnergy = maxEnergy;
+        this.thrust = thrust;
+        this.energyPerTick = energyPerTick;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
         setMaxDamage(0);
+        setMaxStackSize(1);
+    }
+
+    public double getThrust() {
+        return thrust;
+    }
+
+    public int getEnergyPerTick() {
+        return energyPerTick;
     }
 
     @Override
@@ -50,21 +61,17 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
     }
 
     public double getDurabilityForDisplay(ItemStack stack) {
-        int max = getMaxEnergy(stack);
         int energy = ElectricItemHelper.getEnergy(stack);
-        if (max <= 0) {
-            return 1.0D;
-        }
-        return 1.0D - ((double) energy / (double) max);
+        return 1.0D - ((double) energy / (double) maxEnergy);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         int energy = ElectricItemHelper.getEnergy(stack);
-        list.add("Комплект: " + setName);
-        list.add("Электро-броня");
-        list.add("Энергия: " + energy + " / " + getMaxEnergy(stack));
+        list.add("Электро-джетпак");
+        list.add("Тяга: " + thrust);
+        list.add("Энергия: " + energy + " / " + maxEnergy);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -72,7 +79,7 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
     @Override
     public void getSubItems(int id, CreativeTabs tab, List list) {
         ItemStack charged = new ItemStack(id, 1, 0);
-        ElectricItemHelper.setEnergy(charged, getMaxEnergy(charged));
+        ElectricItemHelper.setEnergy(charged, maxEnergy);
         list.add(charged);
 
         ItemStack empty = new ItemStack(id, 1, 0);
@@ -82,9 +89,6 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        if (armorType == 2) {
-            return "/mods/technocloud/textures/armor/" + setName + "_layer_2.png";
-        }
-        return "/mods/technocloud/textures/armor/" + setName + "_layer_1.png";
+        return "/mods/technocloud/textures/armor/jetpack_layer_1.png";
     }
 }

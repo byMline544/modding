@@ -27,14 +27,13 @@ public class ItemWrench extends TCWItem {
             return false;
         }
 
-        int meta = world.getBlockMetadata(x, y, z);
-        // На ПКМ снимаем блок без порчи и с сохранением блока, как ключ в IC2.
+        // На ПКМ снимаем блок без порчи и с гарантированным дропом самого механизма.
         BlockBaseMachine.dropInventory(world, x, y, z);
         world.setBlockToAir(x, y, z);
 
-        ItemStack drop = new ItemStack(id, 1, meta);
+        ItemStack drop = new ItemStack(id, 1, 0);
         if (!player.inventory.addItemStackToInventory(drop)) {
-            player.dropPlayerItem(drop);
+            player.dropPlayerItemWithRandomChoice(drop, false);
         }
         return true;
     }
