@@ -3,7 +3,6 @@ package tcw.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -21,7 +20,7 @@ public class BlockCable extends Block {
         setBlockName("energy_cable_" + tier.textureSuffix);
         setHardness(0.6F);
         setResistance(1.0F);
-        setCreativeTab(CreativeTabs.tabRedstone);
+        setCreativeTab(tcw.TCWCreativeTab.TAB);
     }
 
     @Override

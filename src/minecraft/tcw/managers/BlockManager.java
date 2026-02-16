@@ -1,6 +1,7 @@
 package tcw.managers;
 
 import net.minecraft.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import tcw.blocks.BlockBaseMachine;
 import tcw.blocks.BlockAlloySmelter;
 import tcw.blocks.BlockAssembler;
@@ -40,6 +41,9 @@ public class BlockManager {
         oreCopper = registerBlock(new BlockOreTCW(3100, "ore_copper"), "ore_copper", "Медная руда");
         oreTin = registerBlock(new BlockOreTCW(3101, "ore_tin"), "ore_tin", "Оловянная руда");
         oreNickel = registerBlock(new BlockOreTCW(3102, "ore_nickel"), "ore_nickel", "Никелевая руда");
+        MinecraftForge.setBlockHarvestLevel(oreCopper, "pickaxe", 2);
+        MinecraftForge.setBlockHarvestLevel(oreTin, "pickaxe", 2);
+        MinecraftForge.setBlockHarvestLevel(oreNickel, "pickaxe", 2);
 
         solarBasic = registerBlock(new BlockSolarPanel(3103, "solar_basic", 150000, 8), "solar_basic", "Легкая солнечная панель");
         solarImproved = registerBlock(new BlockSolarPanel(3104, "solar_improved", 500000, 22), "solar_improved", "Улучшенная солнечная панель");

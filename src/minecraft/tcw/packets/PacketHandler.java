@@ -52,6 +52,27 @@ public class PacketHandler implements IPacketHandler {
             if (discriminator == PacketIds.TOGGLE_ASSEMBLER_AUTO_OUTPUT && tile instanceof TileEntityAssembler) {
                 ((TileEntityAssembler) tile).toggleAutoOutput();
             }
+            if (discriminator == PacketIds.CYCLE_EXTRACTOR_INPUT_SIDE && tile instanceof TileEntityExtractor) {
+                ((TileEntityExtractor) tile).cycleInputSide();
+            }
+            if (discriminator == PacketIds.CYCLE_EXTRACTOR_OUTPUT_SIDE && tile instanceof TileEntityExtractor) {
+                ((TileEntityExtractor) tile).cycleOutputSide();
+            }
+            if (discriminator == PacketIds.CYCLE_ASSEMBLER_INPUT_SIDE && tile instanceof TileEntityAssembler) {
+                ((TileEntityAssembler) tile).cycleInputSide();
+            }
+            if (discriminator == PacketIds.CYCLE_ASSEMBLER_OUTPUT_SIDE && tile instanceof TileEntityAssembler) {
+                ((TileEntityAssembler) tile).cycleOutputSide();
+            }
+            if (discriminator == PacketIds.CYCLE_EXTRACTOR_FILTER_MODE && tile instanceof TileEntityExtractor) {
+                ((TileEntityExtractor) tile).cycleFilterMode();
+            }
+            if (discriminator == PacketIds.CYCLE_ASSEMBLER_FILTER_MODE && tile instanceof TileEntityAssembler) {
+                ((TileEntityAssembler) tile).cycleFilterMode();
+            }
+            if (discriminator == PacketIds.TOGGLE_ASSEMBLER_INPUT_PRIORITY && tile instanceof TileEntityAssembler) {
+                ((TileEntityAssembler) tile).toggleInputPriority();
+            }
         } catch (Exception ignored) {
             // Не валим сервер на кривом пакете.
         }

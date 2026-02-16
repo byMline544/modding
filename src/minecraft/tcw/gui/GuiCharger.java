@@ -44,7 +44,7 @@ public class GuiCharger extends GuiContainer {
     }
 
     private String getModeText() {
-        return machine.isFastMode() ? "Режим: FAST" : "Режим: SAFE";
+        return machine.isFastMode() ? "Режим: БЫСТР" : "Режим: БЕЗОП";
     }
 
     @Override

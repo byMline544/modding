@@ -3,14 +3,14 @@ package tcw.managers;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemSword;
 import net.minecraftforge.common.EnumHelper;
 import tcw.items.ItemBattery;
+import tcw.items.ItemBronzeArmor;
 import tcw.items.ItemBronzeAxe;
 import tcw.items.ItemBronzeHoe;
 import tcw.items.ItemBronzePickaxe;
 import tcw.items.ItemBronzeShovel;
+import tcw.items.ItemBronzeSword;
 import tcw.items.ItemTechBook;
 import tcw.items.TCWItem;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -71,28 +71,21 @@ public class ItemManager {
         coil = registerSimple(28012, "coil", "Медная катушка");
         cable = registerSimple(28013, "cable", "Изолированный кабель");
 
-        batteryBasic = new ItemBattery(28014, "battery_basic", 50000);
-        GameRegistry.registerItem(batteryBasic, "battery_basic");
-        LanguageRegistry.addName(batteryBasic, "Базовая батарея");
+        batteryBasic = registerTool(new ItemBattery(28014, "battery_basic", 50000), "battery_basic", "Базовая батарея");
+        batteryAdvanced = registerTool(new ItemBattery(28015, "battery_advanced", 250000), "battery_advanced", "Улучшенная батарея");
 
-        batteryAdvanced = new ItemBattery(28015, "battery_advanced", 250000);
-        GameRegistry.registerItem(batteryAdvanced, "battery_advanced");
-        LanguageRegistry.addName(batteryAdvanced, "Улучшенная батарея");
+        techBook = registerTool(new ItemTechBook(28016), "tech_book", "Справочник TechnoCloud");
 
-        techBook = new ItemTechBook(28016);
-        GameRegistry.registerItem(techBook, "tech_book");
-        LanguageRegistry.addName(techBook, "Справочник TechnoCloud");
-
-        bronzeSword = registerTool(new ItemSword(28017, BRONZE_TOOL).setTextureName("technocloud:bronze_sword").setUnlocalizedName("bronze_sword"), "bronze_sword", "Бронзовый меч");
+        bronzeSword = registerTool(new ItemBronzeSword(28017, BRONZE_TOOL, "bronze_sword"), "bronze_sword", "Бронзовый меч");
         bronzePickaxe = registerTool(new ItemBronzePickaxe(28018, BRONZE_TOOL, "bronze_pickaxe"), "bronze_pickaxe", "Бронзовая кирка");
         bronzeAxe = registerTool(new ItemBronzeAxe(28019, BRONZE_TOOL, "bronze_axe"), "bronze_axe", "Бронзовый топор");
         bronzeShovel = registerTool(new ItemBronzeShovel(28020, BRONZE_TOOL, "bronze_shovel"), "bronze_shovel", "Бронзовая лопата");
         bronzeHoe = registerTool(new ItemBronzeHoe(28021, BRONZE_TOOL, "bronze_hoe"), "bronze_hoe", "Бронзовая мотыга");
 
-        bronzeHelmet = registerTool(new ItemArmor(28022, BRONZE_ARMOR, 0, 0).setTextureName("technocloud:bronze_helmet").setUnlocalizedName("bronze_helmet"), "bronze_helmet", "Бронзовый шлем");
-        bronzeChestplate = registerTool(new ItemArmor(28023, BRONZE_ARMOR, 0, 1).setTextureName("technocloud:bronze_chestplate").setUnlocalizedName("bronze_chestplate"), "bronze_chestplate", "Бронзовый нагрудник");
-        bronzeLeggings = registerTool(new ItemArmor(28024, BRONZE_ARMOR, 0, 2).setTextureName("technocloud:bronze_leggings").setUnlocalizedName("bronze_leggings"), "bronze_leggings", "Бронзовые поножи");
-        bronzeBoots = registerTool(new ItemArmor(28025, BRONZE_ARMOR, 0, 3).setTextureName("technocloud:bronze_boots").setUnlocalizedName("bronze_boots"), "bronze_boots", "Бронзовые ботинки");
+        bronzeHelmet = registerTool(new ItemBronzeArmor(28022, BRONZE_ARMOR, 0, 0, "bronze_helmet"), "bronze_helmet", "Бронзовый шлем");
+        bronzeChestplate = registerTool(new ItemBronzeArmor(28023, BRONZE_ARMOR, 0, 1, "bronze_chestplate"), "bronze_chestplate", "Бронзовый нагрудник");
+        bronzeLeggings = registerTool(new ItemBronzeArmor(28024, BRONZE_ARMOR, 0, 2, "bronze_leggings"), "bronze_leggings", "Бронзовые поножи");
+        bronzeBoots = registerTool(new ItemBronzeArmor(28025, BRONZE_ARMOR, 0, 3, "bronze_boots"), "bronze_boots", "Бронзовые ботинки");
     }
 
     private static Item registerSimple(int id, String key, String ruName) {

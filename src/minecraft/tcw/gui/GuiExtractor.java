@@ -17,6 +17,9 @@ public class GuiExtractor extends GuiContainer {
     private GuiButton modeButton;
     private GuiButton autoInputButton;
     private GuiButton autoOutputButton;
+    private GuiButton inputSideButton;
+    private GuiButton outputSideButton;
+    private GuiButton filterButton;
 
     public GuiExtractor(InventoryPlayer playerInventory, TileEntityExtractor machine) {
         super(new ContainerExtractor(playerInventory, machine));
@@ -33,9 +36,15 @@ public class GuiExtractor extends GuiContainer {
         modeButton = new GuiButton(0, x + 8, y + 6, 74, 20, getModeText());
         autoInputButton = new GuiButton(1, x + 84, y + 6, 42, 20, getAutoInputText());
         autoOutputButton = new GuiButton(2, x + 126, y + 6, 42, 20, getAutoOutputText());
+        inputSideButton = new GuiButton(3, x + 8, y + 28, 80, 20, getInputSideText());
+        outputSideButton = new GuiButton(4, x + 88, y + 28, 80, 20, getOutputSideText());
+        filterButton = new GuiButton(5, x + 8, y + 50, 160, 20, getFilterText());
         buttonList.add(modeButton);
         buttonList.add(autoInputButton);
         buttonList.add(autoOutputButton);
+        buttonList.add(inputSideButton);
+        buttonList.add(outputSideButton);
+        buttonList.add(filterButton);
     }
 
     @Override
@@ -47,6 +56,12 @@ public class GuiExtractor extends GuiContainer {
             discriminator = PacketIds.TOGGLE_EXTRACTOR_AUTO_INPUT;
         } else if (button.id == 2) {
             discriminator = PacketIds.TOGGLE_EXTRACTOR_AUTO_OUTPUT;
+        } else if (button.id == 3) {
+            discriminator = PacketIds.CYCLE_EXTRACTOR_INPUT_SIDE;
+        } else if (button.id == 4) {
+            discriminator = PacketIds.CYCLE_EXTRACTOR_OUTPUT_SIDE;
+        } else if (button.id == 5) {
+            discriminator = PacketIds.CYCLE_EXTRACTOR_FILTER_MODE;
         }
         if (discriminator != -1) {
             net.minecraft.network.packet.Packet250CustomPayload packet = PacketDispatcherTCW.makeTogglePacket(discriminator,
@@ -58,15 +73,27 @@ public class GuiExtractor extends GuiContainer {
     }
 
     private String getModeText() {
-        return machine.isOverclockMode() ? "Режим: OVC" : "Режим: STD";
+        return machine.isOverclockMode() ? "Режим: РАЗГОН" : "Режим: СТАНД";
     }
 
     private String getAutoInputText() {
-        return machine.isAutoInput() ? "IN:A" : "IN:-";
+        return machine.isAutoInput() ? "ВХ:АВТ" : "ВХ:ВЫКЛ";
     }
 
     private String getAutoOutputText() {
-        return machine.isAutoOutput() ? "OUT:A" : "OUT:-";
+        return machine.isAutoOutput() ? "ВЫХ:АВТ" : "ВЫХ:ВЫКЛ";
+    }
+
+    private String getInputSideText() {
+        return "ВХ< " + machine.getInputSideLabel();
+    }
+
+    private String getOutputSideText() {
+        return "ВЫХ> " + machine.getOutputSideLabel();
+    }
+
+    private String getFilterText() {
+        return "Фильтр: " + machine.getFilterModeLabel();
     }
 
     @Override
@@ -76,6 +103,9 @@ public class GuiExtractor extends GuiContainer {
             modeButton.displayString = getModeText();
             autoInputButton.displayString = getAutoInputText();
             autoOutputButton.displayString = getAutoOutputText();
+            inputSideButton.displayString = getInputSideText();
+            outputSideButton.displayString = getOutputSideText();
+            filterButton.displayString = getFilterText();
         }
     }
 

@@ -44,7 +44,7 @@ public class GuiGenerator extends GuiContainer {
     }
 
     private String getModeText() {
-        return machine.isEcoMode() ? "Режим: ECO" : "Режим: TURBO";
+        return machine.isEcoMode() ? "Режим: ЭКО" : "Режим: ТУРБО";
     }
 
     @Override
