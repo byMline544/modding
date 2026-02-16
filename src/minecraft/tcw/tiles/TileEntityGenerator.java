@@ -21,7 +21,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             return;
         }
 
-        int outputPerTick = ecoMode ? 3 : 5;
+        int outputPerTick = ecoMode ? 2 : 3;
         boolean hadBurning = burnTime > 0;
 
         if (burnTime > 0 && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
@@ -32,7 +32,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         if (burnTime <= 0 && inventory[0] != null && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
             int itemBurn = TileEntityFurnace.getItemBurnTime(inventory[0]);
             if (itemBurn > 0) {
-                currentItemBurnTime = Math.max(20, itemBurn / 16);
+                currentItemBurnTime = Math.max(12, itemBurn / 24);
                 burnTime = currentItemBurnTime;
                 inventory[0].stackSize--;
                 if (inventory[0].stackSize <= 0) {
@@ -42,8 +42,8 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             }
         }
 
-        int reserve = ecoMode ? 400 : 800;
-        int sendPerTick = ecoMode ? 18 : 26;
+        int reserve = ecoMode ? 180 : 260;
+        int sendPerTick = ecoMode ? 14 : 18;
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick);
         }

@@ -5,6 +5,7 @@ import java.util.WeakHashMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import tcw.tiles.TileEntityCable;
+import tcw.tiles.TileEntityGenerator;
 import tcw.tiles.TileEntityMachine;
 import tcw.tiles.TileEntitySolarPanel;
 
@@ -55,8 +56,7 @@ public class EnergyNetHelper {
                 continue;
             }
 
-            // Панели не должны заряжать другие панели напрямую.
-            if (source instanceof TileEntitySolarPanel && target instanceof TileEntitySolarPanel) {
+            if (!canTransfer(source, target, sourceNode, targetNode)) {
                 continue;
             }
 
@@ -79,6 +79,24 @@ public class EnergyNetHelper {
         }
 
         ROUND_ROBIN_INDEX.put(source, Integer.valueOf((start + 1) % dirs.length));
+    }
+
+    private static boolean canTransfer(TileEntity source, TileEntity target, IEnergyNode sourceNode, IEnergyNode targetNode) {
+        // панели и генераторы не заряжают друг друга
+        if ((source instanceof TileEntitySolarPanel && target instanceof TileEntitySolarPanel)
+                || (source instanceof TileEntityGenerator && target instanceof TileEntityGenerator)
+                || (source instanceof TileEntitySolarPanel && target instanceof TileEntityGenerator)
+                || (source instanceof TileEntityGenerator && target instanceof TileEntitySolarPanel)) {
+            return false;
+        }
+
+        // чтобы убрать «высасывание в пустоту» на длинных линиях:
+        // кабель не отправляет в кабель с равной/большей энергией.
+        if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
+            return sourceNode.getEnergyStored() > targetNode.getEnergyStored();
+        }
+
+        return true;
     }
 
     private static IEnergyNode getNode(TileEntity tile) {

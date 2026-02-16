@@ -37,6 +37,12 @@ public class BlockCable extends BlockContainer {
         return new tcw.tiles.TileEntityCable(tier);
     }
 
+
+    @Override
+    public void setBlockBoundsForItemRender() {
+        setBlockBounds(0.3125F, 0.3125F, 0.3125F, 0.6875F, 0.6875F, 0.6875F);
+    }
+
     @Override
     public boolean isOpaqueCube() {
         return false;
