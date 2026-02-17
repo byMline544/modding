@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import tcw.energy.IElectricItemTCW;
+import tcw.helpers.ElectricItemHelper;
 import tcw.items.ItemMachineModule;
 
 public abstract class TileEntityInventoryMachine extends TileEntityMachine implements IInventory {
@@ -222,6 +224,32 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
 
     protected boolean ensurePowerLinkOrDropEnergy() {
         return hasExternalPowerLink();
+    }
+
+    public boolean shouldPullEnergyFromNetwork() {
+        if (storage.getEnergyStored() >= storage.getMaxEnergyStored()) {
+            return false;
+        }
+
+        if (this instanceof TileEntityCharger) {
+            ItemStack chargeable = inventory[0];
+            if (chargeable == null || !(chargeable.getItem() instanceof IElectricItemTCW)) {
+                return false;
+            }
+            IElectricItemTCW electric = (IElectricItemTCW) chargeable.getItem();
+            return ElectricItemHelper.getEnergy(chargeable) < electric.getMaxEnergy(chargeable);
+        }
+
+        if (this instanceof TileEntityAlloySmelter || this instanceof TileEntityAssembler) {
+            return inventory[0] != null || inventory[1] != null;
+        }
+
+        if (this instanceof TileEntityCrusher || this instanceof TileEntityMacerator || this instanceof TileEntityCompressor
+                || this instanceof TileEntityElectricFurnace || this instanceof TileEntityExtractor || this instanceof TileEntityWiremill) {
+            return inventory[0] != null;
+        }
+
+        return false;
     }
 
 
