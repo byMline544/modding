@@ -11,6 +11,7 @@ import tcw.packets.PacketHandler;
 import tcw.proxy.CommonProxy;
 import tcw.events.PlayerCombatEventHandler;
 import tcw.events.PlayerEquipmentEventHandler;
+import tcw.events.AchievementEventHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -63,6 +64,7 @@ public class MainLoader {
         AchievementManager.registerAchievements();
         MinecraftForge.EVENT_BUS.register(new PlayerCombatEventHandler());
         MinecraftForge.EVENT_BUS.register(new PlayerEquipmentEventHandler());
+        MinecraftForge.EVENT_BUS.register(new AchievementEventHandler());
     }
 
     @PostInit

@@ -25,7 +25,7 @@ public class ItemElectricSword extends ItemSword implements IElectricItemTCW {
     public ItemElectricSword(int id, EnumToolMaterial material, String textureKey) {
         super(id, material);
         this.textureKey = textureKey;
-        this.maxEnergy = textureKey.contains("quantum") ? 360000 : 120000;
+        this.maxEnergy = textureKey.contains("quantum") ? 180000 : 60000;
         this.damageVsEntity = textureKey.contains("quantum") ? 24 : 14;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);

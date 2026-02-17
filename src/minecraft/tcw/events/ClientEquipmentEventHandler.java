@@ -18,7 +18,7 @@ public class ClientEquipmentEventHandler {
     @ForgeSubscribe
     public void onLivingUpdate(LivingUpdateEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc == null || mc.thePlayer == null) {
+        if (mc == null || mc.thePlayer == null || mc.currentScreen != null) {
             return;
         }
 

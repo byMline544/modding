@@ -38,12 +38,12 @@ public class TileEntitySolarPanel extends TileEntityMachine {
             return;
         }
 
-        if (worldObj.isDaytime() && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
-            storage.receiveEnergy(generation, false);
+        if (worldObj.isDaytime() && !worldObj.provider.hasNoSky && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
+            storage.receiveEnergy(generation * 2, false);
         }
 
-        int reserve = Math.max(32, generation * 4);
-        int sendPerTick = Math.max(18, generation * 3);
+        int reserve = 0;
+        int sendPerTick = Math.max(36, generation * 4);
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick * 3);
         }
@@ -59,24 +59,16 @@ public class TileEntitySolarPanel extends TileEntityMachine {
 
         int loadedCapacity = nbt.getInteger("Capacity");
         int loadedGeneration = nbt.getInteger("Generation");
-        if (loadedCapacity > 0 && loadedGeneration > 0 && loadedCapacity != storage.getMaxEnergyStored()) {
-            int savedEnergy = storage.getEnergyStored();
+        if (loadedCapacity > 0) {
             capacity = loadedCapacity;
-            generation = loadedGeneration;
-            storage = new EnergyStorageTCW(capacity);
-            storage.setEnergy(savedEnergy);
-        } else {
-            if (loadedCapacity > 0) {
-                capacity = loadedCapacity;
-            } else if (capacity <= 0) {
-                capacity = storage.getMaxEnergyStored();
-            }
-            if (loadedGeneration > 0) {
-                generation = loadedGeneration;
-            } else if (generation <= 0) {
-                generation = 8;
-            }
         }
+        if (loadedGeneration > 0) {
+            generation = loadedGeneration;
+        }
+
+        int energy = storage.getEnergyStored();
+        storage = new EnergyStorageTCW(capacity);
+        storage.setEnergy(Math.min(energy, capacity));
     }
 
     @Override

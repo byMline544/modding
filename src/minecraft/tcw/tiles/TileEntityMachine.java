@@ -99,6 +99,21 @@ public class TileEntityMachine extends TileEntity {
         }
     }
 
+
+    public boolean isConnectedToEnergyNet() {
+        if (worldObj == null) {
+            return false;
+        }
+        int[][] o = new int[][] { {1,0,0}, {-1,0,0}, {0,1,0}, {0,-1,0}, {0,0,1}, {0,0,-1} };
+        for (int i = 0; i < o.length; i++) {
+            net.minecraft.tileentity.TileEntity tile = worldObj.getBlockTileEntity(xCoord + o[i][0], yCoord + o[i][1], zCoord + o[i][2]);
+            if (tile instanceof TileEntityMachine || tile instanceof TileEntityCable) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void updateEntity() {
         // Базовые машины сами не раздают энергию.

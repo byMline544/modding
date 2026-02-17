@@ -21,6 +21,9 @@ public class GuiWiremill extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Проволочный стан", 8, 6, 4210752);
+        boolean linked = machine.isNetworkLinked();
+        fontRenderer.drawString("Подключение к сети: " + (linked ? "✓" : "✗"), 8, 16, linked ? 0x2f8f2f : 0xAA2222);
+        if (machine.getStorage().getEnergyStored() <= 0) fontRenderer.drawString("Не хватает энергии!", 8, 26, 0xCC2222);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

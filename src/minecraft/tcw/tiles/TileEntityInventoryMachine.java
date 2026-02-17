@@ -116,6 +116,10 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
         }
     }
 
+    public boolean isNetworkLinked() {
+        return hasExternalPowerLink();
+    }
+
     protected boolean hasExternalPowerLink() {
         if (worldObj == null) {
             return false;

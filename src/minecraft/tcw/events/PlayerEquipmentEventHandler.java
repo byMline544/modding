@@ -22,8 +22,6 @@ public class PlayerEquipmentEventHandler {
 
         ItemStack legs = player.inventory.armorInventory[1];
         applyLeggingsSprintBoost(player, legs);
-        ItemStack boots = player.inventory.armorInventory[0];
-        drainBootsOnJump(player, boots);
 
     }
 
@@ -95,19 +93,6 @@ public class PlayerEquipmentEventHandler {
         }
     }
 
-
-    private void drainBootsOnJump(EntityPlayer player, ItemStack boots) {
-        if (boots == null || boots.getItem() == null) {
-            return;
-        }
-        String name = boots.getItem().getUnlocalizedName();
-        if (name == null || (!name.contains("nano_boots") && !name.contains("quantum_boots"))) {
-            return;
-        }
-        if (!player.onGround && player.motionY > 0.15D) {
-            ElectricItemHelper.addEnergy(boots, -8);
-        }
-    }
 
     private boolean hasFastRunModule(ItemStack stack) {
         return stack != null && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_FastRunModule");

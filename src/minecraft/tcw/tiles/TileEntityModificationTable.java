@@ -57,10 +57,12 @@ public class TileEntityModificationTable extends TileEntityMachine implements II
         int type = ((ItemArmorModule) inventory[1].getItem()).getModuleType();
 
         if (type == ItemArmorModule.TYPE_NIGHT_VISION) {
-            return armorName != null && (armorName.contains("nano_helmet") || armorName.contains("quantum_helmet"));
+            return armorName != null && (armorName.contains("nano_helmet") || armorName.contains("quantum_helmet"))
+                    && (inventory[0].getTagCompound() == null || !inventory[0].getTagCompound().getBoolean("TCW_NightVisionModule"));
         }
         if (type == ItemArmorModule.TYPE_FAST_RUN) {
-            return armorName != null && (armorName.contains("nano_leggings") || armorName.contains("quantum_leggings"));
+            return armorName != null && (armorName.contains("nano_leggings") || armorName.contains("quantum_leggings"))
+                    && (inventory[0].getTagCompound() == null || !inventory[0].getTagCompound().getBoolean("TCW_FastRunModule"));
         }
 
         return false;
@@ -148,10 +150,6 @@ public class TileEntityModificationTable extends TileEntityMachine implements II
     public void closeChest() {}
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return isStackValidForSlot(slot, stack);
-    }
-
     public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 0) {
             if (stack == null || stack.getItem() == null || stack.getItem().getUnlocalizedName() == null) return false;

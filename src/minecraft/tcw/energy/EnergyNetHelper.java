@@ -107,17 +107,9 @@ public class EnergyNetHelper {
             return false;
         }
 
-        // Кабель — только транспорт. Передача в кабель разрешается только если в его сети
-        // реально есть потребитель (машина с недостающей энергией).
-        if (target instanceof TileEntityCable) {
-            if (!hasConsumerInCableNetwork((TileEntityCable) target, source, 32)) {
-                return false;
-            }
-        }
-
         // Для cable->cable дополнительно держим градиент, чтобы убрать пинг-понг.
         if (source instanceof TileEntityCable && target instanceof TileEntityCable) {
-            return sourceNode.getEnergyStored() > targetNode.getEnergyStored() + 2;
+            return sourceNode.getEnergyStored() >= targetNode.getEnergyStored();
         }
 
         return true;

@@ -22,7 +22,9 @@ public class GuiSolarPanel extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Солнечная панель", 8, 6, 4210752);
         fontRenderer.drawString("Генерация: " + panel.getGenerationRate() + " EUC/t", 8, 18, 0x2f6f2f);
-        fontRenderer.drawString("Энергия: " + panel.getStorage().getEnergyStored() + " / " + panel.getStorage().getMaxEnergyStored(), 8, 28, 0x2f6f2f);
+        boolean linked = panel.isConnectedToEnergyNet();
+        fontRenderer.drawString("Подключение к сети: " + (linked ? "✓" : "✗"), 8, 16, linked ? 0x2f8f2f : 0xAA2222);
+        if (panel.getStorage().getEnergyStored() <= 0) fontRenderer.drawString("Не хватает энергии!", 8, 28, 0xCC2222);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

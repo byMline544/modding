@@ -23,7 +23,7 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
         super(id, material, renderIndex, armorType);
         this.textureKey = textureKey;
         this.setName = setName;
-        this.maxEnergy = "quantum".equals(setName) ? 1400000 : 220000;
+        this.maxEnergy = "quantum".equals(setName) ? 700000 : 110000;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
         setMaxDamage(0);

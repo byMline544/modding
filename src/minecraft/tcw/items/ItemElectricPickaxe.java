@@ -23,7 +23,7 @@ public class ItemElectricPickaxe extends ItemPickaxe implements IElectricItemTCW
     public ItemElectricPickaxe(int id, EnumToolMaterial material, String textureKey) {
         super(id, material);
         this.textureKey = textureKey;
-        this.maxEnergy = textureKey.contains("quantum") ? 480000 : 150000;
+        this.maxEnergy = textureKey.contains("quantum") ? 240000 : 75000;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
         setMaxDamage(0);

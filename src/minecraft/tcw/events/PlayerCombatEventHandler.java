@@ -60,11 +60,11 @@ public class PlayerCombatEventHandler {
         }
 
         if (spent >= requiredEnergy) {
-            event.ammount = 0.0F;
+            event.ammount = (int) 0.0F;
             return;
         }
 
         float blockedPart = (float) spent / (float) requiredEnergy;
-        event.ammount = Math.max(0.0F, event.ammount * (1.0F - blockedPart));
+        event.ammount = (int) Math.max(0.0F, event.ammount * (1.0F - blockedPart));
     }
 }

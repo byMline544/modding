@@ -3,6 +3,7 @@ package tcw.items;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import tcw.achievements.AchievementManager;
 
 public class ItemTechBook extends TCWItem {
 
@@ -14,6 +15,7 @@ public class ItemTechBook extends TCWItem {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         player.openGui(tcw.MainLoader.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.addStat(AchievementManager.openBook, 1);
         return stack;
     }
 }
