@@ -65,6 +65,12 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
         list.add("Комплект: " + setName);
         list.add("Электро-броня");
         list.add("Энергия: " + energy + " / " + getMaxEnergy(stack));
+        if (armorType == 0 && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_NightVisionModule")) {
+            list.add("МОДУЛЬ: установлен модуль ночного видения");
+        }
+        if (armorType == 2 && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_FastRunModule")) {
+            list.add("МОДУЛЬ: установлен модуль быстрого бега");
+        }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

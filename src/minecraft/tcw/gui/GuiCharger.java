@@ -21,8 +21,7 @@ public class GuiCharger extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Зарядник", 8, 6, 4210752);
-        fontRenderer.drawString("Режим: БЫСТРЫЙ", 8, 26, 0x2f6f2f);
-        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored(), 8, 16, 0x2f6f2f);
+        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored() + " TC/t", 8, 16, 0x2f6f2f);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

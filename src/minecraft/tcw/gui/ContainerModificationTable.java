@@ -64,9 +64,9 @@ public class ContainerModificationTable extends Container {
 
             if (index < 3) {
                 if (!mergeItemStack(in, 3, inventorySlots.size(), true)) return null;
-            } else if (table.isItemValidForSlot(0, in)) {
+            } else if (table.isStackValidForSlot(0, in)) {
                 if (!mergeItemStack(in, 0, 1, false)) return null;
-            } else if (table.isItemValidForSlot(1, in)) {
+            } else if (table.isStackValidForSlot(1, in)) {
                 if (!mergeItemStack(in, 1, 2, false)) return null;
             } else {
                 return null;

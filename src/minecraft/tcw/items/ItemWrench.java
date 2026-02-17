@@ -33,11 +33,9 @@ public class ItemWrench extends TCWItem {
         BlockBaseMachine.dropInventory(world, x, y, z);
         world.setBlockToAir(x, y, z);
 
-        ItemStack drop = new ItemStack(block, 1, meta);
-        if (!player.inventory.addItemStackToInventory(drop)) {
-            EntityItem entityItem = new EntityItem(world, x + 0.5D, y + 0.6D, z + 0.5D, drop);
-            world.spawnEntityInWorld(entityItem);
-        }
+        ItemStack drop = new ItemStack(block.blockID, 1, 0);
+        EntityItem entityItem = new EntityItem(world, x + 0.5D, y + 0.6D, z + 0.5D, drop);
+        world.spawnEntityInWorld(entityItem);
 
         stack.damageItem(1, player);
         return true;

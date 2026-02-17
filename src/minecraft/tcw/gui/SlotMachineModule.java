@@ -41,6 +41,6 @@ public class SlotMachineModule extends Slot {
 
     @Override
     public int getSlotStackLimit() {
-        return 1;
+        return 16;
     }
 }

@@ -39,23 +39,23 @@ public class TileEntityMachine extends TileEntity {
     }
 
     public int getSafeInputPerTick() {
-        return 128 + transformerModules * 128;
+        return 128 + getTransformerModules() * 128;
     }
 
     public int getDesiredReceivePerTick() {
-        return 32 + overclockerModules * 24;
+        return 32 + getOverclockerModules() * 24;
     }
 
     public boolean installModule(int moduleType) {
-        if (moduleType == 0 && overclockerModules < 8) {
+        if (moduleType == 0 && overclockerModules < 16) {
             overclockerModules++;
             return true;
         }
-        if (moduleType == 1 && transformerModules < 8) {
+        if (moduleType == 1 && transformerModules < 16) {
             transformerModules++;
             return true;
         }
-        if (moduleType == 2 && capacityModules < 8) {
+        if (moduleType == 2 && capacityModules < 16) {
             capacityModules++;
             updateStorageCapacity();
             return true;
@@ -72,7 +72,7 @@ public class TileEntityMachine extends TileEntity {
     }
 
     protected void updateStorageCapacity() {
-        int cap = baseCapacity + capacityModules * 50000;
+        int cap = baseCapacity + getCapacityModules() * 50000;
         int energy = storage.getEnergyStored();
         storage = new EnergyStorageTCW(cap);
         storage.setEnergy(energy);

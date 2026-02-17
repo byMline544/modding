@@ -144,14 +144,11 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
             return;
         }
 
-        if (worldObj.isRemote) {
-            if (worldObj.rand.nextInt(4) == 0) {
-                worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
-            }
-            return;
+        if (worldObj.rand.nextInt(4) == 0) {
+            worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
         }
 
-        if (worldObj.getWorldTime() % 40 == 0) {
+        if (!worldObj.isRemote && worldObj.getWorldTime() % 40 == 0) {
             worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "random.fizz", 0.2F, 1.8F);
         }
     }
@@ -206,7 +203,7 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
                 }
             }
         }
-        return Math.min(4, count);
+        return Math.min(16, count);
     }
 
     @Override

@@ -22,6 +22,9 @@ public class PlayerEquipmentEventHandler {
 
         ItemStack legs = player.inventory.armorInventory[1];
         applyLeggingsSprintBoost(player, legs);
+        ItemStack boots = player.inventory.armorInventory[0];
+        drainBootsOnJump(player, boots);
+
     }
 
     @ForgeSubscribe
@@ -68,13 +71,13 @@ public class PlayerEquipmentEventHandler {
         int sprintCost = 0;
         int jumpCost = 0;
         if (name.contains("quantum_leggings")) {
-            boost = 3.0F;
-            sprintCost = 26;
-            jumpCost = 200;
+            boost = 7.0F;
+            sprintCost = 36;
+            jumpCost = 220;
         } else if (name.contains("nano_leggings")) {
-            boost = 1.8F;
-            sprintCost = 16;
-            jumpCost = 140;
+            boost = 3.0F;
+            sprintCost = 20;
+            jumpCost = 150;
         }
 
         if (boost <= 0.0F || ElectricItemHelper.getEnergy(legs) <= 0) {
@@ -89,6 +92,20 @@ public class PlayerEquipmentEventHandler {
 
         if (!player.onGround && player.motionY > 0.15D) {
             ElectricItemHelper.addEnergy(legs, -jumpCost);
+        }
+    }
+
+
+    private void drainBootsOnJump(EntityPlayer player, ItemStack boots) {
+        if (boots == null || boots.getItem() == null) {
+            return;
+        }
+        String name = boots.getItem().getUnlocalizedName();
+        if (name == null || (!name.contains("nano_boots") && !name.contains("quantum_boots"))) {
+            return;
+        }
+        if (!player.onGround && player.motionY > 0.15D) {
+            ElectricItemHelper.addEnergy(boots, -8);
         }
     }
 

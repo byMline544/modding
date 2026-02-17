@@ -42,7 +42,7 @@ public class TileEntityModificationTable extends TileEntityMachine implements II
     }
 
     public int getScaledProgress(int scale) {
-        return progress * scale / 100;
+        return (int) (progress * scale / 100);
     }
 
     private boolean canCraft() {
@@ -149,6 +149,10 @@ public class TileEntityModificationTable extends TileEntityMachine implements II
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return isStackValidForSlot(slot, stack);
+    }
+
+    public boolean isStackValidForSlot(int slot, ItemStack stack) {
         if (slot == 0) {
             if (stack == null || stack.getItem() == null || stack.getItem().getUnlocalizedName() == null) return false;
             String name = stack.getItem().getUnlocalizedName();
