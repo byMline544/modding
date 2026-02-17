@@ -27,7 +27,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             return;
         }
 
-        int outputPerTick = 14;
+        int outputPerTick = 24;
         boolean hadBurning = burnTime > 0;
         int fuelSaveDivider = 1 + getOverclockerModules();
 
@@ -55,7 +55,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         }
 
         int reserve = 0;
-        int sendPerTick = 64;
+        int sendPerTick = 96;
         sendPerTick += getTransformerModules() * 12;
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick);

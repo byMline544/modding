@@ -39,11 +39,11 @@ public class TileEntitySolarPanel extends TileEntityMachine {
         }
 
         if (worldObj.isDaytime() && !worldObj.provider.hasNoSky && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
-            storage.receiveEnergy(generation * 2, false);
+            storage.receiveEnergy(generation * 4, false);
         }
 
         int reserve = 0;
-        int sendPerTick = Math.max(36, generation * 4);
+        int sendPerTick = Math.max(72, generation * 6);
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick * 3);
         }

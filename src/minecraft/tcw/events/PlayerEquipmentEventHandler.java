@@ -16,10 +16,7 @@ public class PlayerEquipmentEventHandler {
         }
 
         EntityPlayer player = (EntityPlayer) event.entityLiving;
-        if (player.worldObj.isRemote) {
-            return;
-        }
-
+        player.capabilities.setPlayerWalkSpeed(0.1F);
         ItemStack legs = player.inventory.armorInventory[1];
         applyLeggingsSprintBoost(player, legs);
 
@@ -44,6 +41,10 @@ public class PlayerEquipmentEventHandler {
 
         int energy = ElectricItemHelper.getEnergy(boots);
         if (energy <= 0) {
+            return;
+        }
+
+        if (event.distance < 3.5F) {
             return;
         }
 
@@ -79,18 +80,21 @@ public class PlayerEquipmentEventHandler {
         }
 
         if (boost <= 0.0F || ElectricItemHelper.getEnergy(legs) <= 0) {
+            player.capabilities.setPlayerWalkSpeed(0.1F);
             return;
         }
 
+        float targetWalkSpeed = 0.1F;
         if (player.onGround && player.isSprinting()) {
-            player.motionX *= (1.0D + boost);
-            player.motionZ *= (1.0D + boost);
+            targetWalkSpeed = name.contains("quantum_leggings") ? 0.8F : 0.4F;
             ElectricItemHelper.addEnergy(legs, -sprintCost);
         }
 
         if (!player.onGround && player.motionY > 0.15D) {
             ElectricItemHelper.addEnergy(legs, -jumpCost);
         }
+
+        player.capabilities.setPlayerWalkSpeed(targetWalkSpeed);
     }
 
 

@@ -21,9 +21,7 @@ public class GuiGenerator extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Генератор", 8, 6, 4210752);
-        boolean linked = machine.isConnectedToEnergyNet();
-        fontRenderer.drawString("Подключение к сети: " + (linked ? "✓" : "✗"), 8, 16, linked ? 0x2f8f2f : 0xAA2222);
-
+        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored() + " / " + machine.getStorage().getMaxEnergyStored(), 8, 16, 0x2f6f2f);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

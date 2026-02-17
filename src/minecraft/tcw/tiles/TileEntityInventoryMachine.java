@@ -127,16 +127,16 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
         int[][] o = new int[][] { {1,0,0}, {-1,0,0}, {0,1,0}, {0,-1,0}, {0,0,1}, {0,0,-1} };
         for (int i = 0; i < o.length; i++) {
             net.minecraft.tileentity.TileEntity tile = worldObj.getBlockTileEntity(xCoord + o[i][0], yCoord + o[i][1], zCoord + o[i][2]);
-            if (tile instanceof TileEntityGenerator && ((TileEntityGenerator) tile).getStorage().getEnergyStored() > 0) {
+            if (tile instanceof TileEntityGenerator) {
                 return true;
             }
-            if (tile instanceof TileEntitySolarPanel && ((TileEntitySolarPanel) tile).getStorage().getEnergyStored() > 0) {
+            if (tile instanceof TileEntitySolarPanel) {
                 return true;
             }
-            if (tile instanceof TileEntityCable && ((TileEntityCable) tile).getStorage().getEnergyStored() > 0) {
+            if (tile instanceof TileEntityCable) {
                 return true;
             }
-            if (tile instanceof TileEntityEnergyBuffer && ((TileEntityEnergyBuffer) tile).getStorage().getEnergyStored() > 0) {
+            if (tile instanceof TileEntityEnergyBuffer) {
                 return true;
             }
         }
@@ -171,14 +171,7 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
     }
 
     protected boolean ensurePowerLinkOrDropEnergy() {
-        boolean linked = hasExternalPowerLink();
-        if (!linked && storage.getEnergyStored() > 0) {
-            storage.setEnergy(0);
-            if (worldObj != null && !worldObj.isRemote) {
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            }
-        }
-        return linked;
+        return hasExternalPowerLink();
     }
 
 
