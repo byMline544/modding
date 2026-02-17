@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -51,7 +52,7 @@ public class EventHandler {
         RenderItem itemRenderer = new RenderItem();
 
         ItemStack held = player.getCurrentEquippedItem();
-        if (held != null && held.getItem() instanceof IElectricItemTCW) {
+        if (held != null && held.getItem() instanceof IElectricItemTCW && !(held.getItem() instanceof ItemArmor)) {
             int heldEnergy = ElectricItemHelper.getEnergy(held);
             fr.drawStringWithShadow(String.valueOf(heldEnergy), x - 22, y - 12, 0xFFE44D);
             RenderHelper.enableStandardItemLighting();

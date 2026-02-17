@@ -88,6 +88,9 @@ public class TileEntityMachine extends TileEntity {
                 for (int dz = -radius; dz <= radius; dz++) {
                     net.minecraft.tileentity.TileEntity te = world.getBlockTileEntity(x + dx, y + dy, z + dz);
                     if (te instanceof TileEntityMachine) {
+                        if (te instanceof TileEntityGenerator || te instanceof TileEntitySolarPanel || te instanceof TileEntityEnergyBuffer) {
+                            continue;
+                        }
                         TileEntityMachine machine = (TileEntityMachine) te;
                         if (machine.storage.getEnergyStored() > 0) {
                             machine.storage.setEnergy(0);

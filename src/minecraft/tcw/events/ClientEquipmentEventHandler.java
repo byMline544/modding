@@ -81,6 +81,9 @@ public class ClientEquipmentEventHandler {
         boolean jump = Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.keyCode);
         if (jump) {
             player.motionY = Math.min(0.6D, player.motionY + jetpack.getThrust());
+            double sideBoost = jetpack.getThrust() * 1.9D;
+            player.motionX += (-Math.sin(Math.toRadians(player.rotationYaw)) * player.moveForward + Math.cos(Math.toRadians(player.rotationYaw)) * player.moveStrafing) * sideBoost;
+            player.motionZ += (Math.cos(Math.toRadians(player.rotationYaw)) * player.moveForward + Math.sin(Math.toRadians(player.rotationYaw)) * player.moveStrafing) * sideBoost;
             player.fallDistance = 0.0F;
             ElectricItemHelper.addEnergy(chest, -jetpack.getEnergyPerTick());
         }
