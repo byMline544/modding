@@ -134,12 +134,62 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
                 return true;
             }
             if (tile instanceof TileEntityCable) {
-                return true;
+                if (hasPoweredSourceInCableNetwork((TileEntityCable) tile, 32)) {
+                    return true;
+                }
             }
             if (tile instanceof TileEntityEnergyBuffer) {
                 return true;
             }
         }
+        return false;
+    }
+
+    private boolean hasPoweredSourceInCableNetwork(TileEntityCable start, int maxDepth) {
+        if (start == null || start.worldObj == null) {
+            return false;
+        }
+
+        java.util.ArrayDeque<net.minecraft.tileentity.TileEntity> queue = new java.util.ArrayDeque<net.minecraft.tileentity.TileEntity>();
+        java.util.ArrayDeque<Integer> depth = new java.util.ArrayDeque<Integer>();
+        java.util.HashSet<String> seen = new java.util.HashSet<String>();
+
+        queue.add(start);
+        depth.add(Integer.valueOf(0));
+
+        while (!queue.isEmpty()) {
+            net.minecraft.tileentity.TileEntity tile = queue.poll();
+            int d = depth.poll().intValue();
+            String key = tile.xCoord + ":" + tile.yCoord + ":" + tile.zCoord;
+            if (!seen.add(key)) {
+                continue;
+            }
+
+            net.minecraftforge.common.ForgeDirection[] dirs = net.minecraftforge.common.ForgeDirection.VALID_DIRECTIONS;
+            for (int i = 0; i < dirs.length; i++) {
+                net.minecraftforge.common.ForgeDirection dir = dirs[i];
+                net.minecraft.tileentity.TileEntity t = tile.worldObj.getBlockTileEntity(tile.xCoord + dir.offsetX, tile.yCoord + dir.offsetY,
+                        tile.zCoord + dir.offsetZ);
+                if (t == null) {
+                    continue;
+                }
+
+                if (t instanceof TileEntityGenerator && ((TileEntityGenerator) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntitySolarPanel && ((TileEntitySolarPanel) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntityEnergyBuffer && ((TileEntityEnergyBuffer) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntityCable && d < maxDepth) {
+                    queue.add(t);
+                    depth.add(Integer.valueOf(d + 1));
+                }
+            }
+        }
+
         return false;
     }
 

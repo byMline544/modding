@@ -86,12 +86,12 @@ public class PlayerEquipmentEventHandler {
 
         float targetWalkSpeed = 0.1F;
         if (player.onGround && player.isSprinting()) {
-            targetWalkSpeed = name.contains("quantum_leggings") ? 0.8F : 0.4F;
-            ElectricItemHelper.addEnergy(legs, -sprintCost);
+            targetWalkSpeed = name.contains("quantum_leggings") ? 0.3F : 0.2F;
+            if (!player.worldObj.isRemote) ElectricItemHelper.addEnergy(legs, -sprintCost);
         }
 
         if (!player.onGround && player.motionY > 0.15D) {
-            ElectricItemHelper.addEnergy(legs, -jumpCost);
+            if (!player.worldObj.isRemote) ElectricItemHelper.addEnergy(legs, -jumpCost);
         }
 
         player.capabilities.setPlayerWalkSpeed(targetWalkSpeed);

@@ -62,7 +62,6 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         int energy = ElectricItemHelper.getEnergy(stack);
-        list.add("Комплект: " + setName);
         list.add("Электро-броня");
         list.add("Энергия: " + energy + " / " + getMaxEnergy(stack));
         if (armorType == 0 && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_NightVisionModule")) {
