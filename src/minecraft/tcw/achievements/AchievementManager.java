@@ -2,6 +2,8 @@ package tcw.achievements;
 
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 import net.minecraftforge.common.AchievementPage;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import tcw.blocks.MachineTier;
@@ -9,6 +11,8 @@ import tcw.managers.BlockManager;
 import tcw.managers.ItemManager;
 
 public class AchievementManager {
+
+    private static boolean registered;
 
     public static Achievement openBook;
     public static Achievement castBronze;
@@ -33,6 +37,10 @@ public class AchievementManager {
     public static Achievement cableArchitect;
 
     public static void registerAchievements() {
+        if (registered) {
+            return;
+        }
+        registered = true;
         addLoc("achievement.tcw.openBook", "ТехноCloud: Начало", "ТехноCloud: Начало");
         addLoc("achievement.tcw.openBook.desc", "Открыть справочник TechnoCloud", "Открыть справочник TechnoCloud");
         addLoc("achievement.tcw.castBronze", "Первая бронза", "Первая бронза");
@@ -75,32 +83,54 @@ public class AchievementManager {
         addLoc("achievement.tcw.cableArchitect", "Архитектор сети", "Архитектор сети");
         addLoc("achievement.tcw.cableArchitect.desc", "Создать крио-кабель", "Создать крио-кабель");
 
-        openBook = new Achievement(5000, "tcw.openBook", 0, 0, ItemManager.techBook, AchievementList.openInventory).registerAchievement();
-        castBronze = new Achievement(5001, "tcw.castBronze", 2, 0, ItemManager.bronzeIngot, openBook).registerAchievement();
-        firstMachine = new Achievement(5002, "tcw.firstMachine", 4, 0, BlockManager.machines[MachineTier.CRUSHER.ordinal()], castBronze).registerAchievement();
-        electricAge = new Achievement(5003, "tcw.electricAge", 6, 0, BlockManager.machines[MachineTier.GENERATOR.ordinal()], firstMachine).registerAchievement();
-        firstSolar = new Achievement(5004, "tcw.firstSolar", 8, 0, BlockManager.solarBasic, electricAge).registerAchievement();
-        brightFuture = new Achievement(5005, "tcw.brightFuture", 10, 0, BlockManager.solarUltimate, firstSolar).registerAchievement();
-        oreHunter = new Achievement(5006, "tcw.oreHunter", 2, 2, BlockManager.oreNickel, openBook).registerAchievement();
-        armored = new Achievement(5007, "tcw.armored", 4, 2, ItemManager.bronzeChestplate, castBronze).registerAchievement();
-        energyMaster = new Achievement(5008, "tcw.energyMaster", 8, 2, ItemManager.batteryAdvanced, firstMachine).registerAchievement();
-        cloudEngineer = new Achievement(5009, "tcw.cloudEngineer", 10, 2, BlockManager.machines[MachineTier.CHARGER.ordinal()], brightFuture).setSpecial().registerAchievement();
+        int id = nextFreeAchievementId();
+        openBook = new Achievement(id++, "tcw.openBook", 0, 0, ItemManager.techBook, AchievementList.openInventory).registerAchievement();
+        castBronze = new Achievement(id++, "tcw.castBronze", 2, 0, ItemManager.bronzeIngot, openBook).registerAchievement();
+        firstMachine = new Achievement(id++, "tcw.firstMachine", 4, 0, BlockManager.machines[MachineTier.CRUSHER.ordinal()], castBronze).registerAchievement();
+        electricAge = new Achievement(id++, "tcw.electricAge", 6, 0, BlockManager.machines[MachineTier.GENERATOR.ordinal()], firstMachine).registerAchievement();
+        firstSolar = new Achievement(id++, "tcw.firstSolar", 8, 0, BlockManager.solarBasic, electricAge).registerAchievement();
+        brightFuture = new Achievement(id++, "tcw.brightFuture", 10, 0, BlockManager.solarUltimate, firstSolar).registerAchievement();
+        oreHunter = new Achievement(id++, "tcw.oreHunter", 2, 2, BlockManager.oreNickel, openBook).registerAchievement();
+        armored = new Achievement(id++, "tcw.armored", 4, 2, ItemManager.bronzeChestplate, castBronze).registerAchievement();
+        energyMaster = new Achievement(id++, "tcw.energyMaster", 8, 2, ItemManager.batteryAdvanced, firstMachine).registerAchievement();
+        cloudEngineer = new Achievement(id++, "tcw.cloudEngineer", 10, 2, BlockManager.machines[MachineTier.CHARGER.ordinal()], brightFuture).setSpecial().registerAchievement();
 
-        silverAge = new Achievement(5010, "tcw.silverAge", 1, 4, BlockManager.oreSilver, oreHunter).registerAchievement();
-        uraniumAge = new Achievement(5011, "tcw.uraniumAge", 3, 4, BlockManager.oreUranium, silverAge).registerAchievement();
-        steelMind = new Achievement(5012, "tcw.steelMind", 5, 4, ItemManager.steelIngot, uraniumAge).registerAchievement();
-        nanoCrafter = new Achievement(5013, "tcw.nanoCrafter", 7, 4, ItemManager.nanoFiber, steelMind).registerAchievement();
-        matrixBuilder = new Achievement(5014, "tcw.matrixBuilder", 9, 4, ItemManager.energyMatrix, nanoCrafter).registerAchievement();
-        quantumLeap = new Achievement(5015, "tcw.quantumLeap", 11, 4, ItemManager.quantumCore, matrixBuilder).setSpecial().registerAchievement();
-        nanoWarrior = new Achievement(5016, "tcw.nanoWarrior", 7, 6, ItemManager.nanoChestplate, nanoCrafter).registerAchievement();
-        quantumWarrior = new Achievement(5017, "tcw.quantumWarrior", 11, 6, ItemManager.quantumChestplate, quantumLeap).setSpecial().registerAchievement();
-        precisionAssembler = new Achievement(5018, "tcw.precisionAssembler", 5, 6, BlockManager.machines[MachineTier.ASSEMBLER.ordinal()], firstMachine).registerAchievement();
-        cableArchitect = new Achievement(5019, "tcw.cableArchitect", 9, 6, BlockManager.energyCableCryo, precisionAssembler).registerAchievement();
+        silverAge = new Achievement(id++, "tcw.silverAge", 1, 4, BlockManager.oreSilver, oreHunter).registerAchievement();
+        uraniumAge = new Achievement(id++, "tcw.uraniumAge", 3, 4, BlockManager.oreUranium, silverAge).registerAchievement();
+        steelMind = new Achievement(id++, "tcw.steelMind", 5, 4, ItemManager.steelIngot, uraniumAge).registerAchievement();
+        nanoCrafter = new Achievement(id++, "tcw.nanoCrafter", 7, 4, ItemManager.nanoFiber, steelMind).registerAchievement();
+        matrixBuilder = new Achievement(id++, "tcw.matrixBuilder", 9, 4, ItemManager.energyMatrix, nanoCrafter).registerAchievement();
+        quantumLeap = new Achievement(id++, "tcw.quantumLeap", 11, 4, ItemManager.quantumCore, matrixBuilder).setSpecial().registerAchievement();
+        nanoWarrior = new Achievement(id++, "tcw.nanoWarrior", 7, 6, ItemManager.nanoChestplate, nanoCrafter).registerAchievement();
+        quantumWarrior = new Achievement(id++, "tcw.quantumWarrior", 11, 6, ItemManager.quantumChestplate, quantumLeap).setSpecial().registerAchievement();
+        precisionAssembler = new Achievement(id++, "tcw.precisionAssembler", 5, 6, BlockManager.machines[MachineTier.ASSEMBLER.ordinal()], firstMachine).registerAchievement();
+        cableArchitect = new Achievement(id++, "tcw.cableArchitect", 9, 6, BlockManager.energyCableCryo, precisionAssembler).registerAchievement();
 
-        AchievementPage.registerAchievementPage(new AchievementPage("TechnoCloud",
-                openBook, castBronze, firstMachine, electricAge, firstSolar, brightFuture, oreHunter, armored, energyMaster, cloudEngineer,
-                silverAge, uraniumAge, steelMind, nanoCrafter, matrixBuilder, quantumLeap, nanoWarrior, quantumWarrior, precisionAssembler,
-                cableArchitect));
+        if (AchievementPage.getAchievementPage("TechnoCloud") == null) {
+            AchievementPage.registerAchievementPage(new AchievementPage("TechnoCloud",
+                    openBook, castBronze, firstMachine, electricAge, firstSolar, brightFuture, oreHunter, armored, energyMaster, cloudEngineer,
+                    silverAge, uraniumAge, steelMind, nanoCrafter, matrixBuilder, quantumLeap, nanoWarrior, quantumWarrior, precisionAssembler,
+                    cableArchitect));
+        }
+    }
+
+    private static int nextFreeAchievementId() {
+        int id = 12000;
+        while (isAchievementIdBusy(id)) {
+            id++;
+        }
+        return id;
+    }
+
+    private static boolean isAchievementIdBusy(int id) {
+        int statId = 5242880 + id;
+        for (int i = 0; i < StatList.allStats.size(); i++) {
+            StatBase stat = (StatBase) StatList.allStats.get(i);
+            if (stat != null && stat.statId == statId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void addLoc(String key, String ru, String en) {

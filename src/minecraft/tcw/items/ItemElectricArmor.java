@@ -23,9 +23,10 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
         super(id, material, renderIndex, armorType);
         this.textureKey = textureKey;
         this.setName = setName;
-        this.maxEnergy = "quantum".equals(setName) ? 10000000 : 1500000;
+        this.maxEnergy = "quantum".equals(setName) ? 700000 : 110000;
         setUnlocalizedName(textureKey);
         setCreativeTab(TCWCreativeTab.TAB_EQUIPMENT);
+        setMaxDamage(0);
     }
 
     @Override
@@ -44,16 +45,16 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
         return false;
     }
 
-    @Override
     public boolean showDurabilityBar(ItemStack stack) {
         return true;
     }
 
-    @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         int max = getMaxEnergy(stack);
         int energy = ElectricItemHelper.getEnergy(stack);
-        if (max <= 0) return 1.0D;
+        if (max <= 0) {
+            return 1.0D;
+        }
         return 1.0D - ((double) energy / (double) max);
     }
 
@@ -61,9 +62,14 @@ public class ItemElectricArmor extends ItemArmor implements IElectricItemTCW {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         int energy = ElectricItemHelper.getEnergy(stack);
-        list.add("Комплект: " + setName);
         list.add("Электро-броня");
         list.add("Энергия: " + energy + " / " + getMaxEnergy(stack));
+        if (armorType == 0 && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_NightVisionModule")) {
+            list.add("МОДУЛЬ: установлен модуль ночного видения");
+        }
+        if (armorType == 2 && stack.hasTagCompound() && stack.getTagCompound().getBoolean("TCW_FastRunModule")) {
+            list.add("МОДУЛЬ: установлен модуль быстрого бега");
+        }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

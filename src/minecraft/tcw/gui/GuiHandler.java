@@ -14,6 +14,7 @@ import tcw.tiles.TileEntityExtractor;
 import tcw.tiles.TileEntityGenerator;
 import tcw.tiles.TileEntityMacerator;
 import tcw.tiles.TileEntitySolarPanel;
+import tcw.tiles.TileEntityModificationTable;
 import tcw.tiles.TileEntityWiremill;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -37,6 +38,7 @@ public class GuiHandler implements IGuiHandler {
         if (id == 9 && tile instanceof TileEntityCharger) return new ContainerCharger(player.inventory, (TileEntityCharger) tile);
         if (id == 10 && tile instanceof TileEntitySolarPanel) return new ContainerSolarPanel(player.inventory, (TileEntitySolarPanel) tile);
         if (id == 11 && tile instanceof TileEntityMacerator) return new ContainerMacerator(player.inventory, (TileEntityMacerator) tile);
+        if (id == 12 && tile instanceof TileEntityModificationTable) return new ContainerModificationTable(player.inventory, (TileEntityModificationTable) tile);
         return null;
     }
 
@@ -58,6 +60,7 @@ public class GuiHandler implements IGuiHandler {
         if (id == 9 && tile instanceof TileEntityCharger) return new GuiCharger(player.inventory, (TileEntityCharger) tile);
         if (id == 10 && tile instanceof TileEntitySolarPanel) return new GuiSolarPanel(player.inventory, (TileEntitySolarPanel) tile);
         if (id == 11 && tile instanceof TileEntityMacerator) return new GuiMacerator(player.inventory, (TileEntityMacerator) tile);
+        if (id == 12 && tile instanceof TileEntityModificationTable) return new GuiModificationTable(player.inventory, (TileEntityModificationTable) tile);
         return null;
     }
 }

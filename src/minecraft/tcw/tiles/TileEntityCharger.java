@@ -9,7 +9,7 @@ import tcw.items.IElectricItemTCW;
 public class TileEntityCharger extends TileEntityInventoryMachine {
 
     private int progress;
-    private boolean fastMode;
+    private boolean fastMode = true;
 
     public TileEntityCharger() {
         super(180000, 2);
@@ -20,16 +20,34 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         super.updateEntity();
         if (worldObj.isRemote) return;
 
-        int cost = fastMode ? 900 : 500;
         boolean linked = ensurePowerLinkOrDropEnergy();
-        boolean canRun = linked && canCharge() && storage.getEnergyStored() >= cost;
+
+        // Электро-предметы заряжаем напрямую за тик: берём ровно столько, сколько реально нужно.
+        if (linked && inventory[0] != null && inventory[0].getItem() instanceof IElectricItemTCW) {
+            int stored = storage.getEnergyStored();
+            int max = ElectricItemHelper.getMaxEnergy(inventory[0]);
+            int current = ElectricItemHelper.getEnergy(inventory[0]);
+            int need = Math.max(0, max - current);
+            int transfer = Math.min(Math.min(4000 + getOverclockerModules() * 500, stored), need);
+            if (transfer > 0) {
+                storage.extractEnergy(transfer, false);
+                ElectricItemHelper.addEnergy(inventory[0], transfer);
+                tickMachineEffects(true);
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                return;
+            }
+        }
+
+        int cost = getEnergyCostWithModules(420);
+        boolean canRun = linked && canChargeBattery() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
-            progress++;
-            int workTime = isElectricRepairMode() ? 4 : (fastMode ? 60 : 100);
+            progress += getProgressStepWithModules();
+            int workTime = 60;
             if (progress >= workTime) {
                 progress = 0;
-                charge();
+                chargeBattery();
             }
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         } else if (progress > 0) {
@@ -38,12 +56,7 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
         }
     }
 
-    /**
-     * Проверка доступного режима зарядки:
-     * 1) Конверсия батареи basic -> advanced.
-     * 2) Подзарядка электро-предмета через уменьшение его износа.
-     */
-    private boolean canCharge() {
+    private boolean canChargeBattery() {
         if (inventory[0] == null) return false;
 
         if (inventory[0].itemID == ItemManager.batteryBasic.itemID) {
@@ -52,23 +65,11 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
             return inventory[1].stackSize < inventory[1].getMaxStackSize();
         }
 
-        return inventory[0].getItem() instanceof IElectricItemTCW
-                && ElectricItemHelper.getEnergy(inventory[0]) < ElectricItemHelper.getMaxEnergy(inventory[0]);
+        return false;
     }
 
-    private boolean isElectricRepairMode() {
-        return inventory[0] != null && inventory[0].getItem() instanceof IElectricItemTCW;
-    }
-
-    private void charge() {
-        if (!canCharge()) return;
-
-        if (isElectricRepairMode()) {
-            // Заряд электро-предметов по NBT-энергии.
-            ElectricItemHelper.addEnergy(inventory[0], fastMode ? 6000 : 3000);
-            onInventoryChanged();
-            return;
-        }
+    private void chargeBattery() {
+        if (!canChargeBattery()) return;
 
         if (inventory[1] == null) inventory[1] = new ItemStack(ItemManager.batteryAdvanced, 1);
         else inventory[1].stackSize++;
@@ -92,14 +93,13 @@ public class TileEntityCharger extends TileEntityInventoryMachine {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) { super.readFromNBT(nbt); progress = nbt.getInteger("Progress"); fastMode = nbt.getBoolean("FastMode"); }
+    public void readFromNBT(NBTTagCompound nbt) { super.readFromNBT(nbt); progress = nbt.getInteger("Progress"); fastMode = true; }
     @Override
     public void writeToNBT(NBTTagCompound nbt) { super.writeToNBT(nbt); nbt.setInteger("Progress", progress); nbt.setBoolean("FastMode", fastMode); }
 
-
     public boolean isFastMode() { return fastMode; }
-    public void toggleFastMode() { fastMode = !fastMode; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
-    public void setClientFastMode(int mode) { fastMode = mode == 1; }
+    public void toggleFastMode() { fastMode = true; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void setClientFastMode(int mode) { fastMode = true; }
 
     public int getProgress() { return progress; }
     public void setClientProgress(int value) { this.progress = value; }

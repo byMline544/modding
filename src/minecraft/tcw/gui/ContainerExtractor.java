@@ -24,6 +24,10 @@ public class ContainerExtractor extends Container {
         this.machine = machine;
         addSlotToContainer(new Slot(machine, 0, 56, 35));
         addSlotToContainer(new Slot(machine, 1, 116, 35));
+        for (int i = 0; i < machine.getModuleSlotCount(); i++) {
+            addSlotToContainer(new SlotMachineModule(machine, machine.getModuleSlotStart() + i, 152, 8 + i * 16));
+        }
+
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
@@ -87,7 +91,7 @@ public class ContainerExtractor extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack in = slot.getStack();
             ret = in.copy();
-            if (index < 2) {
+            if (index < 2 + machine.getModuleSlotCount()) {
                 if (!mergeItemStack(in, 2, inventorySlots.size(), true)) return null;
             } else if (!mergeItemStack(in, 0, 1, false)) return null;
             if (in.stackSize <= 0) slot.putStack((ItemStack) null); else slot.onSlotChanged();

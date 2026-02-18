@@ -9,24 +9,38 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
 
     public int burnTime;
     private int currentItemBurnTime;
-    private boolean ecoMode;
+    private int burnTickAccumulator;
 
     public TileEntityGenerator() {
         super(160000, 1);
     }
 
     @Override
+    public int getDesiredReceivePerTick() {
+        return 0;
+    }
+
+    @Override
     public void updateEntity() {
+        super.updateEntity();
         if (worldObj.isRemote) {
             return;
         }
 
-        int outputPerTick = ecoMode ? 2 : 3;
+        int beforeEnergy = storage.getEnergyStored();
+        int beforeBurn = burnTime;
+
+        int outputPerTick = 24;
         boolean hadBurning = burnTime > 0;
+        int fuelSaveDivider = 1 + getOverclockerModules();
 
         if (burnTime > 0 && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
-            burnTime--;
-            storage.receiveEnergy(outputPerTick, false);
+            burnTickAccumulator++;
+            if (burnTickAccumulator >= fuelSaveDivider) {
+                burnTime--;
+                burnTickAccumulator = 0;
+            }
+            storage.receiveEnergy(outputPerTick + getOverclockerModules(), false);
         }
 
         if (burnTime <= 0 && inventory[0] != null && storage.getEnergyStored() + outputPerTick <= storage.getMaxEnergyStored()) {
@@ -34,6 +48,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             if (itemBurn > 0) {
                 currentItemBurnTime = Math.max(12, itemBurn / 24);
                 burnTime = currentItemBurnTime;
+                burnTickAccumulator = 0;
                 inventory[0].stackSize--;
                 if (inventory[0].stackSize <= 0) {
                     inventory[0] = null;
@@ -42,14 +57,19 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             }
         }
 
-        int reserve = ecoMode ? 180 : 260;
-        int sendPerTick = ecoMode ? 14 : 18;
+        int reserve = 0;
+        int sendPerTick = 96;
+        sendPerTick += getTransformerModules() * 12;
         if (storage.getEnergyStored() > reserve) {
             EnergyNetHelper.pushToNeighbors(this, sendPerTick, 0, reserve, sendPerTick);
         }
 
         if (worldObj.getWorldTime() % 10 == 0 || hadBurning != (burnTime > 0)) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+
+        if (beforeEnergy != storage.getEnergyStored() || beforeBurn != burnTime) {
+            onInventoryChanged();
         }
     }
 
@@ -73,7 +93,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         super.readFromNBT(nbt);
         burnTime = nbt.getInteger("BurnTime");
         currentItemBurnTime = nbt.getInteger("CurrentItemBurnTime");
-        ecoMode = nbt.getBoolean("EcoMode");
+        burnTickAccumulator = nbt.getInteger("BurnAcc");
         if (currentItemBurnTime <= 0) {
             currentItemBurnTime = 200;
         }
@@ -84,7 +104,7 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         super.writeToNBT(nbt);
         nbt.setInteger("BurnTime", burnTime);
         nbt.setInteger("CurrentItemBurnTime", currentItemBurnTime);
-        nbt.setBoolean("EcoMode", ecoMode);
+        nbt.setInteger("BurnAcc", burnTickAccumulator);
     }
 
     public int getBurnTime() {
@@ -99,22 +119,6 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
         int energy = this.storage.getMaxEnergyStored() * scaled / 10000;
         this.storage.setEnergy(energy);
     }
-
-    public boolean isEcoMode() {
-        return ecoMode;
-    }
-
-    public void toggleEcoMode() {
-        ecoMode = !ecoMode;
-        if (worldObj != null) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-    }
-
-    public void setClientEcoMode(int mode) {
-        ecoMode = mode == 1;
-    }
-
     public int getScaledBurnTime(int scale) {
         int max = currentItemBurnTime <= 0 ? 200 : currentItemBurnTime;
         return burnTime * scale / max;

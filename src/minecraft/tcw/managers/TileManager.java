@@ -7,10 +7,12 @@ import tcw.tiles.TileEntityCharger;
 import tcw.tiles.TileEntityCompressor;
 import tcw.tiles.TileEntityCrusher;
 import tcw.tiles.TileEntityElectricFurnace;
+import tcw.tiles.TileEntityEnergyBuffer;
 import tcw.tiles.TileEntityExtractor;
 import tcw.tiles.TileEntityGenerator;
 import tcw.tiles.TileEntityMachine;
 import tcw.tiles.TileEntityMacerator;
+import tcw.tiles.TileEntityModificationTable;
 import tcw.tiles.TileEntitySolarPanel;
 import tcw.tiles.TileEntityWiremill;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,5 +33,7 @@ public class TileManager {
         GameRegistry.registerTileEntity(TileEntityAssembler.class, "tcw.assembler");
         GameRegistry.registerTileEntity(TileEntityCharger.class, "tcw.charger");
         GameRegistry.registerTileEntity(TileEntityCable.class, "tcw.cable");
+        GameRegistry.registerTileEntity(TileEntityEnergyBuffer.class, "tcw.energyBuffer");
+        GameRegistry.registerTileEntity(TileEntityModificationTable.class, "tcw.modificationTable");
     }
 }

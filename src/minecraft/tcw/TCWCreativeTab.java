@@ -20,7 +20,7 @@ public class TCWCreativeTab {
     public static final CreativeTabs TAB_EQUIPMENT = new CreativeTabs("technocloud.equipment") {
         @Override
         public Item getTabIconItem() {
-            return ItemManager.nanoSword != null ? ItemManager.nanoSword : Item.diamondSword;
+            return ItemManager.nanoSword != null ? ItemManager.nanoSword : Item.swordDiamond;
         }
     };
 

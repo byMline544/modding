@@ -11,11 +11,14 @@ import tcw.blocks.BlockCompressor;
 import tcw.blocks.BlockCrusher;
 import tcw.blocks.BlockElectricFurnace;
 import tcw.blocks.BlockExtractor;
+import tcw.blocks.BlockEnergyBuffer;
 import tcw.blocks.BlockGenerator;
 import tcw.blocks.BlockMacerator;
+import tcw.blocks.BlockModificationTable;
 import tcw.blocks.BlockMachineCasing;
 import tcw.blocks.BlockOreTCW;
 import tcw.blocks.BlockSolarPanel;
+import tcw.tiles.TileEntityEnergyBuffer;
 import tcw.blocks.BlockWiremill;
 import tcw.blocks.MachineTier;
 import tcw.energy.CableTier;
@@ -39,6 +42,11 @@ public class BlockManager {
     public static Block energyCable;
     public static Block energyCableReinforced;
     public static Block energyCableCryo;
+
+    public static Block batBox;
+    public static Block mfe;
+    public static Block mfsu;
+    public static Block modificationTable;
 
     public static Block[] machines;
 
@@ -65,6 +73,11 @@ public class BlockManager {
         energyCable = registerBlock(new BlockCable(3107, CableTier.BASIC), "energy_cable", "Энергетический кабель (базовый)");
         energyCableReinforced = registerBlock(new BlockCable(3108, CableTier.REINFORCED), "energy_cable_reinforced", "Энергетический кабель (усиленный)");
         energyCableCryo = registerBlock(new BlockCable(3109, CableTier.CRYO), "energy_cable_cryo", "Энергетический кабель (крио)");
+
+        batBox = registerBlock(new BlockEnergyBuffer(3123, "batbox", TileEntityEnergyBuffer.BufferTier.BATBOX), "batbox", "БАТБОКС");
+        mfe = registerBlock(new BlockEnergyBuffer(3124, "mfe", TileEntityEnergyBuffer.BufferTier.MFE), "mfe", "МФЭ");
+        mfsu = registerBlock(new BlockEnergyBuffer(3125, "mfsu", TileEntityEnergyBuffer.BufferTier.MFSU), "mfsu", "МФСУ");
+        modificationTable = registerBlock(new BlockModificationTable(3126), "modification_table", "Стол модификации");
 
         machines = new Block[MachineTier.values().length];
         for (int i = 0; i < MachineTier.values().length; i++) {
