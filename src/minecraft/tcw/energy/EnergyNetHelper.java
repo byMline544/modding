@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import tcw.tiles.TileEntityCable;
 import tcw.tiles.TileEntityGenerator;
+import tcw.tiles.TileEntityInventoryMachine;
 import tcw.tiles.TileEntityMachine;
 import tcw.tiles.TileEntitySolarPanel;
 
@@ -71,6 +72,20 @@ public class EnergyNetHelper {
             canSend = Math.min(canSend, remainingBudget);
             if (canSend <= 0) {
                 continue;
+            }
+
+            if (target instanceof TileEntityMachine) {
+                TileEntityMachine machineTarget = (TileEntityMachine) target;
+                if (machineTarget instanceof TileEntityInventoryMachine) {
+                    if (!((TileEntityInventoryMachine) machineTarget).shouldPullEnergyFromNetwork()) {
+                        continue;
+                    }
+                }
+                if (canSend > machineTarget.getSafeInputPerTick()) {
+                    machineTarget.onOvervoltage(canSend);
+                    continue;
+                }
+                canSend = Math.min(canSend, machineTarget.getDesiredReceivePerTick());
             }
 
             int accepted = targetNode.receiveEnergy(canSend, false);

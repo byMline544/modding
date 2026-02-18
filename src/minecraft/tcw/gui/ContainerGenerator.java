@@ -13,11 +13,14 @@ public class ContainerGenerator extends Container {
     private final TileEntityGenerator machine;
     private int lastBurn;
     private int lastEnergy;
-    private int lastMode;
 
     public ContainerGenerator(InventoryPlayer playerInventory, TileEntityGenerator machine) {
         this.machine = machine;
-        addSlotToContainer(new Slot(machine, 0, 80, 35));
+        addSlotToContainer(new Slot(machine, 0, 56, 53));
+
+        for (int i = 0; i < machine.getModuleSlotCount(); i++) {
+            addSlotToContainer(new SlotMachineModule(machine, machine.getModuleSlotStart() + i, 152, 8 + i * 16));
+        }
 
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
@@ -33,7 +36,6 @@ public class ContainerGenerator extends Container {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         int energyScaled = machine.getStorage().getEnergyStored() * 10000 / machine.getStorage().getMaxEnergyStored();
-        int mode = machine.isEcoMode() ? 1 : 0;
         for (int i = 0; i < this.crafters.size(); ++i) {
             ICrafting crafting = (ICrafting) this.crafters.get(i);
             if (lastBurn != machine.getBurnTime()) {
@@ -42,14 +44,9 @@ public class ContainerGenerator extends Container {
             if (lastEnergy != energyScaled) {
                 crafting.sendProgressBarUpdate(this, 1, energyScaled);
             }
-            if (lastMode != mode) {
-                crafting.sendProgressBarUpdate(this, 2, mode);
-            }
         }
-
         lastBurn = machine.getBurnTime();
         lastEnergy = energyScaled;
-        lastMode = mode;
     }
 
     @Override
@@ -58,8 +55,6 @@ public class ContainerGenerator extends Container {
             machine.setClientBurnTime(value);
         } else if (id == 1) {
             machine.setClientEnergyScaled(value);
-        } else if (id == 2) {
-            machine.setClientEcoMode(value);
         }
     }
 
@@ -70,28 +65,18 @@ public class ContainerGenerator extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack itemstack = null;
+        ItemStack ret = null;
         Slot slot = (Slot) this.inventorySlots.get(index);
-
         if (slot != null && slot.getHasStack()) {
-            ItemStack inSlot = slot.getStack();
-            itemstack = inSlot.copy();
-
-            if (index == 0) {
-                if (!this.mergeItemStack(inSlot, 1, this.inventorySlots.size(), true)) {
-                    return null;
-                }
-            } else if (!this.mergeItemStack(inSlot, 0, 1, false)) {
+            ItemStack in = slot.getStack();
+            ret = in.copy();
+            if (index < 1 + machine.getModuleSlotCount()) {
+                if (!mergeItemStack(in, 1 + machine.getModuleSlotCount(), inventorySlots.size(), true)) return null;
+            } else if (!mergeItemStack(in, 0, 1, false)) {
                 return null;
             }
-
-            if (inSlot.stackSize == 0) {
-                slot.putStack((ItemStack) null);
-            } else {
-                slot.onSlotChanged();
-            }
+            if (in.stackSize <= 0) slot.putStack((ItemStack) null); else slot.onSlotChanged();
         }
-
-        return itemstack;
+        return ret;
     }
 }

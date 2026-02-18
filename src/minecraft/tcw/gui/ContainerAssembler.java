@@ -27,6 +27,10 @@ public class ContainerAssembler extends Container {
         addSlotToContainer(new Slot(machine, 1, 62, 35));
         addSlotToContainer(new Slot(machine, 2, 116, 35));
 
+        for (int i = 0; i < machine.getModuleSlotCount(); i++) {
+            addSlotToContainer(new SlotMachineModule(machine, machine.getModuleSlotStart() + i, 152, 8 + i * 16));
+        }
+
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
@@ -94,7 +98,7 @@ public class ContainerAssembler extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack in = slot.getStack();
             ret = in.copy();
-            if (index < 3) {
+            if (index < 3 + machine.getModuleSlotCount()) {
                 if (!mergeItemStack(in, 3, inventorySlots.size(), true)) return null;
             } else if (!mergeItemStack(in, 0, 2, false)) return null;
             if (in.stackSize <= 0) slot.putStack((ItemStack) null); else slot.onSlotChanged();

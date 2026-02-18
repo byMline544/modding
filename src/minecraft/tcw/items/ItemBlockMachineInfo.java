@@ -37,13 +37,22 @@ public class ItemBlockMachineInfo extends ItemBlock {
         } else if (key.contains("wiremill")) {
             list.add("16 EU/t • 100 тиков");
         } else if (key.contains("extractor")) {
-            list.add("26/40 EU/t • обычный/turbo");
+            list.add("44 EU/t • режим МАКС");
         } else if (key.contains("assembler")) {
-            list.add("30/48 EU/t • обычный/precision");
+            list.add("48 EU/t • режим МАКС");
         } else if (key.contains("charger")) {
-            list.add("500/900 EU/t • normal/fast");
+            list.add("900 EU/t • быстрый заряд");
         } else if (key.contains("generator")) {
-            list.add("Генерация до 80 EU/t");
+            list.add("Генерация с усилением от модулей");
+        } else if (key.contains("batbox")) {
+            list.add("БатБокс: малый буфер для стабилизации сети");
+            list.add("Принимает/отдаёт низкое напряжение");
+        } else if (key.contains("mfe")) {
+            list.add("МФЭ: средний буфер для цеха");
+            list.add("Выравнивает питание нескольких машин");
+        } else if (key.contains("mfsu")) {
+            list.add("МФСУ: крупный энергонакопитель");
+            list.add("Хранит запас для пиковых нагрузок");
         } else if (key.contains("solar")) {
             list.add("Генерация днём • зависит от уровня");
         }

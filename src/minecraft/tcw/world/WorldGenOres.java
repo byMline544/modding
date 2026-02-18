@@ -25,24 +25,28 @@ public class WorldGenOres implements IWorldGenerator {
     }
 
     private void generateSurface(World world, Random random, int x, int z) {
-        addOreSpawn(BlockManager.oreCopper.blockID, world, random, x, z, 8, 28, 20, 10, 64);
-        addOreSpawn(BlockManager.oreTin.blockID, world, random, x, z, 7, 24, 16, 8, 48);
-        addOreSpawn(BlockManager.oreNickel.blockID, world, random, x, z, 6, 16, 10, 6, 34);
-        addOreSpawn(BlockManager.oreSilver.blockID, world, random, x, z, 6, 14, 8, 4, 20);
-        addOreSpawn(BlockManager.oreUranium.blockID, world, random, x, z, 5, 10, 6, 2, 8);
+        addOreSpawn(BlockManager.oreCopper.blockID, world, random, x, z, 8, 20, 10, 64);
+        addOreSpawn(BlockManager.oreTin.blockID, world, random, x, z, 7, 16, 8, 48);
+        addOreSpawn(BlockManager.oreNickel.blockID, world, random, x, z, 6, 10, 6, 34);
+        addOreSpawn(BlockManager.oreSilver.blockID, world, random, x, z, 6, 8, 4, 20);
+        addOreSpawn(BlockManager.oreUranium.blockID, world, random, x, z, 5, 6, 2, 8);
     }
 
     private void generateNether(World world, Random random, int x, int z) {
-        addOreSpawn(BlockManager.oreNickel.blockID, world, random, x, z, 5, 12, 6, 16, 80);
+        addOreSpawn(BlockManager.oreNickel.blockID, world, random, x, z, 5, 6, 16, 80);
     }
 
-    private void addOreSpawn(int blockId, World world, Random random, int blockXPos, int blockZPos, int maxX,
-            int maxZ, int maxVeinSize, int chancesToSpawn, int minY) {
-        int diff = maxX - minY;
+    private void addOreSpawn(int blockId, World world, Random random, int blockXPos, int blockZPos, int maxVeinSize,
+            int chancesToSpawn, int minY, int maxY) {
+        if (maxY <= minY) {
+            return;
+        }
+
+        int diff = maxY - minY;
         for (int i = 0; i < chancesToSpawn; i++) {
-            int posX = blockXPos + random.nextInt(maxX);
+            int posX = blockXPos + random.nextInt(16);
             int posY = minY + random.nextInt(diff);
-            int posZ = blockZPos + random.nextInt(maxZ);
+            int posZ = blockZPos + random.nextInt(16);
             new WorldGenMinable(blockId, maxVeinSize).generate(world, random, posX, posY, posZ);
         }
     }

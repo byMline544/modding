@@ -8,7 +8,7 @@ import tcw.tiles.TileEntitySolarPanel;
 
 public class GuiSolarPanel extends GuiContainer {
 
-    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/generator.png";
+    private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/solar_panel.png";
     private final TileEntitySolarPanel panel;
 
     public GuiSolarPanel(InventoryPlayer playerInventory, TileEntitySolarPanel panel) {

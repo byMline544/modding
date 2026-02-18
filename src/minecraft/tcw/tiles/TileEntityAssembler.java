@@ -21,7 +21,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     private static final int FILTER_BLACKLIST = 2;
 
     private int progress;
-    private boolean precisionMode;
+    private boolean precisionMode = true;
     private boolean autoInput;
     private boolean autoOutput;
     private int inputSide;
@@ -48,12 +48,13 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
             tryAutoInput();
         }
 
-        int cost = precisionMode ? 48 : 30;
+        int cost = getEnergyCostWithModules(precisionMode ? 48 : 30);
         boolean linked = ensurePowerLinkOrDropEnergy();
         boolean canRun = linked && canProcess() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
             storage.extractEnergy(cost, false);
-            progress++;
+            progress += getProgressStepWithModules();
             if (progress >= (precisionMode ? 110 : 160)) {
                 progress = 0;
                 process();
@@ -261,7 +262,7 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         progress = nbt.getInteger("Progress");
-        precisionMode = nbt.getBoolean("PrecisionMode");
+        precisionMode = true;
         autoInput = nbt.getBoolean("AutoInput");
         autoOutput = nbt.getBoolean("AutoOutput");
         inputSide = normalizeSide(nbt.getInteger("InputSide"), SIDE_WEST);
@@ -333,8 +334,8 @@ public class TileEntityAssembler extends TileEntityInventoryMachine {
     public void setClientProgress(int value) { this.progress = value; }
     public void setClientEnergyScaled(int scaled) { this.storage.setEnergy(this.storage.getMaxEnergyStored() * scaled / 10000); }
     public boolean isPrecisionMode() { return precisionMode; }
-    public void togglePrecisionMode() { precisionMode = !precisionMode; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
-    public void setClientPrecisionMode(int mode) { precisionMode = mode == 1; }
+    public void togglePrecisionMode() { precisionMode = true; if (worldObj != null) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
+    public void setClientPrecisionMode(int mode) { precisionMode = true; }
     public int getScaledProgress(int scale) { return progress * scale / (precisionMode ? 110 : 160); }
     public boolean isAutoInput() { return autoInput; }
     public boolean isAutoOutput() { return autoOutput; }

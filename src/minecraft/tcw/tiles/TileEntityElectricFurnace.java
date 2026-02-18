@@ -20,10 +20,12 @@ public class TileEntityElectricFurnace extends TileEntityInventoryMachine {
         }
 
         boolean linked = ensurePowerLinkOrDropEnergy();
-        boolean canRun = linked && canSmelt() && storage.getEnergyStored() >= 24;
+        int cost = getEnergyCostWithModules(24);
+        boolean canRun = linked && canSmelt() && storage.getEnergyStored() >= cost;
+        tickMachineEffects(canRun);
         if (canRun) {
-            storage.extractEnergy(24, false);
-            progress++;
+            storage.extractEnergy(cost, false);
+            progress += getProgressStepWithModules();
             if (progress >= 100) {
                 progress = 0;
                 smeltItem();

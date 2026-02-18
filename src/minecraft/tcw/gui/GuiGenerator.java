@@ -1,20 +1,15 @@
 package tcw.gui;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import tcw.packets.PacketDispatcherTCW;
-import tcw.packets.PacketIds;
 import tcw.tiles.TileEntityGenerator;
 
 public class GuiGenerator extends GuiContainer {
 
     private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/generator.png";
     private final TileEntityGenerator machine;
-    private GuiButton modeButton;
 
     public GuiGenerator(InventoryPlayer playerInventory, TileEntityGenerator machine) {
         super(new ContainerGenerator(playerInventory, machine));
@@ -24,41 +19,9 @@ public class GuiGenerator extends GuiContainer {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2;
-        modeButton = new GuiButton(0, x + 8, y + 56, 62, 16, getModeText());
-        buttonList.add(modeButton);
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) {
-            net.minecraft.network.packet.Packet250CustomPayload packet = PacketDispatcherTCW.makeTogglePacket(PacketIds.TOGGLE_GENERATOR_MODE, machine.xCoord,
-                    machine.yCoord, machine.zCoord);
-            if (packet != null) {
-                PacketDispatcher.sendPacketToServer(packet);
-            }
-        }
-    }
-
-    private String getModeText() {
-        return machine.isEcoMode() ? "Режим: ЭКО" : "Режим: ТУРБО";
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-        if (modeButton != null) {
-            modeButton.displayString = getModeText();
-        }
-    }
-
-    @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Генератор", 8, 6, 4210752);
-        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored(), 8, 16, 0x2f6f2f);
+        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored() + " / " + machine.getStorage().getMaxEnergyStored(), 8, 16, 0x2f6f2f);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

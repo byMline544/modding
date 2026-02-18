@@ -1,20 +1,15 @@
 package tcw.gui;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import tcw.packets.PacketDispatcherTCW;
-import tcw.packets.PacketIds;
 import tcw.tiles.TileEntityCharger;
 
 public class GuiCharger extends GuiContainer {
 
     private static final String TEXTURE_PATH = "/mods/technocloud/textures/gui/charger.png";
     private final TileEntityCharger machine;
-    private GuiButton modeButton;
 
     public GuiCharger(InventoryPlayer playerInventory, TileEntityCharger machine) {
         super(new ContainerCharger(playerInventory, machine));
@@ -24,41 +19,11 @@ public class GuiCharger extends GuiContainer {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2;
-        modeButton = new GuiButton(0, x + 8, y + 56, 64, 16, getModeText());
-        buttonList.add(modeButton);
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) {
-            net.minecraft.network.packet.Packet250CustomPayload packet = PacketDispatcherTCW.makeTogglePacket(PacketIds.TOGGLE_CHARGER_MODE, machine.xCoord,
-                    machine.yCoord, machine.zCoord);
-            if (packet != null) {
-                PacketDispatcher.sendPacketToServer(packet);
-            }
-        }
-    }
-
-    private String getModeText() {
-        return machine.isFastMode() ? "Режим: БЫСТР" : "Режим: БЕЗОП";
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-        if (modeButton != null) {
-            modeButton.displayString = getModeText();
-        }
-    }
-
-    @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString("Зарядник", 8, 6, 4210752);
-        fontRenderer.drawString("Энергия: " + machine.getStorage().getEnergyStored(), 8, 16, 0x2f6f2f);
+        boolean linked = machine.isNetworkLinked();
+        fontRenderer.drawString("Подключение к сети: " + (linked ? "✓" : "✗"), 8, 16, linked ? 0x2f8f2f : 0xAA2222);
+        if (machine.getStorage().getEnergyStored() <= 0) fontRenderer.drawString("Не хватает энергии!", 8, 26, 0xCC2222);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
     }
 

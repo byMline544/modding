@@ -5,6 +5,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import tcw.energy.IElectricItemTCW;
+import tcw.helpers.ElectricItemHelper;
+import tcw.items.ItemMachineModule;
 
 public abstract class TileEntityInventoryMachine extends TileEntityMachine implements IInventory {
 
@@ -12,7 +15,15 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
 
     protected TileEntityInventoryMachine(int capacity, int slots) {
         super(capacity);
-        this.inventory = new ItemStack[slots];
+        this.inventory = new ItemStack[slots + 4];
+    }
+
+    public int getModuleSlotStart() {
+        return inventory.length - 4;
+    }
+
+    public int getModuleSlotCount() {
+        return 4;
     }
 
     @Override
@@ -82,13 +93,33 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
     public void closeChest() {
     }
 
-
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        if (slot >= getModuleSlotStart()) {
+            return stack != null && stack.getItem() instanceof ItemMachineModule;
+        }
         return isStackValidForSlot(slot, stack);
     }
 
     public boolean isStackValidForSlot(int slot, ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        int expectedCapacity = baseCapacity + getCapacityModules() * 50000;
+        if (storage.getMaxEnergyStored() != expectedCapacity) {
+            int energy = storage.getEnergyStored();
+            storage = new tcw.energy.EnergyStorageTCW(expectedCapacity);
+            storage.setEnergy(Math.min(energy, expectedCapacity));
+            if (worldObj != null && !worldObj.isRemote) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            }
+        }
+    }
+
+    public boolean isNetworkLinked() {
+        return hasExternalPowerLink();
     }
 
     protected boolean hasExternalPowerLink() {
@@ -98,27 +129,156 @@ public abstract class TileEntityInventoryMachine extends TileEntityMachine imple
         int[][] o = new int[][] { {1,0,0}, {-1,0,0}, {0,1,0}, {0,-1,0}, {0,0,1}, {0,0,-1} };
         for (int i = 0; i < o.length; i++) {
             net.minecraft.tileentity.TileEntity tile = worldObj.getBlockTileEntity(xCoord + o[i][0], yCoord + o[i][1], zCoord + o[i][2]);
-            if (tile instanceof TileEntityCable || tile instanceof TileEntityGenerator || tile instanceof TileEntitySolarPanel) {
+            if (tile instanceof TileEntityGenerator) {
+                return true;
+            }
+            if (tile instanceof TileEntitySolarPanel) {
+                return true;
+            }
+            if (tile instanceof TileEntityCable) {
+                if (hasPoweredSourceInCableNetwork((TileEntityCable) tile, 32)) {
+                    return true;
+                }
+            }
+            if (tile instanceof TileEntityEnergyBuffer) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * Сбрасывает энергию машины при потере подключения к энергосети.
-     *
-     * @return true если связь с сетью есть, иначе false.
-     */
-    protected boolean ensurePowerLinkOrDropEnergy() {
-        boolean linked = hasExternalPowerLink();
-        if (!linked && storage.getEnergyStored() > 0) {
-            storage.setEnergy(0);
-            if (worldObj != null && !worldObj.isRemote) {
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    private boolean hasPoweredSourceInCableNetwork(TileEntityCable start, int maxDepth) {
+        if (start == null || start.worldObj == null) {
+            return false;
+        }
+
+        java.util.ArrayDeque<net.minecraft.tileentity.TileEntity> queue = new java.util.ArrayDeque<net.minecraft.tileentity.TileEntity>();
+        java.util.ArrayDeque<Integer> depth = new java.util.ArrayDeque<Integer>();
+        java.util.HashSet<String> seen = new java.util.HashSet<String>();
+
+        queue.add(start);
+        depth.add(Integer.valueOf(0));
+
+        while (!queue.isEmpty()) {
+            net.minecraft.tileentity.TileEntity tile = queue.poll();
+            int d = depth.poll().intValue();
+            String key = tile.xCoord + ":" + tile.yCoord + ":" + tile.zCoord;
+            if (!seen.add(key)) {
+                continue;
+            }
+
+            net.minecraftforge.common.ForgeDirection[] dirs = net.minecraftforge.common.ForgeDirection.VALID_DIRECTIONS;
+            for (int i = 0; i < dirs.length; i++) {
+                net.minecraftforge.common.ForgeDirection dir = dirs[i];
+                net.minecraft.tileentity.TileEntity t = tile.worldObj.getBlockTileEntity(tile.xCoord + dir.offsetX, tile.yCoord + dir.offsetY,
+                        tile.zCoord + dir.offsetZ);
+                if (t == null) {
+                    continue;
+                }
+
+                if (t instanceof TileEntityGenerator && ((TileEntityGenerator) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntitySolarPanel && ((TileEntitySolarPanel) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntityEnergyBuffer && ((TileEntityEnergyBuffer) t).getStorage().getEnergyStored() > 0) {
+                    return true;
+                }
+                if (t instanceof TileEntityCable && d < maxDepth) {
+                    queue.add(t);
+                    depth.add(Integer.valueOf(d + 1));
+                }
             }
         }
-        return linked;
+
+        return false;
+    }
+
+    protected void tickMachineEffects(boolean active) {
+        if (!active || worldObj == null) {
+            return;
+        }
+
+        if (worldObj.rand.nextInt(4) == 0) {
+            worldObj.spawnParticle("smoke", xCoord + 0.5D, yCoord + 1.02D, zCoord + 0.5D, 0.0D, 0.02D, 0.0D);
+        }
+
+        if (!worldObj.isRemote && worldObj.getWorldTime() % 40 == 0) {
+            worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "random.fizz", 0.2F, 1.8F);
+        }
+    }
+
+    protected int getEnergyCostWithModules(int baseCost) {
+        int over = getOverclockerModules();
+        int cost = baseCost;
+        for (int i = 0; i < over; i++) {
+            cost += Math.max(1, baseCost / 2);
+        }
+        return cost;
+    }
+
+    protected int getProgressStepWithModules() {
+        return 1 + getOverclockerModules();
+    }
+
+    protected boolean ensurePowerLinkOrDropEnergy() {
+        return hasExternalPowerLink();
+    }
+
+    public boolean shouldPullEnergyFromNetwork() {
+        if (storage.getEnergyStored() >= storage.getMaxEnergyStored()) {
+            return false;
+        }
+
+        if (this instanceof TileEntityCharger) {
+            ItemStack chargeable = inventory[0];
+            if (chargeable == null || !(chargeable.getItem() instanceof IElectricItemTCW)) {
+                return false;
+            }
+            IElectricItemTCW electric = (IElectricItemTCW) chargeable.getItem();
+            return ElectricItemHelper.getEnergy(chargeable) < electric.getMaxEnergy(chargeable);
+        }
+
+        if (this instanceof TileEntityAlloySmelter || this instanceof TileEntityAssembler) {
+            return inventory[0] != null || inventory[1] != null;
+        }
+
+        if (this instanceof TileEntityCrusher || this instanceof TileEntityMacerator || this instanceof TileEntityCompressor
+                || this instanceof TileEntityElectricFurnace || this instanceof TileEntityExtractor || this instanceof TileEntityWiremill) {
+            return inventory[0] != null;
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public int getOverclockerModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_OVERCLOCKER);
+    }
+
+    @Override
+    public int getTransformerModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_TRANSFORMER);
+    }
+
+    @Override
+    public int getCapacityModules() {
+        return getInstalledModuleCount(ItemMachineModule.TYPE_CAPACITY);
+    }
+
+    private int getInstalledModuleCount(int moduleType) {
+        int count = 0;
+        for (int i = getModuleSlotStart(); i < inventory.length; i++) {
+            ItemStack stack = inventory[i];
+            if (stack != null && stack.getItem() instanceof ItemMachineModule) {
+                if (((ItemMachineModule) stack.getItem()).getModuleType() == moduleType) {
+                    count += stack.stackSize;
+                }
+            }
+        }
+        return Math.min(16, count);
     }
 
     @Override

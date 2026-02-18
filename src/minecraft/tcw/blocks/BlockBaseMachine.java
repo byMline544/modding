@@ -18,8 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBaseMachine extends BlockContainer {
 
-    protected Icon frontIcon;
-    protected Icon sideIcon;
+    protected Icon icon;
     private final String textureKey;
     private final int guiId;
 
@@ -40,15 +39,29 @@ public class BlockBaseMachine extends BlockContainer {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.frontIcon = register.registerIcon("technocloud:" + textureKey + "_front");
-        this.sideIcon = register.registerIcon("technocloud:" + textureKey + "_side");
-        this.blockIcon = sideIcon;
+        this.icon = register.registerIcon("technocloud:block" + toTextureSuffix(textureKey));
+        this.blockIcon = icon;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta) {
-        return side == 3 ? frontIcon : sideIcon;
+        return icon != null ? icon : blockIcon;
+    }
+
+    protected String toTextureSuffix(String key) {
+        String[] parts = key.split("_");
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].length() == 0) continue;
+            String part = parts[i].toLowerCase();
+            if (i == 0) {
+                b.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1));
+            } else {
+                b.append(part);
+            }
+        }
+        return b.toString();
     }
 
     @Override
@@ -82,6 +95,7 @@ public class BlockBaseMachine extends BlockContainer {
     @Override
     public void breakBlock(World world, int x, int y, int z, int blockId, int meta) {
         dropInventory(world, x, y, z);
+        tcw.tiles.TileEntityMachine.resetNearbyMachineEnergy(world, x, y, z, 6);
         super.breakBlock(world, x, y, z, blockId, meta);
     }
 
