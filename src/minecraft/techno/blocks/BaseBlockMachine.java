@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import techno.TechnoCreativeTabs;
 import techno.TechnoMod;
 
 public abstract class BaseBlockMachine extends BlockContainer {
@@ -19,6 +20,7 @@ public abstract class BaseBlockMachine extends BlockContainer {
         this.guiId = guiId;
         setUnlocalizedName(textureKey);
         setHardness(3.0F);
+        setCreativeTab(TechnoCreativeTabs.TAB_BLOCKS);
     }
 
     public void registerIcons(IconRegister register) {

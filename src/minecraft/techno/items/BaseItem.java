@@ -3,8 +3,8 @@ package techno.items;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import techno.TechnoCreativeTabs;
 
 public class BaseItem extends Item {
     protected final String key;
@@ -13,7 +13,7 @@ public class BaseItem extends Item {
         super(id);
         this.key = key;
         setUnlocalizedName(key);
-        setCreativeTab(CreativeTabs.tabMaterials);
+        setCreativeTab(TechnoCreativeTabs.TAB_ITEMS);
     }
 
     @Override

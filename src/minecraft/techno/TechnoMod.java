@@ -27,11 +27,11 @@ import techno.managers.WorldManager;
 import techno.packets.PacketHandler;
 import techno.proxy.ServerProxy;
 
-@Mod(modid = "newindustrialtechno", name = "New Industrial Techno", version = "0.0.1")
+@Mod(modid = "industrialTechno", name = "Industrial Techno", version = "0.0.1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { "NIT_MAIN" })
 public class TechnoMod {
 
-    @Instance("newindustrialtechno")
+    @Instance("industrialTechno")
     public static TechnoMod instance;
 
     @SidedProxy(clientSide = "techno.proxy.ClientProxy", serverSide = "techno.proxy.ServerProxy")
