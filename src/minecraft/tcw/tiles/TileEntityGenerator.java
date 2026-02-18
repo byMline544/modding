@@ -27,6 +27,9 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
             return;
         }
 
+        int beforeEnergy = storage.getEnergyStored();
+        int beforeBurn = burnTime;
+
         int outputPerTick = 24;
         boolean hadBurning = burnTime > 0;
         int fuelSaveDivider = 1 + getOverclockerModules();
@@ -63,6 +66,10 @@ public class TileEntityGenerator extends TileEntityInventoryMachine {
 
         if (worldObj.getWorldTime() % 10 == 0 || hadBurning != (burnTime > 0)) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+
+        if (beforeEnergy != storage.getEnergyStored() || beforeBurn != burnTime) {
+            onInventoryChanged();
         }
     }
 

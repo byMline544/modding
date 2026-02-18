@@ -38,6 +38,8 @@ public class TileEntitySolarPanel extends TileEntityMachine {
             return;
         }
 
+        int beforeEnergy = storage.getEnergyStored();
+
         if (worldObj.isDaytime() && !worldObj.provider.hasNoSky && worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord)) {
             storage.receiveEnergy(generation * 4, false);
         }
@@ -50,6 +52,10 @@ public class TileEntitySolarPanel extends TileEntityMachine {
 
         if (worldObj.getWorldTime() % 20 == 0) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+
+        if (beforeEnergy != storage.getEnergyStored()) {
+            onInventoryChanged();
         }
     }
 
